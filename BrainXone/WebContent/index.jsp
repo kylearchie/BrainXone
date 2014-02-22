@@ -10,10 +10,7 @@
 	<p>Hello world?</p>
 	<br>
 	<p>kyle was here</p>
-<<<<<<< HEAD
 	<p>Xinhui was here!</p>
-=======
 	<p>Zheng was here</p>
->>>>>>> a4ce7e24d473878f4d0d3076f92d540a0c24d4a5
 </body>
 </html>
