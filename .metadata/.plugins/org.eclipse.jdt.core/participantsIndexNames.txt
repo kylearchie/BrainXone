@@ -1,3 +1,0 @@
-INDEX VERSION 1.126
-/Users/gsroth/Desktop/CS108/BrainXone/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/3550692788.index
-/BrainXone
