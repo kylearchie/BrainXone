@@ -1,3 +1,5 @@
+package brainxone;
+
 import java.util.*;
 
 
@@ -11,7 +13,7 @@ public class User {
         this.userID = userID;
         this.userName = userName;
         isAdmin = false;
-        friends = new ArrayList<int>();
+        friends = new ArrayList<Integer>();
     }
 	
 	public String getUserName() {

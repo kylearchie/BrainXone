@@ -1,3 +1,5 @@
+package brainxone;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,7 +14,6 @@ public class DBConnection {
 	 private static String database = MyDBInfo.MYSQL_DATABASE_NAME;
 	 private Connection con;
 	 private Statement stmt;
-	 
 	 
 	 public DBConnection() {
 		 try { 
