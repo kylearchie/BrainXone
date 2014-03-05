@@ -19,8 +19,8 @@ public class Message
 		type = t;
 		text = body;
 		try {
-			stmt.executeUpdate("INSERT INTO messages VALUES(" + fromID + "," + toID + "," + 
-		timeSent + "," + type + "," + text + ", NULL);");
+			stmt.executeUpdate("INSERT INTO messages VALUES(" + fromID + "," + toID + ",\"" + 
+		timeSent + "\",\"" + type + "\",\"" + text + "\", NULL);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +69,7 @@ public class Message
 		ArrayList<Message> messages = new ArrayList<Message>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM messages WHERE toID = " + userID + " ORDER BY timeSent DECS;");
+			rs = stmt.executeQuery("SELECT * FROM messages WHERE toID = " + userID + " ORDER BY timeSent DESC;");
 			while (rs.next()) {
 		    	int fromID = rs.getInt("fromID");
 		    	String timeSent = rs.getString("timeSent");

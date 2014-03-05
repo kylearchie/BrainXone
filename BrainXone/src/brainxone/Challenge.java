@@ -39,7 +39,7 @@ public class Challenge extends Message
 		ResultSet rs;
 		try {
 			rs = stmt.executeQuery("SELECT * FROM messages WHERE toID = " + userID + 
-					" AND messageType = \"challenge\" ORDER BY timeSent DECS;");
+					" AND messageType = \"challenge\" ORDER BY timeSent DESC;");
 			while (rs.next()) {
 		    	int fromID = rs.getInt("fromID");
 		    	String timeSent = rs.getString("timeSent");
