@@ -1,23 +1,40 @@
 package brainxone;
 
+import java.sql.*;
+import java.util.ArrayList;
+
 public class Event 
 {
-	private long timeInMillis;
+	private String time;
 	private int userID;
 	private int quizID;
-	private int id; //if needed
-	
-	public Event(int user, int quiz)
+
+	public Event(int user, int quiz, Statement stmt)
 	{
-		timeInMillis = System.currentTimeMillis();
+		time = "" + System.currentTimeMillis();
 		userID = user;
 		quizID = quiz;
-		id = 0; //pull from 1+ highest number in database
+		try {
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + time + "\"," + userID + "," + quizID + ", NULL, NULL);");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Event(String time, int userID, int quizID) {
+		this.time = time;
+		this.userID = userID;
+		this.quizID = quizID;
 	}
 	
-	public long getTimeInMillis() 
+	public Event(int userID, int quizID) {
+		this.userID = userID;
+		this.quizID = quizID;
+	}
+	
+	public String getTime() 
 	{
-		return timeInMillis;
+		return time;
 	}
 
 	public int getUserID() 
@@ -30,8 +47,21 @@ public class Event
 		return quizID;
 	}
 
-	public int getId() 
-	{
-		return id;
+	public static ArrayList<Event> getEventss(Integer userID, Statement stmt) {
+		ArrayList<Event> events = new ArrayList<Event>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE userID = " + userID + " ORDER BY time DESC;");
+			while (rs.next()) {
+		    	String time = rs.getString("time");
+		    	int quizID = rs.getInt("quizID");
+                Event event = new Event(time, userID, quizID);
+                events.add(event);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return events;
 	}
 }
