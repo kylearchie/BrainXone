@@ -1,6 +1,8 @@
 package brainxone;
 
 import java.util.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 
@@ -9,19 +11,88 @@ public class User {
 	private Integer userID;
 	private String userName;
 	private boolean isAdmin;
+	private String password;
 	private ArrayList<Integer> friends;
 	
-	public User(Statement stmt, String userName) {
+	public User(Statement stmt, String userName, String password) {
         userID = ++nextID;
         this.userName = userName;
         isAdmin = false;
         friends = new ArrayList<Integer>();
+        MessageDigest mdigest;
+        try {
+			mdigest = MessageDigest.getInstance("SHA");
+			byte[] inputBytes = password.getBytes();
+			byte[] outputBytes = mdigest.digest(inputBytes);
+			this.password = hexToString(outputBytes);
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
 		try {
-			stmt.executeUpdate("INSERT INTO users VALUES(" + userID + "," + userName + "," + isAdmin +");");
+			stmt.executeUpdate("INSERT INTO users VALUES(" + userID + ",\"" + userName +
+					"\"," + isAdmin +",\"" + this.password + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
     }
+	
+	public static boolean passwordMatch(String account, String password, Statement stmt) {
+		ResultSet rs;
+		int size = 0;
+		MessageDigest mdigest;
+		String attemptedPassword = null;
+		try {
+			mdigest = MessageDigest.getInstance("SHA");
+			byte[] inputBytes = password.getBytes();
+			byte[] outputBytes = mdigest.digest(inputBytes);
+			attemptedPassword = hexToString(outputBytes);			
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+		String realPassword = null;
+		try {
+			rs = stmt.executeQuery("SELECT password FROM accounts WHERE userName = \"" + account + "\";");			
+			while (rs.next()) {
+		    	realPassword = rs.getString("password");
+				size++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}    
+		return size == 1 && attemptedPassword.equals(realPassword);
+	}
+	
+	public static String hexToString(byte[] bytes) {
+		StringBuffer buff = new StringBuffer();
+		for (int i=0; i<bytes.length; i++) {
+			int val = bytes[i];
+			val = val & 0xff;  // remove higher bits, sign
+			if (val<16) buff.append('0'); // leading 0
+			buff.append(Integer.toString(val, 16));
+		}
+		return buff.toString();
+	}	
+	
+	
+	public static boolean userExist(String userName, Statement stmt){
+		ResultSet rs;
+		int size = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM users WHERE userName = \"" + userName + "\";");			
+			while (rs.next()) {
+				size++;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return size == 1;
+	}	
+		
 	
 	public User(Integer userID, String userName, boolean isAdmin, ArrayList<Integer> friends) {
 		this.userID = userID;

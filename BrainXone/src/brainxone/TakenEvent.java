@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class TakenEvent extends Event
 {
-	private String time;
+	private String timeCreated;
 	private int userID;
 	private int quizID;
 	private int score;
@@ -14,11 +14,11 @@ public class TakenEvent extends Event
 	public TakenEvent(int user, int quiz, int points, String taken, Statement stmt) 
 	{
 		super(user, quiz);
-		time = "" + System.currentTimeMillis();
+		timeCreated = "" + System.currentTimeMillis();
 		score = points;
 		timeTaken = taken;
 		try {
-			stmt.executeUpdate("INSERT INTO events VALUES(\"" + time + "\"," + userID + "," + 
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\"," + userID + "," + 
 					quizID + ", " + score + ",\"" +  timeTaken + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -43,9 +43,9 @@ public class TakenEvent extends Event
 		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM events WHERE socre <> NULL and timeTaken <> NULL and userID = " + userID + " ORDER BY time DESC;");
+			rs = stmt.executeQuery("SELECT * FROM events WHERE socre <> NULL and timeTaken <> NULL and userID = " + userID + " ORDER BY timeCreated DESC;");
 			while (rs.next()) {
-		    	String time = rs.getString("time");
+		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
 		    	String timeTaken = rs.getString("timeTaken");

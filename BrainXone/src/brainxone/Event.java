@@ -5,24 +5,24 @@ import java.util.ArrayList;
 
 public class Event 
 {
-	private String time;
+	private String timeCreated;
 	private int userID;
 	private int quizID;
 
 	public Event(int user, int quiz, Statement stmt)
 	{
-		time = "" + System.currentTimeMillis();
+		timeCreated = "" + System.currentTimeMillis();
 		userID = user;
 		quizID = quiz;
 		try {
-			stmt.executeUpdate("INSERT INTO events VALUES(\"" + time + "\"," + userID + "," + quizID + ", NULL, NULL);");
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\"," + userID + "," + quizID + ", NULL, NULL);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public Event(String time, int userID, int quizID) {
-		this.time = time;
+		this.timeCreated = time;
 		this.userID = userID;
 		this.quizID = quizID;
 	}
@@ -34,7 +34,7 @@ public class Event
 	
 	public String getTime() 
 	{
-		return time;
+		return timeCreated;
 	}
 
 	public int getUserID() 
@@ -51,9 +51,9 @@ public class Event
 		ArrayList<Event> events = new ArrayList<Event>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM events WHERE userID = " + userID + " ORDER BY time DESC;");
+			rs = stmt.executeQuery("SELECT * FROM events WHERE userID = " + userID + " ORDER BY timeCreated DESC;");
 			while (rs.next()) {
-		    	String time = rs.getString("time");
+		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
                 Event event = new Event(time, userID, quizID);
                 events.add(event);
