@@ -17,16 +17,16 @@ class MultiChoice extends Question{
 	 * CREATOR MODE
 	 * 
 	 */
-	private void setAnswer(HashMap<String, Boolean> answerKeys) {
+	public void setAnswer(HashMap<String, Integer> answerKeys) {
 		maxPoints = 0;
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			for(Map.Entry<String, Boolean> ans : answerKeys.entrySet()){
+			for(Map.Entry<String, Integer> ans : answerKeys.entrySet()){
 				String option = ans.getKey();
-				boolean isValid = ans.getValue();
-				if(isValid == true) maxPoints++;
-				stmt.executeUpdate("INSERT INTO ansOptions VALUES (\"" + ID +"\",\"" + option + "\",\"" + isValid + "\");");
+				int isValid = ans.getValue();
+				if(isValid == 1) maxPoints++;
+				stmt.executeUpdate("INSERT INTO ansOptions VALUES (\"" + quesID +"\",\"" + option + "\",\"" + isValid + "\");");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -45,25 +45,35 @@ class MultiChoice extends Question{
 	 * @return
 	 */
 	@Override
-	public void checkAnswer(int quesID, HashSet<String> mapB){
+	public void checkAnswer(HashSet<String> mapB){
 		points = 0;
-		HashMap<String, Boolean> mapA = new HashMap<String, Boolean>();
+		HashMap<String, Integer> mapA = displayAnswers();
+		for(String ans : mapB){
+			if(mapA.containsKey(ans) && mapA.get(ans) == 1) {
+				points++;
+			}
+		}
+	}
+	
+	/** 
+	 * Function to display the MCQs when we retrieve a question
+	 * Populates & returns a map with answers from database
+	 * @return
+	 */
+	@Override
+	public HashMap<String, Integer> displayAnswers(){
+		HashMap<String, Integer> mapA = new HashMap<String, Integer>();
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT ansOption, isValid FROM ansOptions WHERE quesID = " + quesID);
+			ResultSet rs = stmt.executeQuery("SELECT ansOption, isVaid FROM ansOptions WHERE quesID = " + quesID);
 			while(rs.next()){
-				mapA.put(rs.getString(1), Boolean.parseBoolean(rs.getString(2)));
+				mapA.put(rs.getString(1), Integer.parseInt(rs.getString(2)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		for(String ans : mapB){
-			if(mapA.containsKey(ans)) {
-				points++;
-			}
-		}
+		return mapA;
 	}
 
 }

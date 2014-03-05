@@ -61,10 +61,14 @@ public class Question {
 	public void checkAnswer(int quesID, HashMap<String, Integer> mapB){
 	}
 	
-	public void checkAnswer(int quesID, HashSet<String> mapB){
+	public void checkAnswer(HashSet<String> mapB){
 	}
 	
 	public int getPoints() {
 		return points;
+	}
+	
+	public HashMap<String, Integer> displayAnswers(){
+		return null;
 	}
 }

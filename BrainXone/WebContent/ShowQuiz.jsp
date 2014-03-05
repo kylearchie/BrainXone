@@ -40,8 +40,23 @@
 		case Question.MULTI_STR_ANS:
 			break;
 		case Question.MULTI_CHOICE_C:
-			break;
 		case Question.MULTI_CHOICE_R:
+			request.getSession().setAttribute("quesID", ques.getID());
+			%>
+			<form action = "CheckAnswerMultiChoiceServlet" method = "post">
+			<%
+			HashMap<String, Integer> options = ques.displayAnswers();
+			int i = 0;
+			for(String str : options.keySet()){
+				//out.print("<input type = 'checkbox' name = 'selected' value='selectedOption"+ (i + 1) + "'> " + str + " <br>");
+				out.print("<input type = 'hidden' name = 'options" + (i + 1) + "' value = '" + str+ "'>");
+				out.print(str + "<input type = 'radio' name='isValid"+ (i + 1) + "' value = '1'> YES &nbsp; <input type = 'radio'  name='isValid"+ (i + 1) + "' value = '0'> NO <br>");
+				i++;			
+			}
+			%>
+			<input type = "submit" value = "Submit Ans">
+			</form>
+			<% 
 			break;
 		}
 		// call a jsp to display ques + ans using ques id
