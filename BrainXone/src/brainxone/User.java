@@ -53,7 +53,7 @@ public class User {
 		}		
 		String realPassword = null;
 		try {
-			rs = stmt.executeQuery("SELECT password FROM accounts WHERE userName = \"" + account + "\";");			
+			rs = stmt.executeQuery("SELECT password FROM users WHERE userName = \"" + account + "\";");			
 			while (rs.next()) {
 		    	realPassword = rs.getString("password");
 				size++;
@@ -61,7 +61,8 @@ public class User {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}    
+		}
+		System.out.println(account + " " + realPassword + " " + attemptedPassword);
 		return size == 1 && attemptedPassword.equals(realPassword);
 	}
 	
@@ -101,27 +102,49 @@ public class User {
 		this.friends = friends;
 	}
 	
-	public static User retrieveByID(Integer userID, Statement stmt) {
+	public static User retrieveByUserName(String userName, Statement stmt) {
 		User user = null;
 		try {
-			String retrievedUserName = null;
 			boolean RetrievedIsAdmin = false;
-			ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE userID = " + userID + ";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE userName = \"" + userName + "\";");
 		    while (rs.next()) {
-		    	retrievedUserName = rs.getString("userName");
 		    	RetrievedIsAdmin = rs.getBoolean("isAdmin");
 		    }
 		    ArrayList<Integer> friends = new ArrayList<Integer>();
-		    rs = stmt.executeQuery("SELECT id2 FROM friends WHERE id1 = " + userID + ";");
-		    while (rs.next()) {
-		    	Integer friendID = rs.getInt("id2");
-		    	friends.add(friendID);
-		    }
-		    user = new User(userID, retrievedUserName, RetrievedIsAdmin, friends);
+//		    rs = stmt.executeQuery("SELECT id2 FROM friends WHERE id1 = " + userID + ";");
+//		    while (rs.next()) {
+//		    	Integer friendID = rs.getInt("id2");
+//		    	friends.add(friendID);
+//		    }
+		    user = new User(3, userName, RetrievedIsAdmin, friends);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
 		return user;
+	}
+	
+	public static ArrayList<User> retrieveByPartialUserName(String userName, Statement stmt) {
+		ArrayList<User> users = new ArrayList<User>();
+		User user = null;
+		try {
+			ArrayList<Integer> friends = new ArrayList<Integer>();
+			boolean RetrievedIsAdmin = false;
+			String RetrievedUserName = null;
+			ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE userName LIKE \"%" + userName + "%\";");
+		    while (rs.next()) {
+		    	RetrievedUserName = rs.getString("userName");
+		    	RetrievedIsAdmin = rs.getBoolean("isAdmin");
+		    	users.add(new User(3, RetrievedUserName, RetrievedIsAdmin, friends));
+		    }
+//		    rs = stmt.executeQuery("SELECT id2 FROM friends WHERE id1 = " + userID + ";");
+//		    while (rs.next()) {
+//		    	Integer friendID = rs.getInt("id2");
+//		    	friends.add(friendID);
+//		    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		return users;
 	}
 	
 	public Integer getUserID() {
