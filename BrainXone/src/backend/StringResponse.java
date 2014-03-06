@@ -42,6 +42,7 @@ public class StringResponse extends Question{
 			while(rsx.next()){
 				mapA.put(rsx.getString(1), Integer.parseInt(rsx.getString(2)));
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +77,7 @@ public class StringResponse extends Question{
 		Statement stmt = conn.getStmt();
 		for(String ans : answerKeys.keySet()){
 			try {
-				stmt.executeUpdate("INSERT INTO indexAnswer VALUES (\"" + ID +"\",\"" + ans + "\",\"" + answerKeys.get(ans) + "\");");
+				stmt.executeUpdate("INSERT INTO indexAnswer VALUES (\"" + quesID +"\",\"" + ans + "\",\"" + answerKeys.get(ans) + "\");");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

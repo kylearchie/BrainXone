@@ -65,10 +65,8 @@ public class AddQuestionServlet extends HttpServlet {
 			nextPage = "MultiStrAns.jsp";
 			break;
 		case Question.MULTI_CHOICE_C:
-			nextPage = "MultiChoiceAnsC.jsp";
-			break;
 		case Question.MULTI_CHOICE_R:
-			nextPage = "MultiChoiceAnsR.jsp";
+			nextPage = "MultiChoiceAns.jsp";
 			break;
 
 		}

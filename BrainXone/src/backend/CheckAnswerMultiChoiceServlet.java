@@ -2,7 +2,9 @@ package backend;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class CheckAnswerServlet
+ * Servlet implementation class CheckAnswerMultiChoiceServlet
  */
-@WebServlet("/CheckAnswerServlet")
-public class CheckAnswerServlet extends HttpServlet {
+@WebServlet("/CheckAnswerMultiChoiceServlet")
+public class CheckAnswerMultiChoiceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CheckAnswerServlet() {
+    public CheckAnswerMultiChoiceServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,13 +39,19 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		String answer = (String) request.getParameter("answer");
+		HashSet<String> selectedOptions = new HashSet<String>();
 		String quesID = Integer.toString((Integer) hs.getAttribute("quesID"));
 		Question ques = (Question) hs.getAttribute(quesID);
-		HashMap<String, Integer> mapB = new HashMap<String, Integer>();
-		mapB.put(answer, 1);
 		
-		ques.checkAnswer(Integer.parseInt(quesID), mapB);
+		for(int i = 0; i < 2; i ++)
+		{
+			String option = (String) request.getParameter("options" + (i + 1));
+			String isValid = (String)(request.getParameter("isValid" + (i + 1)));
+			if(isValid.equals("1"))
+				selectedOptions.add(option);
+		}
+		
+		ques.checkAnswer(selectedOptions);
 		System.out.println(ques.getPoints());
 	}
 
