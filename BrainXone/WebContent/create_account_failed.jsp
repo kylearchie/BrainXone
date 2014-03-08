@@ -7,8 +7,8 @@
 <title>Create Account</title>
 </head>
 <body>
-<h1>Create New Account</h1>
-<p>Please enter proposed name and password.</p>
+<h1>The Name <%= request.getParameter("username")%> is Already In Use</h1>
+<p>Please enter another name and password.</p>
 <form action="CreateNewAccountServlet" method="post">
     <p>User Name: <input type="text" name="username"/></p>
     <p>

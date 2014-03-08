@@ -5,19 +5,19 @@ import java.util.ArrayList;
 
 public class Challenge extends Message
 {
-	private int fromID;
-	private int toID;
+	private String fromID;
+	private String toID;
 	private String timeSent;
 	private String type;
 	private String text;
 	private int quizID;
 
-	public Challenge(int from, int to, String t, String body, int quiz, Statement stmt) {	
+	public Challenge(String from, String to, String t, String body, int quiz, Statement stmt) {	
 		super(from, to, t, body);		
 		timeSent = "" + System.currentTimeMillis();
 		quizID = quiz;
 		try {
-			stmt.executeUpdate("INSERT INTO messages VALUES(" + fromID + "," + toID + ",\"" + 
+			stmt.executeUpdate("INSERT INTO messages VALUES(\"" + fromID + "\",\"" + toID + "\",\"" + 
 		timeSent + "\",\"" + type + "\",\"" + text + "\"," + quizID + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -29,24 +29,24 @@ public class Challenge extends Message
 		return quizID;
 	}
 	
-	public Challenge(int from, int to, String time, String t, String body, int quiz) {
+	public Challenge(String from, String to, String time, String t, String body, int quiz) {
 		super(from, to, time, t, body);
 		quizID = quiz;
 	}
 	
-	public static ArrayList<Challenge> getChallenges(Integer userID, Statement stmt) {
+	public static ArrayList<Challenge> getChallenges(String userName, Statement stmt) {
 		ArrayList<Challenge> challenges = new ArrayList<Challenge>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM messages WHERE toID = " + userID + 
-					" AND messageType = \"challenge\" ORDER BY timeSent DESC;");
+			rs = stmt.executeQuery("SELECT * FROM messages WHERE toUserName = \"" + userName + 
+					"\" AND messageType = \"challenge\" ORDER BY timeSent DESC;");
 			while (rs.next()) {
-		    	int fromID = rs.getInt("fromID");
+		    	String fromUserName = rs.getString("fromUserName");
 		    	String timeSent = rs.getString("timeSent");
 		    	String messageType = rs.getString("messageType");
 		    	String text = rs.getString("text");
 		    	int quizID = rs.getInt("quizID");
-                Challenge challenge = new Challenge(fromID, userID, timeSent, messageType, text, quizID);
+                Challenge challenge = new Challenge(fromUserName, userName, timeSent, messageType, text, quizID);
                 challenges.add(challenge);
 		    }
 		} catch (SQLException e) {
@@ -54,5 +54,18 @@ public class Challenge extends Message
 			e.printStackTrace();
 		}	    
 		return challenges;
+	}
+	
+	public static void deleteChallenge(String userName, String friendUserName, String timeSent,Statement stmt) {
+
+		try {
+			stmt.executeUpdate("DELETE FROM messages WHERE messageType = \"challenge\" AND toUserName = \"" + userName + "\" AND fromUserName = \"" + friendUserName + "\" AND timeSent = \"" + timeSent + "\";");
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}	    
 	}
 }

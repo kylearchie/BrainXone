@@ -1,7 +1,7 @@
 package brainxone;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -10,20 +10,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 
 /**
- * Servlet implementation class CreateNewAccountServlet
+ * Servlet implementation class DenyFriendServlet
  */
-@WebServlet("/CreateNewAccountServlet")
-public class CreateNewAccountServlet extends HttpServlet {
+@WebServlet("/DenyFriendServlet")
+public class DenyFriendServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateNewAccountServlet() {
+    public DenyFriendServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,22 +36,15 @@ public class CreateNewAccountServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {    
-		ServletContext servletContext = getServletContext();
-		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		String account = request.getParameter("username");
-		if (!User.userExist(account, stmt)) {
-			String password = request.getParameter("password");
-			User user = new User(stmt, account, password);
-			HttpSession session = request.getSession();
-			session.setAttribute("currentUser", account);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    ServletContext servletContext = getServletContext();
+			Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		    String currentUser = request.getParameter("currentUser");
+			String friendUser = request.getParameter("friendUser");
+			String timeSent = request.getParameter("timeSent");
+			Message.deleteFriendRequest(currentUser, friendUser, timeSent, stmt);
 			RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
 			dispatch.forward(request, response);
-		} else {
-			RequestDispatcher dispatch = request.getRequestDispatcher("create_account_failed.jsp");
-			dispatch.forward(request, response);
-		}
 	}
 
 }
-

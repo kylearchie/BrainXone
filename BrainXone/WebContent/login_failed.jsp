@@ -4,17 +4,18 @@
 <html> 
 <head> 
 <meta charset="UTF-8" /> 
-<title>Create Account</title>
+<title>Information Incorrect</title>
 </head>
 <body>
-<h1>Create New Account</h1>
-<p>Please enter proposed name and password.</p>
-<form action="CreateNewAccountServlet" method="post">
-    <p>User Name: <input type="text" name="username"/></p>
+<h1>Please Try Again</h1>
+<p>Either your user name or password is incorrect. Please try again.</p>
+<form action="LoginServlet" method="post">
+    <p>User Name: <input type="text" name="name"/></p>
     <p>
     Password: <input type="text" name="password"/>
     <input type="submit" value="Login"/>
     </p>
 </form>
+<a href = "create_new_account.jsp">Create New Account</a>
 </body>
 </html>
