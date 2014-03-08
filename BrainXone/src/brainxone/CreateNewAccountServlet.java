@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -44,6 +45,8 @@ public class CreateNewAccountServlet extends HttpServlet {
 		if (!User.userExist(account, stmt)) {
 			String password = request.getParameter("password");
 			User user = new User(stmt, account, password);
+			HttpSession session = request.getSession();
+			session.setAttribute("currentUser", account);
 			RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
 			dispatch.forward(request, response);
 		} else {

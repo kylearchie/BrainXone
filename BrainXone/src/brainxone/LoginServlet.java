@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -42,6 +43,8 @@ public class LoginServlet extends HttpServlet {
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String account = request.getParameter("username");
 		String password = request.getParameter("password");
+	    HttpSession session = request.getSession();
+		session.setAttribute("currentUser", account);
 		if (User.passwordMatch(account, password, stmt)) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
 			dispatch.forward(request, response);

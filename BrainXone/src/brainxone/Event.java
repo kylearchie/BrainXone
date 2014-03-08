@@ -6,29 +6,29 @@ import java.util.ArrayList;
 public class Event 
 {
 	private String timeCreated;
-	private int userID;
+	private String userName;
 	private int quizID;
 
-	public Event(int user, int quiz, Statement stmt)
+	public Event(String userName, int quiz, Statement stmt)
 	{
 		timeCreated = "" + System.currentTimeMillis();
-		userID = user;
+		this.userName = userName;
 		quizID = quiz;
 		try {
-			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\"," + userID + "," + quizID + ", NULL, NULL);");
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\",\"" + userName + "\"," + quizID + ", NULL, NULL);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Event(String time, int userID, int quizID) {
+	public Event(String time, String userName, int quizID) {
 		this.timeCreated = time;
-		this.userID = userID;
+		this.userName = userName;
 		this.quizID = quizID;
 	}
 	
-	public Event(int userID, int quizID) {
-		this.userID = userID;
+	public Event(String userName, int quizID) {
+		this.userName = userName;
 		this.quizID = quizID;
 	}
 	
@@ -37,9 +37,9 @@ public class Event
 		return timeCreated;
 	}
 
-	public int getUserID() 
+	public String getUserName() 
 	{
-		return userID;
+		return userName;
 	}
 
 	public int getQuizID() 
@@ -47,15 +47,15 @@ public class Event
 		return quizID;
 	}
 
-	public static ArrayList<Event> getEventss(Integer userID, Statement stmt) {
+	public static ArrayList<Event> getEventss(String userName, Statement stmt) {
 		ArrayList<Event> events = new ArrayList<Event>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM events WHERE userID = " + userID + " ORDER BY timeCreated DESC;");
+			rs = stmt.executeQuery("SELECT * FROM events WHERE userName = \"" + userName + "\" ORDER BY timeCreated DESC;");
 			while (rs.next()) {
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
-                Event event = new Event(time, userID, quizID);
+                Event event = new Event(time, userName, quizID);
                 events.add(event);
 		    }
 		} catch (SQLException e) {

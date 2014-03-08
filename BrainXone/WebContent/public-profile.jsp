@@ -9,8 +9,10 @@
 
 
 String userName = (String) session.getAttribute("currentUser");
-
+ServletContext servletContext = getServletContext();
+Statement stmt = (Statement) servletContext.getAttribute("Statement");
 User user = User.retrieveByUserName(userName, stmt);
+
 
 %>
 
@@ -19,9 +21,37 @@ User user = User.retrieveByUserName(userName, stmt);
 <body>
 <h1><%=(String)request.getParameter("name")%></h1>
 <% 
-
-if()
+ArrayList<String> friends = user.getFriends();
+String profileName = (String)request.getParameter("name");
+if (!userName.equals(profileName) && !friends.contains(profileName)) {
+	out.println("<form action=\"AddFriendServlet\" method=\"post\">");
+	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"friendUser\" value=\"" + profileName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"type\" value=\"friend\"/>");
+	out.println("Your message: <input type=\"text\" name=\"message\"/>");
+    out.println("<input type=\"submit\" value=\"Send Friend Request\"/>");   
+    out.println("</form>");
+} else if (friends.contains(profileName)) {
+	out.println("<form action=\"AddFriendServlet\" method=\"post\">");
+	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"friendUser\" value=\"" + profileName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"type\" value=\"message\"/>");
+	out.println("Your message: <input type=\"text\" name=\"message\"/>");
+    out.println("<input type=\"submit\" value=\"Send Message\"/>");   
+    out.println("</form>");	
+    
+    
+    
+    out.println("<form action=\"AddFriendServlet\" method=\"post\">");
+	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"friendUser\" value=\"" + profileName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"type\" value=\"message\"/>");
+	out.println("Your message: <input type=\"text\" name=\"message\"/>");
+    out.println("<input type=\"submit\" value=\"Send Message\"/>");   
+    out.println("</form>");	
+}
 
 %>
+
 </body>
 </html>
