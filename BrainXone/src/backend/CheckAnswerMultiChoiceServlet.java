@@ -52,6 +52,18 @@ public class CheckAnswerMultiChoiceServlet extends HttpServlet {
 		}
 		
 		ques.checkAnswer(selectedOptions);
+		int isPracticeMode = (Integer)hs.getAttribute("isPracticeMode");
+		if(isPracticeMode == 1){
+			HashMap<Question, Integer> curScore = (HashMap<Question, Integer>) request.getSession().getAttribute("curScore");
+			System.out.println("ques.getPoints()" + ques.getPoints() + "ques.getMaxPoints()" + ques.getMaxPoints());
+			if(ques.getPoints() == 2){
+				int score = curScore.get(ques);
+				curScore.put(ques, (score + 1));
+			}
+			request.getSession().setAttribute("curScore", curScore);	
+			RequestDispatcher rd = request.getRequestDispatcher("PracticeMode.jsp");
+	        rd.forward(request, response);
+		}
 		System.out.println(ques.getPoints());
 	}
 

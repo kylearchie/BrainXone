@@ -7,8 +7,16 @@
 <title>Multi String Answers</title>
 </head>
 <body>
-<h1> Enter the 1 correct answer and the n incorrect answers </h1>
-<form action="" method="post"></form>
+<h1> Enter the correct answers</h1>
+<form action="AddMultiStrAns" method="post">
+
+<% for(int i = 0; i < 3; i++) {
+	out.print("Answer " + (i + 1) + "&nbsp; <input type ='text'  name='multiStringAns"+ (i + 1) + "'>");
+}
+%>
+
+<input type = "submit" value = "Add All Answers">
+</form>
 
 </body>
 </html>

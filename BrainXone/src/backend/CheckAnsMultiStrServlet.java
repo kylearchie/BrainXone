@@ -2,6 +2,7 @@ package backend;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class CheckAnswerServlet
+ * Servlet implementation class CheckAnsMultiStrServlet
  */
-@WebServlet("/CheckAnswerServlet")
-public class CheckAnswerServlet extends HttpServlet {
+@WebServlet("/CheckAnsMultiStrServlet")
+public class CheckAnsMultiStrServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CheckAnswerServlet() {
+    public CheckAnsMultiStrServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,18 +39,23 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		String answer = (String) request.getParameter("answer");
+		HashMap<String, Integer> answers = new HashMap<String, Integer>();
 		String quesID = Integer.toString((Integer) hs.getAttribute("quesID"));
-		Question ques = (Question) hs.getAttribute(quesID);
-		HashMap<String, Integer> mapB = new HashMap<String, Integer>();
-		mapB.put(answer, 1);
+		StringResponse ques = (StringResponse) hs.getAttribute(quesID);
 		
-		ques.checkAnswer(Integer.parseInt(quesID), mapB);
+		for(int i = 0; i < 3; i ++)
+		{
+			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
+			answers.put(answer, i);
+		}
+		
+		ques.checkAnswer(Integer.parseInt(quesID), answers);
+		
 		int isPracticeMode = (Integer)hs.getAttribute("isPracticeMode");
 		if(isPracticeMode == 1){
 			HashMap<Question, Integer> curScore = (HashMap<Question, Integer>) request.getSession().getAttribute("curScore");
 			System.out.println("ques.getPoints()" + ques.getPoints() + "ques.getMaxPoints()" + ques.getMaxPoints());
-			if(ques.getPoints() == 1){
+			if(ques.getPoints() == 3){
 				int score = curScore.get(ques);
 				curScore.put(ques, (score + 1));
 			}
@@ -59,7 +65,6 @@ public class CheckAnswerServlet extends HttpServlet {
 		}
 		System.out.println(ques.getPoints());
 		
-        
 	}
 
 }
