@@ -23,6 +23,7 @@ User user = User.retrieveByUserName(userName, stmt);
 <% 
 ArrayList<String> friends = user.getFriends();
 String profileName = (String)request.getParameter("name");
+User profileUser = User.retrieveByUserName(profileName, stmt);
 if (!userName.equals(profileName) && !friends.contains(profileName)) {
 	out.println("<form action=\"AddFriendServlet\" method=\"post\">");
 	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
@@ -42,14 +43,28 @@ if (!userName.equals(profileName) && !friends.contains(profileName)) {
     
     
     
-    out.println("<form action=\"AddFriendServlet\" method=\"post\">");
+    out.println("<form action=\"RemoveFriendServlet\" method=\"post\">");
 	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
 	out.println("<input type=\"hidden\" name=\"friendUser\" value=\"" + profileName + "\"/>");
-	out.println("<input type=\"hidden\" name=\"type\" value=\"message\"/>");
-	out.println("Your message: <input type=\"text\" name=\"message\"/>");
-    out.println("<input type=\"submit\" value=\"Send Message\"/>");   
+	out.println("<input type=\"hidden\" name=\"type\" value=\"friend\"/>");
+    out.println("<input type=\"submit\" value=\"Remove Friend\"/>");   
     out.println("</form>");	
+} 
+if (!profileUser.isAdmin() && user.isAdmin()) {
+	out.println("<form action=\"PromoteServlet\" method=\"post\">");
+	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"promotedUser\" value=\"" + profileName + "\"/>");
+    out.println("<input type=\"submit\" value=\"Promote to administrator\"/>");   
+    out.println("</form>");
+    
+    out.println("<form action=\"DeleteServlet\" method=\"post\">");
+	out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+	out.println("<input type=\"hidden\" name=\"deletedUser\" value=\"" + profileName + "\"/>");
+    out.println("<input type=\"submit\" value=\"Delete User\"/>");   
+    out.println("</form>");
+    
 }
+
 
 %>
 

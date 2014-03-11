@@ -11,14 +11,16 @@ public class Challenge extends Message
 	private String type;
 	private String text;
 	private int quizID;
+	private boolean hasBeenRead;
+	
 
 	public Challenge(String from, String to, String t, String body, int quiz, Statement stmt) {	
-		super(from, to, t, body);		
+		super(from, to, t, body, false);		
 		timeSent = "" + System.currentTimeMillis();
 		quizID = quiz;
 		try {
 			stmt.executeUpdate("INSERT INTO messages VALUES(\"" + fromID + "\",\"" + toID + "\",\"" + 
-		timeSent + "\",\"" + type + "\",\"" + text + "\"," + quizID + ");");
+		timeSent + "\",\"" + type + "\",\"" + text + "\"," + quizID + ", NULL);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -29,8 +31,8 @@ public class Challenge extends Message
 		return quizID;
 	}
 	
-	public Challenge(String from, String to, String time, String t, String body, int quiz) {
-		super(from, to, time, t, body);
+	public Challenge(String from, String to, String time, String t, String body, int quiz, boolean hasBeenRead) {
+		super(from, to, time, t, body, hasBeenRead);
 		quizID = quiz;
 	}
 	
@@ -46,7 +48,8 @@ public class Challenge extends Message
 		    	String messageType = rs.getString("messageType");
 		    	String text = rs.getString("text");
 		    	int quizID = rs.getInt("quizID");
-                Challenge challenge = new Challenge(fromUserName, userName, timeSent, messageType, text, quizID);
+		    	boolean hasBeenRead = rs.getBoolean("hasBeenRead");
+                Challenge challenge = new Challenge(fromUserName, userName, timeSent, messageType, text, quizID, hasBeenRead);
                 challenges.add(challenge);
 		    }
 		} catch (SQLException e) {

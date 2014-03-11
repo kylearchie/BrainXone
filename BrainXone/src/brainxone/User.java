@@ -11,11 +11,13 @@ public class User {
 	private boolean isAdmin;
 	private String password;
 	private ArrayList<String> friends;
+	private boolean isPrivate;
 	
 	public User(Statement stmt, String userName, String password) {
         this.userName = userName;
         isAdmin = false;
         friends = new ArrayList<String>();
+        isPrivate = false;
         MessageDigest mdigest;
         try {
 			mdigest = MessageDigest.getInstance("SHA");
@@ -28,7 +30,7 @@ public class User {
 		}		
 		try {
 			stmt.executeUpdate("INSERT INTO users VALUES(\"" + userName +
-					"\"," + isAdmin +",\"" + this.password + "\");");
+					"\"," + isAdmin +",\"" + this.password + "\"," + isPrivate + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -92,19 +94,22 @@ public class User {
 	}	
 		
 	
-	public User(String userName, boolean isAdmin, ArrayList<String> friends) {
+	public User(String userName, boolean isAdmin, ArrayList<String> friends, boolean isPrivate) {
 		this.userName = userName;
 		this.isAdmin = isAdmin;
 		this.friends = friends;
+		this.isPrivate = isPrivate;
 	}
 	
 	public static User retrieveByUserName(String userName, Statement stmt) {
 		User user = null;
 		try {
 			boolean RetrievedIsAdmin = false;
+			boolean RetrievedIsPrivate = false;
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE userName = \"" + userName + "\";");
 		    while (rs.next()) {
 		    	RetrievedIsAdmin = rs.getBoolean("isAdmin");
+		    	RetrievedIsPrivate = rs.getBoolean("isPrivate"); 	
 		    }
 		    ArrayList<String> friends = new ArrayList<String>();
 		    rs = stmt.executeQuery("SELECT userName2 FROM friends WHERE userName1 = \"" + userName + "\";");
@@ -112,7 +117,7 @@ public class User {
 		    	String friendUserName = rs.getString("userName2");
 		    	friends.add(friendUserName);
 		    }
-		    user = new User(userName, RetrievedIsAdmin, friends);
+		    user = new User(userName, RetrievedIsAdmin, friends, RetrievedIsPrivate);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -126,13 +131,14 @@ public class User {
 		    while (rs.next()) {
 		    	String retrievedUserName = rs.getString("userName");
 		    	boolean retrievedIsAdmin = rs.getBoolean("isAdmin");
+		    	boolean retrievedIsPrivate = rs.getBoolean("isPrivate");
 		    	ArrayList<String> friends = new ArrayList<String>();
 		    	ResultSet rsFriend = stmt.executeQuery("SELECT userName2 FROM friends WHERE userName1 = \"" + retrievedUserName + "\";");
 				while (rsFriend.next()) {
 					String friendUserName = rsFriend.getString("userName2");
 				    friends.add(friendUserName);
 				}
-		    	users.add(new User(retrievedUserName, retrievedIsAdmin, friends));
+		    	users.add(new User(retrievedUserName, retrievedIsAdmin, friends, retrievedIsPrivate));
 		    }		   
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -164,8 +170,8 @@ public class User {
 		if(friends.contains(friendUserName)) {
 			friends.remove(friendUserName);
 			try {
-				stmt.executeUpdate("DELETE FROM friends WHERE userName1 = \"" + userName + "\"AND userName2 = \"" + friendUserName + "\";");
-				stmt.executeUpdate("DELETE FROM friends WHERE userName1 = \"" + friendUserName + "\"AND userName2 = " + userName + "\";");
+				stmt.executeUpdate("DELETE FROM friends WHERE userName1 = \"" + userName + "\" AND userName2 = \"" + friendUserName + "\";");
+				stmt.executeUpdate("DELETE FROM friends WHERE userName1 = \"" + friendUserName + "\" AND userName2 = \"" + userName + "\";");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -185,6 +191,20 @@ public class User {
 		return isAdmin;
 	}
 	
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+	
+	public void changePrivacy(Statement stmt) {
+		isPrivate = !isPrivate;
+		try {
+			stmt.executeUpdate("UPDATE users SET isPrivate = " + isPrivate +" WHERE userName = \"" + userName + "\";");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void promote(Statement stmt) {
 		isAdmin = true;
 		try {
@@ -195,6 +215,8 @@ public class User {
 		}
 	}
 	
+	
+	
 	public void demote(Statement stmt) {
 		isAdmin = false;
 		try {
@@ -204,6 +226,38 @@ public class User {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static void DeleteUser(String userName, Statement stmt) {
+		try {
+			stmt.executeUpdate("DELETE from users WHERE userName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from events WHERE userName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from messages WHERE fromUserName = \"" + userName + "\" OR toUserName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from friends WHERE userName1 = \"" + userName + "\" OR userName2 = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from reviews WHERE reviewUserName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from quiz WHERE creatorUserName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from quizPlayer WHERE userName = \"" + userName + "\";");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static int getNumberOfUsers(Statement stmt) {
+		int count = 0;
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM users;");
+			while (rs.next()) {
+		    	count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return count;
+	}
+	
 	
 	
 }

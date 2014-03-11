@@ -9,18 +9,19 @@
 </head>
 <body>
 <%
-
-String searchTerm = (String) session.getAttribute("search");
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
+String userName = (String) session.getAttribute("currentUser");
+String searchTerm = (String) session.getAttribute("search");
 ArrayList<User> users = User.retrieveByPartialUserName(searchTerm, stmt);
 out.println(users.size());
 out.println("<ul>");
 for (User user : users) 
 {
-	
-	String name = "<a href = \"public-profile.jsp?name=" + user.getUserName() + "\">" + user.getUserName() + "</a>";
-	out.println("<li>" + name + "</li>");
+	if (!user.isPrivate() || user.getFriends().contains(userName)) {
+		String name = "<a href = \"public-profile.jsp?name=" + user.getUserName() + "\">" + user.getUserName() + "</a>";
+		out.println("<li>" + name + "</li>");
+	}	
 }
 out.println("</ul>");
 
