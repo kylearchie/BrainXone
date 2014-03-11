@@ -17,6 +17,19 @@ Select category: <select name = "category">
 <option value = "Drink"> Drink </option>
 </select>
 <br> <br>
+
+Display in Random Order? 
+<input type = "radio" name = "isRandom" value = "1"> YES &nbsp;
+<input type = "radio" name = "isRandom" value = "0"> NO <br>
+
+Display all questions in One Page? 
+<input type = "radio" name = "isOnePage" value = "1"> YES &nbsp;
+<input type = "radio" name = "isOnePage" value = "0"> NO <br>
+
+Is the quiz available for practice? 
+<input type = "radio" name = "isPracticeMode" value = "1"> YES &nbsp;
+<input type = "radio" name = "isPracticeMode" value = "0"> NO <br> <br>
+
 <input type = "submit" value = "Move to add questions">
 </form>
 </body>

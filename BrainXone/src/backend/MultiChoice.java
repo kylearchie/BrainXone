@@ -33,11 +33,6 @@ class MultiChoice extends Question{
 		}		
 	}
 
-
-	public int getMaxPoints(){
-		return maxPoints;
-	}
-
 	/**
 	 * PLAYER MODE
 	 * @param quesID

@@ -30,19 +30,13 @@ public class QuizListener implements ServletContextListener {
 		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quizID FROM quiz WHERE quizID = (SELECT MAX(quizID) FROM quiz);");
-			if(rs.next())
-			{
-				while(rs.next()){
-					Quiz.initMinID(Integer.parseInt(rs.getString(1)));
-					System.out.println(rs.getString(1));
-				}
+			while(rs.next()){
+				Quiz.initMinID(Integer.parseInt(rs.getString(1)));
+				System.out.println(rs.getString(1));
 			}
 			rs = stmt.executeQuery("SELECT MAX(quesID) FROM ques;");
-			if(rs.next())
-			{
-				while(rs.next()){
-					Question.initMinID(Integer.parseInt(rs.getString(1)));
-				}
+			while(rs.next()){
+				Question.initMinID(Integer.parseInt(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

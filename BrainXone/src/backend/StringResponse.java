@@ -11,10 +11,6 @@ public class StringResponse extends Question{
 		super(isPlayerMode, quesID, quesType, quesText);
 	}
 
-	public int getMaxPoints() {
-		return maxPoints;
-	}
-
 	/**
 	 * For the PLAYER MODE
 	 * Simply populates points that the player should get based

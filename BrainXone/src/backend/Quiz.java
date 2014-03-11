@@ -10,10 +10,10 @@ public class Quiz {
 	private String description = "";
 	private ArrayList<String> tags;
 	private ArrayList<Question> questions;
-	private int creatorID;
+	private String creatorName = "";
 	private String category = "";
 	private ArrayList<Review> reviews;
-	private boolean isSinglePage = true;
+	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 
 	/**
 	 * Constructor: To be used by creator
@@ -22,11 +22,15 @@ public class Quiz {
 	 * @param creatorID
 	 * @param category
 	 */
-	public Quiz(boolean isPlayerMode, String description, int creatorID, String category){
-		if(!isPlayerMode) ID++;
+	public Quiz(boolean isPlayerMode, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
+		if(!isPlayerMode) 
+			ID++;
 		this.description = description;
-		this.creatorID = creatorID;
+		this.creatorName = creatorName;
 		this.category = category;
+		this.isRandom = isRandom;
+		this.isOnePage = isOnePage;
+		this.isPracticeMode = isPracticeMode;
 
 		questions = new ArrayList<Question>();
 		reviews = new ArrayList<Review>();
@@ -42,7 +46,7 @@ public class Quiz {
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorID + "\",\"" + description + "\",\"" + category + "\");");
+			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -70,9 +74,6 @@ public class Quiz {
 		}
 	}
 
-	public void singleOrMultiPage(boolean isSingle) {
-		isSinglePage = isSingle;
-	}
 
 	public void addTagsToDB(String t){
 		tags.add(t);
@@ -109,23 +110,31 @@ public class Quiz {
 
 
 	public static Quiz getQuizUsingID(int quizID){
-		int creatorID = 0;
+		String creatorName = "";
 		String description = "", category = "";
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorID, description, category FROM quiz WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
 			if(rs.next()){				
-				creatorID = Integer.parseInt(rs.getString(1));
+				creatorName = rs.getString(1);
 				description = rs.getString(2);
 				category = rs.getString(3);
+				isRandom = Integer.parseInt(rs.getString(4));
+				isOnePage = Integer.parseInt(rs.getString(5));
+				isPracticeMode = Integer.parseInt(rs.getString(6));
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, description, creatorID, category);
+		Quiz q = new Quiz(true, description, "1", category, isRandom, isOnePage, isPracticeMode);
 		return q;
+	}
+	
+	public String getCreatorName(){
+		return creatorName;
 	}
 
 	public String getDescription(){
@@ -179,6 +188,33 @@ public class Quiz {
 		}
 		public long getTime(){
 			return timeTaken;
+		}
+	}
+	
+	public int isRandomVal(){
+		return isRandom;
+	}
+	
+	public int hasPracticeMode(){
+		return isPracticeMode;
+	}
+	
+	public void deleteQuizByCreatorName(String creatorName){
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\"");	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void deleteQuizByQuizID(int quizID){
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\"");	
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -71,4 +71,8 @@ public class Question {
 	public HashMap<String, Integer> displayAnswers(){
 		return null;
 	}
+	
+	public int getMaxPoints() {
+		return maxPoints;
+	}
 }
