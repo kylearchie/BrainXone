@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+
+.main-page-content {
+	display: table;
+	height: 500px;
+	width: 100%;
+}
+
+.main-page-content > div {
+	display: table-cell;
+}
+
+.center-content {
+	width: 50%;
+}
+
+.left-content, .right-content {
+	width: 25%;
+}
+
+.section {
+	margin-top: 15px;
+	margin-left: 15px;
+	border: 1px solid #ccc;
+}
+
+.right-content > .section {
+	margin-right: 15px;
+}
+
+.section-header {
+	padding: 5px;
+	font-weight: 600;
+	font-size: 14pt;
+}
+
+.section-content {
+	padding: 10px;
+}
+
+.section-content img {
+	max-width: 100%;
+}

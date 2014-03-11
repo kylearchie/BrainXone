@@ -1,0 +1,50 @@
+@CHARSET "UTF-8";
+
+header {
+	height: 50px;
+	background: url( "../images/QuiZoneHeaderBar.jpg" );
+	color: #fff;
+	width: 100%;
+}
+
+header > * {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.logo {
+	width: 200px;
+}
+
+.logo > a {
+	display: block;
+}
+
+.logo > a > img {
+	max-width: 100%;
+	max-height: 100%;
+	padding: 10px 20px;
+	box-sizing: border-box;
+}
+
+nav > ul {
+	display: table-row;
+}
+
+nav > ul > li {
+	display: table-cell;
+	width: 120px;
+	line-height: 50px;
+	font-size: 12pt;
+	text-align: center;
+}
+
+nav > ul > li > a {
+	display: block;
+	text-decoration: none;
+	color: #fff;
+}
+
+nav > ul > li:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}

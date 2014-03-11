@@ -44,7 +44,7 @@ public class AddMultiStrAns extends HttpServlet {
 		for(int i = 0; i < 3; i ++)
 		{
 			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
-			answerKeys.put(answer, i);
+			answerKeys.put(answer, i+1);
 		}
 
 		StringResponse ques = (StringResponse) hs.getAttribute("question");

@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+
+.quiz-title {
+	text-align: center;
+	margin: 10px 10px 25px;
+	font-size: 3em;
+}
+
+.quiz-question-header {
+	margin-top: 0px;
+}
+
+.quiz-answers.multi-option {
+	display: table;
+}
+
+.quiz-answers.multi-option .quiz-answer-option {
+	display: table-row;
+}
+
+.quiz-answers.multi-option .quiz-answer-option > * {
+	display: table-cell;
+}
+.quiz-answers label {
+	padding-right: 10px;
+}
+
+input[type=submit] {
+	margin-left: auto;
+	margin-right: auto;
+}
