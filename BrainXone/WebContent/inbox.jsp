@@ -26,6 +26,7 @@
 		out.println("<input type=\"hidden\" name=\"type\" value=\" message \"/>");
 	    out.println("<input type=\"submit\" value=\"Reply\"/>");   
 	    out.println("</form>");	
+	    message.setRead(stmt);
 	}
 	ArrayList<Message> requests = Message.getFriendRequests(userName, stmt);
 	out.println("<h4> Friend Requests </h4>");

@@ -23,7 +23,8 @@ public class Quiz {
 	 * @param category
 	 */
 	public Quiz(boolean isPlayerMode, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
-		if(!isPlayerMode) ID++;
+		if(!isPlayerMode) 
+			ID++;
 		this.description = description;
 		this.creatorName = creatorName;
 		this.category = category;
@@ -196,5 +197,24 @@ public class Quiz {
 	
 	public int hasPracticeMode(){
 		return isPracticeMode;
+	}
+	
+	public void deleteQuizByCreatorName(String creatorName){
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\"");	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void deleteQuizByQuizID(int quizID){
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\"");	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

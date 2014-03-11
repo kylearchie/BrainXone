@@ -17,5 +17,10 @@
  <input type="submit" value="Login"/>
 </form>
 <a href = "create_new_account.jsp">Create New Account</a>
+<form action="GuestServlet" method="post">
+ <input type="submit" value="Login as Guest"/>
+</form>
+
+
 </body>
 </html>

@@ -39,11 +39,11 @@ public class TakenEvent extends Event
 		return timeTaken;
 	}
 
-	public static ArrayList<TakenEvent> getTakenEventss(String userName, Statement stmt) {
+	public static ArrayList<TakenEvent> getTakenEvents(String userName, Statement stmt) {
 		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
 		ResultSet rs;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM events WHERE socre <> NULL and timeTaken <> NULL and userName = \"" + userName + "\" ORDER BY timeCreated DESC;");
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND userName = \"" + userName + "\" ORDER BY timeCreated DESC;");
 			while (rs.next()) {
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
@@ -58,5 +58,41 @@ public class TakenEvent extends Event
 		}	    
 		return takenEvents;
 	}
+	
+	public static ArrayList<TakenEvent> getFriendsTakenEvents(String userName, Statement stmt) {
+		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT events.* FROM events,friends WHERE events.score IS NOT NULL AND timeTaken IS NOT NULL AND friends.userName1 = \"" + userName + "\" AND friends.userName2 = events.userName ORDER BY timeCreated DESC;");
+			while (rs.next()) {
+		    	String time = rs.getString("timeCreated");
+		    	int quizID = rs.getInt("quizID");
+		    	int score = rs.getInt("score");
+		    	String timeTaken = rs.getString("timeTaken");
+                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                takenEvents.add(takenEvent);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return takenEvents;
+	}
+	
+	public static int getNumberOfTakenEvents(Statement stmt) {
+		int count = 0;
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL ORDER BY timeCreated DESC;");
+			while (rs.next()) {
+		    	count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return count;
+	}
+	
 	
 }
