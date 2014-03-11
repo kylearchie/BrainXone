@@ -128,7 +128,7 @@ public class Quiz {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(false, description, "1", category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, description, "1", category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	
