@@ -104,19 +104,19 @@ public class Event
 		int size = Event.getCreateEvents(userName, stmt).size();
 		if (size == 1 && !checkAmateur(userName, stmt)) {
 			try {
-				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"amateur\");");
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"Amateur Author\");");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else if (size == 5 && !checkProlific(userName, stmt)) {
 			try {
-				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"prolific\");");
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"Prolific Author\");");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else if (size == 10 && !checkProdigious(userName, stmt)) {
 			try {
-				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"prodigious\");");
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"Prodigious Author\");");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -127,7 +127,7 @@ public class Event
 		ResultSet rs;
 		int count = 0;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"amateur\" AND userName = \"" + userName + "\";");
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"Amateur Author\" AND userName = \"" + userName + "\";");
 			while (rs.next()) {
 				count++;
 		    }
@@ -143,7 +143,7 @@ public class Event
 		ResultSet rs;
 		int count = 0;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"prolific\" AND userName = \"" + userName + "\";");
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"Prolific Author\" AND userName = \"" + userName + "\";");
 			while (rs.next()) {
 				count++;
 		    }
@@ -159,7 +159,7 @@ public class Event
 		ResultSet rs;
 		int count = 0;
 		try {
-			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"prodigious\" AND userName = \"" + userName + "\";");
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"Prodigious Author\" AND userName = \"" + userName + "\";");
 			while (rs.next()) {
 				count++;
 		    }
@@ -170,5 +170,5 @@ public class Event
 	
 		return count==1;
 	}
-		
+	
 }
