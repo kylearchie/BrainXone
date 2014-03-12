@@ -1,6 +1,9 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -39,16 +42,25 @@ public class AddMultiStrAns extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession hs = request.getSession();
-		HashMap<String, Integer> answerKeys = new HashMap<String, Integer>();
+		ArrayList<String> answerKeys = new ArrayList<String>();
 
 		for(int i = 0; i < 3; i ++)
 		{
 			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
-			answerKeys.put(answer, i+1);
+			answerKeys.add(answer);
 		}
 
 		StringResponse ques = (StringResponse) hs.getAttribute("question");
-		ques.setAnswer(answerKeys);
+		int maxPoints = Integer.parseInt((String) request.getParameter("maxPoints"));
+		ques.setAnswer(answerKeys, maxPoints);
+		
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		RequestDispatcher rd = request.getRequestDispatcher("MoreOrSubmit.jsp");
 		rd.forward(request, response);

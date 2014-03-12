@@ -104,11 +104,11 @@ for (Event createEvent : createEvents)
 %>
 
 <%
-out.println(profileUser + "<h4>has created" + numCreateEvents + "quizzes: </h4>");
+out.println(profileUser + "<h4>has taken" + numTakenEvents + "quizzes: </h4>");
 out.println("<ul>");
-for (Event createEvent : createEvents) 
+for (TakenEvent takenEvent : takenEvents) 
 {
-	String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
 	out.println("<li>" + name + "</li>");
 }
 %>    	

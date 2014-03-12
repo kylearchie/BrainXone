@@ -71,4 +71,5 @@ public class Challenge extends Message
 			
 		}	    
 	}
+	
 }

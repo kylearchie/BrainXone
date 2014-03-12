@@ -13,6 +13,7 @@
 <% for(int i = 0; i < 3; i++) {
 	out.print("Answer " + (i + 1) + "&nbsp; <input type ='text'  name='multiStringAns"+ (i + 1) + "'>");
 }
+	out.print("Number of correct answers(maxPoints) <input type = 'text' name = 'maxPoints'>");
 %>
 
 <input type = "submit" value = "Add All Answers">

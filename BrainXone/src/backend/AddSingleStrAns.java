@@ -1,6 +1,9 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -40,9 +43,17 @@ public class AddSingleStrAns extends HttpServlet {
 		HttpSession hs = request.getSession();
 		String singleStrAnsTxt = (String) request.getParameter("singleStrAnsTxt");
 		StringResponse ques = (StringResponse) hs.getAttribute("question");
-		HashMap<String, Integer> answerKeys = new HashMap<String, Integer>();
-		answerKeys.put(singleStrAnsTxt, 1);
-		ques.setAnswer(answerKeys);
+		ArrayList<String> answerKeys = new ArrayList<String>();
+		answerKeys.add(singleStrAnsTxt);
+		ques.setAnswer(answerKeys, 1);
+		
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("UPDATE ques SET maxPoints = " + 1 + " WHERE quesID = " + ques.getID());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		RequestDispatcher rd = request.getRequestDispatcher("MoreOrSubmit.jsp");
         rd.forward(request, response);

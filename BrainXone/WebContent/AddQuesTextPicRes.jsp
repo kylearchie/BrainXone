@@ -9,16 +9,24 @@
 <body>
 <h1>Step 2-a: Please add question text and relevant instructions: </h1>
 
-<form action="InputQuesTextServlet" method = "post">
-Select Question Type: <select name = "quesType">  
-<option value = "2"> Fill in the Blank </option>
-<option value = "4"> Picture Response </option>
-<option value = "6"> Single String Response </option>
-<option value = "8"> Multiple String Response </option>
-<option value = "1"> Multiple Choice Single Correct Answer </option>
-<option value = "3"> Multiple Choice Multiple Correct Answers </option>
-</select> <br>
+<form action="AddQuestionServlet" method = "post">
+<%
+String instructions = (String) request.getSession().getAttribute("instructions");
+out.println("<b>" + instructions + "</b><br>");
+%>
+Input Question Text: <input type = "text" name = "quesText"> 
+<br> <br>
+
+Input Image URL: <input type = "text" name = "quesImgURL"> 
+<br> <br>
+
+<input type = hidden name = "isOrdered">
+
+Add Tags? Separate by <b>spaces</b>
+<input type = "text" name = "tags">  <br> <br>
+
 <input type = "submit" value = "Add answer">
 </form>
+
 </body>
 </html>
