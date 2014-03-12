@@ -92,14 +92,14 @@ public class CheckAnswerServlet extends HttpServlet {
 // G: This doesn't feel very OOP to me.
 // G: This method no longer necessary
 
-	private int solveSingleString(HttpServletRequest request, String q, int quesID) {
-		String answer = request.getParameter(q + "answer");
-		HashMap<String, Integer> mapB = new HashMap<String, Integer>();
-		mapB.put(answer, 1);
-		StringResponse sr = new StringResponse( true, quesID, Question.STRING_RESPONSE, null); //Create a temporary question we can use to check the answer.
-		sr.checkAnswer(quesID, mapB); // G: This is hella redundant.
-		return sr.getPoints();
-	}
+//	private int solveSingleString(HttpServletRequest request, String q, int quesID) {
+//		String answer = request.getParameter(q + "answer");
+//		HashMap<String, Integer> mapB = new HashMap<String, Integer>();
+//		mapB.put(answer, 1);
+//		StringResponse sr = new StringResponse( true, quesID, Question.STRING_RESPONSE, null); //Create a temporary question we can use to check the answer.
+//		sr.checkAnswer(quesID, mapB); // G: This is hella redundant.
+//		return sr.getPoints();
+//	}
 
 	/* G: BUG -- What happens when answers to different questions are the same? */
 	private int solveMultiString(HttpServletRequest request, String q, int quesID) {

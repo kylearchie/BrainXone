@@ -36,7 +36,9 @@ public class QuizListener implements ServletContextListener {
 			}
 			rs = stmt.executeQuery("SELECT MAX(quesID) FROM ques;");
 			while(rs.next()){
-				Question.initMinID(Integer.parseInt(rs.getString(1)));
+				String x = rs.getString(1);
+				if( x == null ) Question.initMinID( 0 );
+				else Question.initMinID(Integer.parseInt(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
