@@ -57,7 +57,7 @@ public class Quiz {
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\");");
+			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\", 0);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -110,6 +110,7 @@ public class Quiz {
 
 
 	public static Quiz getQuizUsingID(int quizID){
+		if(quizID == 0) return null;
 		String creatorName = "";
 		String description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
@@ -169,6 +170,23 @@ public class Quiz {
 		}
 		return qList;
 	}
+	
+	public static int getNumQuestionsUsingID(int quizID){
+		int result = 0;
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT count(quesID) FROM ques WHERE quizID = \"" + quizID + "\"");
+			if(rs != null){
+				while(rs.next()){
+					result = rs.getInt(1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	private class Player {
 
@@ -191,12 +209,16 @@ public class Quiz {
 		}
 	}
 	
-	public int isRandomVal(){
-		return isRandom;
+	public boolean isRandomVal(){
+		return isRandom == 1;
 	}
 	
-	public int hasPracticeMode(){
-		return isPracticeMode;
+	public boolean isOnePage() {
+		return isOnePage == 1;
+	}
+	
+	public boolean hasPracticeMode(){
+		return isPracticeMode == 1;
 	}
 	
 	public void deleteQuizByCreatorName(String creatorName){
@@ -216,5 +238,9 @@ public class Quiz {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isTimedQuiz() {
+		return true;
 	}
 }

@@ -50,7 +50,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	double timeTaken = rs.getDouble("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }
@@ -70,7 +70,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	double timeTaken = rs.getDouble("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }

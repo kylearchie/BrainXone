@@ -44,16 +44,21 @@ public class CheckAnswerServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		String userName = (String) hs.getAttribute("currentUser");
 		int scoreTotal = 0;
+		String quizIDString = (String) hs.getAttribute("quizID");
+		int quizID = 0;
+		if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+		Quiz currQuiz = Quiz.getQuizUsingID(quizID);
+		
 		int counter = 0;
 		while( true ) {
 			counter++;
 			String q = "question" + counter;
 			String quesID = request.getParameter(q);
-			System.out.println("ID: " + quesID);
+//			System.out.println("ID: " + quesID);
 			if( quesID == null ) break;
 			int id = Integer.parseInt(quesID);
 			int type = Integer.parseInt(request.getParameter(q + "type"));
-			System.out.println("Type: " + type);
+//			System.out.println("Type: " + type);
 			switch( type ) {
 			case Question.SINGLE_STR_ANS:
 			case Question.FIB:
@@ -91,13 +96,35 @@ public class CheckAnswerServlet extends HttpServlet {
 //		System.out.println(ques.getPoints());  
 		System.out.println(scoreTotal);
 		System.out.println(request.getParameter("elapsedTime"));
-		double taken = Double.parseDouble(request.getParameter("elapsedTime"));
+		
+		long taken = Long.parseLong(request.getParameter("elapsedTime"));
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		int quizID = Integer.parseInt(request.getParameter("quizID"));
 		TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
 		if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 			TakenEvent.UpdateGreatestAchievements(userName, stmt);
+		}
+		
+		if( currQuiz.isOnePage() ) {
+			RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
+			dispatch.forward(request, response);
+		} else {
+			int qNum = (Integer) hs.getAttribute("questionNumber");
+			int currScore = (Integer) hs.getAttribute("currentScore");
+			int currTime = (Integer) hs.getAttribute("currentTime");
+			
+			hs.setAttribute("questionNumber", qNum+1);
+			hs.setAttribute("currentScore", currScore + scoreTotal);
+			hs.setAttribute("currentTime", currTime + Integer.parseInt(request.getParameter("elapsedTime")));
+			
+			if( qNum == Quiz.getNumQuestionsUsingID(quizID) ) {
+				RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
+				dispatch.forward(request, response);
+			} else {
+				RequestDispatcher dispatch = request.getRequestDispatcher("showQuiz.jsp");
+				dispatch.forward(request, response);
+			}
+
 		}
 	}
 

@@ -13,7 +13,7 @@
 <%@ include file="header.html" %>
 	<div class="central-content">
 		<div class="content-pane">
-			<h1>Select the category:</h1>
+			<h1 class="page-title">Select the category:</h1>
 
 			<form id="category-choice-form" action="CategorySelectionServlet" method="post">
 				<select name="category">
