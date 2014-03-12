@@ -17,7 +17,7 @@
 		int quizID = Integer.parseInt(request.getParameter("id"));
 		request.getSession().setAttribute("isPracticeMode", 0);
 
-		Quiz q = Quiz.getQuizUsingID(quizID); 
+		Quiz q = Quiz.getQuizUsingID(quizID);
 	%>
 
 </head>
@@ -27,6 +27,7 @@
 		<div class="content-pane">
 		<h1 class="quiz-title"><%= q.getDescription() %></h1>
 		<form id="quiz-submit-form" action="CheckAnswerServlet" method="post">
+		<input type="hidden" value="<%= quizID %>" name="quizID">
 		<% 
 			ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
 			if (q.isRandomVal() == 1) {
@@ -82,5 +83,7 @@
 		%>
 		<input id="quiz-submit-button" class="action-button button" type="submit" value="Submit Answers">
 	</form>
+	</div>
+	</div>
 </body>
 </html>
