@@ -11,9 +11,9 @@ public class TakenEvent extends Event
 	private String userName;
 	private int quizID;
 	private int score;
-	private double timeTaken;
+	private long timeTaken;
 
-	public TakenEvent(String userName, int quiz, int points, double taken, Statement stmt) 
+	public TakenEvent(String userName, int quiz, int points, long taken, Statement stmt) 
 	{
 		super(userName, quiz);
 		timeCreated = "" + System.currentTimeMillis();
@@ -27,7 +27,7 @@ public class TakenEvent extends Event
 		}
 	}
 	
-	public TakenEvent(String time, String userName, int quizID, int score, double timeTaken) {
+	public TakenEvent(String time, String userName, int quizID, int score, long timeTaken) {
 	    super(time, userName, quizID);
 		this.score = score;
 		this.timeTaken = timeTaken;
@@ -50,7 +50,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	double timeTaken = rs.getDouble("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }
@@ -70,7 +70,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	double timeTaken = rs.getDouble("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }

@@ -97,10 +97,9 @@ public class CheckAnswerServlet extends HttpServlet {
 		System.out.println(scoreTotal);
 		System.out.println(request.getParameter("elapsedTime"));
 		
-		double taken = Double.parseDouble(request.getParameter("elapsedTime"));
+		long taken = Long.parseLong(request.getParameter("elapsedTime"));
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		int quizID = Integer.parseInt(request.getParameter("quizID"));
 		TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
 		if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 			TakenEvent.UpdateGreatestAchievements(userName, stmt);
