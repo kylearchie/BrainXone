@@ -44,9 +44,9 @@ public class CheckAnswerServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		String userName = (String) hs.getAttribute("currentUser");
 		int scoreTotal = 0;
-		String quizIDString = (String) hs.getAttribute("quizID");
+		Integer quizIDObj = (Integer) hs.getAttribute("quizID");
 		int quizID = 0;
-		if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+		if( quizIDObj != null) quizID = quizIDObj;
 		Quiz currQuiz = Quiz.getQuizUsingID(quizID);
 		
 		int counter = 0;

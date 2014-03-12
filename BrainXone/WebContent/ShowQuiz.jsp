@@ -4,7 +4,7 @@
 
 <%
 	HttpSession sess = request.getSession();
-	int quizID = Integer.parseInt(request.getParameter("id"));
+	Integer quizID = Integer.parseInt(request.getParameter("id"));
 	sess.setAttribute("quizID", quizID);
 	sess.setAttribute("isPracticeMode", 0);
 
