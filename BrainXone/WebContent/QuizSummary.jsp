@@ -23,7 +23,7 @@
 	out.print("List of Performance of Recent Test Takers: <br>");
 	out.print("Summary of staticstics of how well users have performed on quiz: <br> <br><br>");
 	out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
-	if(q.hasPracticeMode() == 1){
+	if(q.hasPracticeMode()){
 	%>
 	
 	<form action="PracticeModeServlet" method = "post">

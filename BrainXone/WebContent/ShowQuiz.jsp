@@ -2,23 +2,42 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*,backend.*,java.util.*"%>
 
+<%
+	HttpSession sess = request.getSession();
+	int quizID = Integer.parseInt(request.getParameter("id"));
+	sess.setAttribute("quizID", quizID);
+	sess.setAttribute("isPracticeMode", 0);
+
+	Quiz q = Quiz.getQuizUsingID(quizID);
+
+	int questionNumber = -1;
+	if (!q.isOnePage()) {
+		Integer qNum = (Integer) sess.getAttribute("questionNumber");
+		if (qNum == null) {
+			questionNumber = 0;
+			sess.setAttribute("questionNumber", questionNumber);
+			sess.setAttribute("currentScore", 0);
+			sess.setAttribute("currentTime", 0);
+			sess.setAttribute("randomSeed", System.nanoTime());
+
+		} else
+			questionNumber = qNum;
+	}
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 	<script src="js/quizTiming.js"></script>
+	<% if(q.isTimedQuiz()) { %>
+	<script src="js/quizCountdown.js"></script>
+	<% } %>
 	<title>Take a quiz!</title>
 	<link rel="stylesheet" href="css/header.css">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/quiz-page.css">
-
-	<% 
-		int quizID = Integer.parseInt(request.getParameter("id"));
-		request.getSession().setAttribute("isPracticeMode", 0);
-
-		Quiz q = Quiz.getQuizUsingID(quizID);
-	%>
 
 </head>
 <body>
@@ -27,13 +46,20 @@
 		<div class="content-pane">
 		<h1 class="quiz-title"><%= q.getDescription() %></h1>
 		<form id="quiz-submit-form" action="CheckAnswerServlet" method="post">
-		<input type="hidden" value="<%= quizID %>" name="quizID">
 		<% 
 			ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
-			if (q.isRandomVal() == 1) {
-				long seed = System.nanoTime();
+			if (q.isRandomVal()) {
+				long seed;
+				if( q.isOnePage() ) seed = System.nanoTime();
+				else seed = (Long) sess.getAttribute("randomSeed");
 				Collections.shuffle(quesList, new Random(seed));
 			}
+			if(!q.isOnePage()) {
+				Question curr = quesList.get(questionNumber);
+				quesList = new ArrayList<Question>();
+				quesList.add(curr);
+			}
+			
 			int counter = 0;
 			for (Question ques : quesList) {
 				counter++;
