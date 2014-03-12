@@ -91,7 +91,7 @@ public class Quiz {
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT TOP " + n + " userID, score, timeTaken FROM quizPlayer WHERE quizID = " + ID + " ORDER BY score DESC, timeTaken ASC;");
+			ResultSet rs = stmt.executeQuery("SELECT TOP " + n + " userName, score, timeTaken FROM quizPlayer WHERE quizID = " + ID + " ORDER BY score DESC, timeTaken ASC;");
 			if(rs != null){
 				while(rs.next()){
 					Player p = new Player(rs.getString(1), rs.getString(2), rs.getString(3));

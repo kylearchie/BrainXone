@@ -83,4 +83,92 @@ public class Event
 		}	    
 		return events;
 	}
+	
+	public static int NumberOfQuizesCreated(String userName, Statement stmt) {
+		ArrayList<Event> events = new ArrayList<Event>();
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score is NULL and timeTaken is NULL and userName = \"" + userName + "\";");
+			while (rs.next()) {
+		    	count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return count;
+	}
+	
+	public static void UpdateCreateAchievements(String userName, Statement stmt) {
+		int size = Event.getCreateEvents(userName, stmt).size();
+		if (size == 1 && !checkAmateur(userName, stmt)) {
+			try {
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"amateur\");");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else if (size == 5 && !checkProlific(userName, stmt)) {
+			try {
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"prolific\");");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else if (size == 10 && !checkProdigious(userName, stmt)) {
+			try {
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"prodigious\");");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} 
+	}
+	
+	public static boolean checkAmateur(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"amateur\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+	
+	public static boolean checkProlific(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"prolific\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+	
+	public static boolean checkProdigious(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"prodigious\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+		
 }

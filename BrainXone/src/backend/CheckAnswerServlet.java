@@ -1,10 +1,13 @@
 package backend;
+import brainxone.*;
 
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,6 +42,7 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		String userName = (String) hs.getAttribute("currentUser");
 		int scoreTotal = 0;
 		int counter = 0;
 		while( true ) {
@@ -87,6 +91,14 @@ public class CheckAnswerServlet extends HttpServlet {
 //		System.out.println(ques.getPoints());  
 		System.out.println(scoreTotal);
 		System.out.println(request.getParameter("elapsedTime"));
+		double taken = Double.parseDouble(request.getParameter("elapsedTime"));
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		int quizID = Integer.parseInt(request.getParameter("quizID"));
+		TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
+		if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
+			TakenEvent.UpdateGreatestAchievements(userName, stmt);
+		}
 	}
 
 // G: This doesn't feel very OOP to me.

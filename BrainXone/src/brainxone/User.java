@@ -237,6 +237,7 @@ public class User {
 			stmt.executeUpdate("DELETE from reviews WHERE reviewUserName = \"" + userName + "\";");
 			stmt.executeUpdate("DELETE from quiz WHERE creatorUserName = \"" + userName + "\";");
 			stmt.executeUpdate("DELETE from quizPlayer WHERE userName = \"" + userName + "\";");
+			stmt.executeUpdate("DELETE from achievements WHERE userName = \"" + userName + "\";");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

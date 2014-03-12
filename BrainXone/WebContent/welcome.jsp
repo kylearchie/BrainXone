@@ -53,6 +53,21 @@ if(isPrivate) status = "ON";
 
 %>
 
+<h4> Your Achievements </h4>
+<%
+	try {
+		ResultSet rs = stmt.executeQuery("SELECT * FROM achievements WHERE userName = \"" + userName + "\";");
+		while (rs.next()) {
+	    	String achievement = rs.getString("achievement");
+	    	out.println(achievement);
+	    }
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	    
+%>
+
+
 <h4> Inbox </h4>
 
 <%
@@ -87,6 +102,9 @@ if(isPrivate) status = "ON";
 %>
  <a href="quizTaken.jsp"> You have taken <%= numTakenEvents %> quizes.</a>  	 
 
+
+
+
 <p>
 Your friends have created quizes:
 <% 
@@ -119,9 +137,29 @@ Your friends have taken quizes:
 %>
 </p>
 
+<p>
+Your friends have recently earned achievements:
+<% 
 
-
-
+		
+	try {
+		ResultSet rs = stmt.executeQuery("SELECT achievements.* FROM achievements,friends WHERE friends.userName1 = \"" + userName + "\" AND friends.userName2 = achievements.userName;");
+		int count = 0;
+		while (rs.next()) {
+			if (count == 10) break;
+	    	String friendName = rs.getString("userName");
+            String achievement = rs.getString("achievement");
+            String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
+            out.println("<li>" + friendNameURL + " earned " + achievement + ".</li>");
+            count++;
+	    }
+	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	    
+		
+%>
+<p>
 
 <form action="logoutServlet" method="post">
 <input type="submit" value="Logout"/>
