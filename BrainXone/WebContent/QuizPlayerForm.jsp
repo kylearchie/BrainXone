@@ -11,16 +11,18 @@
 <body>
 
 <%@ include file="header.html" %>
+	<div class="central-content">
+		<div class="content-pane">
+			<h1>Select the category:</h1>
 
-<h1>Select the category:</h1>
-
-<form action="CategorySelectionServlet" method = "post">
-Select category: <select name = "category">  
-<option value = "Food"> Food </option>
-<option value = "Drink"> Drink </option>
-</select>
-<br> <br>
-<input type = "submit" value = "Move to see the list of quizzes in the selected category">
-</form>
+			<form id="category-choice-form" action="CategorySelectionServlet" method="post">
+				<select name="category">
+					<option value="Food">Food</option>
+					<option value="Drink">Drink</option>
+				</select> 
+				<input class="action-button button" type="submit" value="See quizzes">
+			</form>
+		</div>
+	</div>
 </body>
 </html>
