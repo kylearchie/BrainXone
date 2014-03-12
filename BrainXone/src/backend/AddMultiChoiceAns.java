@@ -1,6 +1,8 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
@@ -48,7 +50,15 @@ public class AddMultiChoiceAns extends HttpServlet {
 		}
 		
 		MultiChoice ques = (MultiChoice) hs.getAttribute("question");
-		ques.setAnswer(answerKeys);
+		int maxPoints = ques.setAnswer(answerKeys);
+		
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		RequestDispatcher rd = request.getRequestDispatcher("MoreOrSubmit.jsp");
         rd.forward(request, response);

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Quiz {
 	private static int ID = 0;
@@ -57,7 +58,7 @@ public class Quiz {
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
 		try {
-			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\");");
+			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\",\"" + q.getMaxPoints() +"\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	

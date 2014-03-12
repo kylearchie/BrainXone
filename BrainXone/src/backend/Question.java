@@ -1,5 +1,9 @@
 package backend;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,15 +31,22 @@ public class Question {
 	public static Map<Integer, String> INSTRUCTIONS = new HashMap<Integer, String>();
 	
 	public static void init(){
-		INSTRUCTIONS.put(0, "SINGLE ANSWER");
-		INSTRUCTIONS.put(1, "MULTI ANSWER");
+		INSTRUCTIONS.put(0, "Type question");
+		INSTRUCTIONS.put(1, "1 Correct answer, multiple incorrect answers");
+		INSTRUCTIONS.put(2, "Type '#BLANK' to signify a blank space.");
+		INSTRUCTIONS.put(3, "n Correct answers, m incorrect answers");
+		INSTRUCTIONS.put(4, "Type question, provide URL for related image.");
+		INSTRUCTIONS.put(6, "Type single question, and on the next page, put in single str answer");
+		INSTRUCTIONS.put(8, "Type question for which you anticipate multiple answers");
 	}
 	
 	
 	// note: add 8* sub categories all that lead to 0 or 1.
 	public Question(boolean isPlayerMode, int quesID, int quesType, String quesText){
-		if(!isPlayerMode) 
+		if(!isPlayerMode){
 			ID++;
+			this.quesID = ID;
+		}
 		else 
 			this.quesID = quesID;
 		this.quesType = quesType;
@@ -58,13 +69,11 @@ public class Question {
 		return quesType;
 	}
 	
-	public void checkAnswer(int quesID, HashMap<String, Integer> mapB){
+	public int checkAnswer(ArrayList<String> answers){
+		return points;
 	}
 	
-	public void checkAnswer(HashSet<String> mapB){
-	}
-	
-	public int getPoints() {
+	public int checkAnswer(HashSet<String> mapB){
 		return points;
 	}
 	
@@ -73,6 +82,20 @@ public class Question {
 	}
 	
 	public int getMaxPoints() {
+		DBConnection conn = new DBConnection();
+		Statement stmt = conn.getStmt();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT maxPoints FROM ques WHERE quesID = " + quesID);
+			if(rs.next()){
+				maxPoints = Integer.parseInt(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return maxPoints;
+	}
+	
+	public int getType(){
+		return quesType;
 	}
 }

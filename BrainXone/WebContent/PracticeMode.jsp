@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Practice Mode</title>
 </head>
 <body>
 
@@ -37,7 +37,7 @@
 					break;
 				case Question.MULTI_STR_ANS:
 				%>
-					<form action="CheckAnsMultiStrServlet" method="post">Input your answers <%
+					<form action="CheckAnswerServlet" method="post">Input your answers <%
 					for (int i = 0; i < 3; i++) {
 						out.print("<input type = 'text' name = 'multiStringAns" + (i + 1) + "'>");
 					}
@@ -47,7 +47,7 @@
 				case Question.MULTI_CHOICE_C:
 				case Question.MULTI_CHOICE_R:
 				%>
-					<form action="CheckAnswerMultiChoiceServlet" method="post">
+					<form action="CheckAnswerServlet" method="post">
 					<%
 					HashMap<String, Integer> options = ques.displayAnswers();
 					int i = 0;

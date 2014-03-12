@@ -17,7 +17,7 @@ class MultiChoice extends Question{
 	 * CREATOR MODE
 	 * 
 	 */
-	public void setAnswer(HashMap<String, Integer> answerKeys) {
+	public int setAnswer(HashMap<String, Integer> answerKeys) {
 		maxPoints = 0;
 		DBConnection conn = new DBConnection();
 		Statement stmt = conn.getStmt();
@@ -30,7 +30,8 @@ class MultiChoice extends Question{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}	
+		return maxPoints;
 	}
 
 	/**
@@ -40,7 +41,7 @@ class MultiChoice extends Question{
 	 * @return
 	 */
 	@Override
-	public void checkAnswer(HashSet<String> mapB){
+	public int checkAnswer(HashSet<String> mapB){
 		points = 0;
 		HashMap<String, Integer> mapA = displayAnswers();
 		for(String ans : mapB){
@@ -48,6 +49,7 @@ class MultiChoice extends Question{
 				points++;
 			}
 		}
+		return points;
 	}
 	
 	/** 

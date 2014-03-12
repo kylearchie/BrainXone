@@ -32,9 +32,8 @@
 	</form>
 	
 	<%
-		out.print("<li><a href=\"PracticeMode.jsp?id=" + quizID + "\"> PLAY IN PRACTICE MODE </a></li>");
 	}
-	out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
+	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
 
 %>
 </body>
