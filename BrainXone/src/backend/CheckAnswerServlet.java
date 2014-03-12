@@ -1,11 +1,14 @@
 package backend;
+import brainxone.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +43,9 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		String userName = (String) hs.getAttribute("currentUser");
 		int isPracticeMode = (Integer)hs.getAttribute("isPracticeMode");
+
 		if(isPracticeMode == 1){
 			String quesID = Integer.toString((Integer) hs.getAttribute("quesID"));
 			Question ques = (Question) hs.getAttribute(quesID);
@@ -48,6 +53,7 @@ public class CheckAnswerServlet extends HttpServlet {
 			int type = ques.getType();
 			int points = 0;
 			int max = 0;
+
 			switch( type ) {
 			case Question.SINGLE_STR_ANS:
 			case Question.FIB:
@@ -83,16 +89,21 @@ public class CheckAnswerServlet extends HttpServlet {
 	        rd.forward(request, response);
 		} else{
 			int scoreTotal = 0;
+			String quizIDString = (String) hs.getAttribute("quizID");
+			int quizID = 0;
+			if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+			Quiz currQuiz = Quiz.getQuizUsingID(quizID);
+			
 			int counter = 0;
 			while( true ) {
 				counter++;
 				String q = "question" + counter;
 				String quesID = request.getParameter(q);
-				System.out.println("ID: " + quesID);
+	//			System.out.println("ID: " + quesID);
 				if( quesID == null ) break;
 				int id = Integer.parseInt(quesID);
 				int type = Integer.parseInt(request.getParameter(q + "type"));
-				System.out.println("Type: " + type);
+	//			System.out.println("Type: " + type);
 				switch( type ) {
 				case Question.SINGLE_STR_ANS:
 				case Question.FIB:
@@ -107,6 +118,36 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 			System.out.println(scoreTotal);
 			System.out.println(request.getParameter("elapsedTime"));
+
+			long taken = Long.parseLong(request.getParameter("elapsedTime"));
+			ServletContext servletContext = getServletContext();
+			Statement stmt = (Statement) servletContext.getAttribute("Statement");
+			TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
+			if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
+				TakenEvent.UpdateGreatestAchievements(userName, stmt);
+			}
+			
+			if( currQuiz.isOnePage() ) {
+				RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
+				dispatch.forward(request, response);
+			} else {
+				int qNum = (Integer) hs.getAttribute("questionNumber");
+				int currScore = (Integer) hs.getAttribute("currentScore");
+				int currTime = (Integer) hs.getAttribute("currentTime");
+				
+				hs.setAttribute("questionNumber", qNum+1);
+				hs.setAttribute("currentScore", currScore + scoreTotal);
+				hs.setAttribute("currentTime", currTime + Integer.parseInt(request.getParameter("elapsedTime")));
+				
+				if( qNum == Quiz.getNumQuestionsUsingID(quizID) ) {
+					RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
+					dispatch.forward(request, response);
+				} else {
+					RequestDispatcher dispatch = request.getRequestDispatcher("showQuiz.jsp");
+					dispatch.forward(request, response);
+				}
+
+			}
 		}
 	}
 

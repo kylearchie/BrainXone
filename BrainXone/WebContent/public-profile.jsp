@@ -68,5 +68,50 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
 
 %>
 
+<h4> <%= profileName %>'s Achievements </h4>
+<%
+	try {
+		ResultSet rs = stmt.executeQuery("SELECT * FROM achievements WHERE userName = \"" + profileName + "\";");
+		while (rs.next()) {
+	    	String achievement = rs.getString("achievement");
+	    	out.println(achievement);
+	    }
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	    
+%>
+
+<%
+     ArrayList<Event>  createEvents = Event.getCreateEvents(profileName, stmt);
+     int numCreateEvents = createEvents.size();
+%>
+
+<%
+out.println(profileUser + "<h4>has created" + numCreateEvents + "quizzes: </h4>");
+out.println("<ul>");
+for (Event createEvent : createEvents) 
+{
+	String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	out.println("<li>" + name + "</li>");
+}
+%>   
+
+
+<%
+     ArrayList<TakenEvent>  takenEvents= TakenEvent.getTakenEvents(profileName, stmt);
+	 int numTakenEvents = takenEvents.size();    
+%>
+
+<%
+out.println(profileUser + "<h4>has taken" + numTakenEvents + "quizzes: </h4>");
+out.println("<ul>");
+for (TakenEvent takenEvent : takenEvents) 
+{
+	String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+	out.println("<li>" + name + "</li>");
+}
+%>    	
+
 </body>
 </html>

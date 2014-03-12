@@ -3,15 +3,17 @@ package brainxone;
 import java.sql.*;
 import java.util.ArrayList;
 
+import backend.DBConnection;
+
 public class TakenEvent extends Event
 {
 	private String timeCreated;
 	private String userName;
 	private int quizID;
 	private int score;
-	private String timeTaken;
+	private long timeTaken;
 
-	public TakenEvent(String userName, int quiz, int points, String taken, Statement stmt) 
+	public TakenEvent(String userName, int quiz, int points, long taken, Statement stmt) 
 	{
 		super(userName, quiz);
 		timeCreated = "" + System.currentTimeMillis();
@@ -19,13 +21,13 @@ public class TakenEvent extends Event
 		timeTaken = taken;
 		try {
 			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\",\"" + userName + "\"," + 
-					quizID + "," + score + ",\"" +  timeTaken + "\");");
+					quizID + "," + score + "," +  timeTaken + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public TakenEvent(String time, String userName, int quizID, int score, String timeTaken) {
+	public TakenEvent(String time, String userName, int quizID, int score, long timeTaken) {
 	    super(time, userName, quizID);
 		this.score = score;
 		this.timeTaken = timeTaken;
@@ -35,7 +37,7 @@ public class TakenEvent extends Event
 		return score;
 	}
 
-	public String getTimeTaken() {
+	public double getTimeTaken() {
 		return timeTaken;
 	}
 
@@ -48,7 +50,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	String timeTaken = rs.getString("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }
@@ -68,7 +70,7 @@ public class TakenEvent extends Event
 		    	String time = rs.getString("timeCreated");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
-		    	String timeTaken = rs.getString("timeTaken");
+		    	long timeTaken = rs.getLong("timeTaken");
                 TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }
@@ -93,6 +95,112 @@ public class TakenEvent extends Event
 		}	    
 		return count;
 	}
+	
+	public static boolean checkMachine(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"Quiz Machine\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+	
+	public static void UpdateTakenAchievements(String userName, Statement stmt) {
+		int size = TakenEvent.getTakenEvents(userName, stmt).size();
+		if (size == 10 && !checkMachine(userName, stmt)) {
+			try {
+				stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"Quiz Machine\");");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} 
+	}
+	
+	public static void UpdateGreatestAchievements(String userName, Statement stmt) {
+		try {
+			stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"I am the Greatest\");");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public static void UpdatePractivechievements(String userName, Statement stmt) {
+		try {
+			stmt.executeUpdate("INSERT INTO achievements VALUES(\"" + userName + "\", \"Practice Makes Perfect\");");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
+
+	public static boolean CheckQualifiedGreatest(String userName, int quizID, Statement stmt) {
+		ResultSet rs;
+		String numberOneUserName = null;
+		try {
+			rs = stmt.executeQuery("SELECT userName FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 1;");
+			while (rs.next()) {
+				numberOneUserName = rs.getString("userName");
+		    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return userName.equals(numberOneUserName);
+	}
+		
+	public static boolean checkPractice(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"Practice Makes Perfect\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+	
+	public static boolean checkGreatest(String userName, Statement stmt) {
+		ResultSet rs;
+		int count = 0;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM achievements WHERE achievement = \"I am the Greatest\" AND userName = \"" + userName + "\";");
+			while (rs.next()) {
+				count++;
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	
+		return count==1;
+	}
+	
+	public static int bestScore(String userName, int quizID, Statement stmt) {
+		int score = 0;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT score FROM events WHERE userName = \"" + userName + "\" AND quizID = " + quizID + "ORDER BY score DESC LIMIT 1;");
+			while (rs.next()) {
+				score = rs.getInt("score");
+				
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return score;
+	}
+	
+	
 	
 	
 }

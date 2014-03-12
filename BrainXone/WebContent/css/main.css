@@ -8,13 +8,23 @@ body {
 }
 
 
-input, button {
+input, button, select {
 	display: block;
-	font-size: 12pt;
+	font-size: 1em;
 	border: 0px;
 	border-radius: 3px;
 	min-width: 20em;
 	padding: 0.75em;
+	cursor: pointer;
+	-webkit-appearance: none;
+}
+
+select {
+	background:url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.8 5.9" enable-background="new 0 0 8.8 5.9" xml:space="preserve"><path fill="#333333" d="M8.3,0.7L4.5,5.4c0,0.1-0.1,0.1-0.2,0L0.5,0.7c-0.1-0.1,0-0.2,0.1-0.2h7.6C8.3,0.5,8.3,0.6,8.3,0.7z"/></svg>') no-repeat;
+	 outline: none; 
+	background-color: #eee;
+	background-size: 25% 25%;
+	background-position: top 50% right -1em;
 }
 
 .central-content {
@@ -46,7 +56,8 @@ input[type=text] {
 .button {
 	color: #fff;
 	text-shadow: 1px 1px rgba( 0, 0, 0, 0.25 );
-	margin: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 /* Quiz Boxes */
@@ -60,4 +71,15 @@ input[type=text] {
 
 .content-box:hover {
 	background-color: #f8f8f8
+}
+
+.page-title {
+	text-align: center;
+	margin-top: 0px;
+	font-size: 2em;
+}
+
+form > * {
+	margin-left: auto;
+	margin-right: auto;
 }
