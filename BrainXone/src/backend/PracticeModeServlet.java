@@ -45,19 +45,20 @@ public class PracticeModeServlet extends HttpServlet {
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		int quizID = Integer.parseInt(request.getParameter("quizID"));
 
-		Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+//		Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 
 		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
 		
-		HashMap<Question, Integer> curScore = new HashMap<Question, Integer>();
+		HashMap<Integer, Integer> usedQuestions = new HashMap<Integer, Integer>();
 		
-		for(Question ques : quesList){
-			curScore.put(ques, 0);
+		for(int i = 0; i < quesList.size(); i++){
+			usedQuestions.put(quesList.get(i).getID(), 3);
 		}
 
-		hs.setAttribute("curScore" , curScore);
+		hs.setAttribute("usedQuestions" , usedQuestions);
+		hs.setAttribute("isPracticeMode", true);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("PracticeMode.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("ShowQuiz.jsp?id=" + quizID);
         rd.forward(request, response);
 	}
 
