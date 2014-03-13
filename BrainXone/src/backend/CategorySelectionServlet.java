@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,15 +43,17 @@ public class CategorySelectionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
 		String selectedCategory = request.getParameter("category");
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		HashMap<Integer, String> quizList = new HashMap<Integer, String>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT * FROM quiz WHERE category = \"" + selectedCategory + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT quizID, description FROM quiz WHERE category = \"" + selectedCategory + "\";");
 			if(rs != null){
 				while(rs.next()){
-					int quizID = Integer.parseInt(rs.getString(1));
-					String description = rs.getString(3);
+					int quizID = 0;
+					String idObj = rs.getString(1);
+					if( idObj != null ) quizID = Integer.parseInt(idObj);
+					String description = rs.getString(2);
 					quizList.put(quizID, description);
 				}
 			} 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,8 +43,11 @@ public class AddMultiStrAns extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		
 		ArrayList<String> answerKeys = new ArrayList<String>();
-
+		
 		for(int i = 0; i < 3; i ++)
 		{
 			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
@@ -52,10 +56,8 @@ public class AddMultiStrAns extends HttpServlet {
 
 		StringResponse ques = (StringResponse) hs.getAttribute("question");
 		int maxPoints = Integer.parseInt((String) request.getParameter("maxPoints"));
-		ques.setAnswer(answerKeys, maxPoints);
+		ques.setAnswer(answerKeys, maxPoints, stmt);
 		
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
 		} catch (SQLException e) {

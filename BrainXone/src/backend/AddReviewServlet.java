@@ -1,11 +1,8 @@
 package backend;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class AddMultiChoiceAns
+ * Servlet implementation class AddReviewServlet
  */
-@WebServlet("/AddMultiChoiceAns")
-public class AddMultiChoiceAns extends HttpServlet {
+@WebServlet("/AddReviewServlet")
+public class AddReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddMultiChoiceAns() {
+    public AddReviewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,29 +38,18 @@ public class AddMultiChoiceAns extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		HashMap<String, Integer> answerKeys = new HashMap<String, Integer>();
-		
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		Integer quizIDObj = (Integer) hs.getAttribute("quizID");
+		int quizID = 0;
+		if( quizIDObj != null) quizID = quizIDObj;
 		
-		for(int i = 0; i < 2; i ++)
-		{
-			String option = (String) request.getParameter("options" + (i + 1));
-			String isValid = (String)(request.getParameter("isValid" + (i + 1)));
-			answerKeys.put(option, Integer.parseInt(isValid));
-		}
+		String textReview = request.getParameter("textReview");
+		int stars = Integer.parseInt(request.getParameter("stars"));
 		
-		MultiChoice ques = (MultiChoice) hs.getAttribute("question");
-		int maxPoints = ques.setAnswer(answerKeys, stmt);
-		
-		try {
-			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("MoreOrSubmit.jsp");
-        rd.forward(request, response);
-        }
+		//TODO how to get the reviewer's name?
+		String reviewerName = (String) hs.getAttribute("currentUser");
+		Quiz.addReviewAndRating(quizID, reviewerName, textReview, stars, stmt);
+	}
 
 }

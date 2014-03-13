@@ -1,27 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*,backend.*,java.util.*"%>
+<%@ page import= "java.sql.Statement" %>
 
 <%
 	HttpSession sess = request.getSession();
+	ServletContext servletContext = getServletContext();
+	Statement stmt = (Statement) servletContext.getAttribute("Statement");
 	Integer quizID = Integer.parseInt(request.getParameter("id"));
 	sess.setAttribute("quizID", quizID);
-	sess.setAttribute("isPracticeMode", 0);
+	ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
+	
+	HashMap<Integer, Integer> usedQuestions = (HashMap<Integer, Integer>) sess.getAttribute("usedQuestions");
 
-	Quiz q = Quiz.getQuizUsingID(quizID);
+	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 
+	Boolean practiceObject = (Boolean) sess.getAttribute("isPracticeMode");
+	boolean isPracticeMode;
+	if( practiceObject == null ) isPracticeMode = false;
+	else isPracticeMode = practiceObject;
+	
 	int questionNumber = -1;
 	if (!q.isOnePage()) {
 		Integer qNum = (Integer) sess.getAttribute("questionNumber");
-		if (qNum == null || qNum >= Quiz.getNumQuestionsUsingID(quizID)) {
+		if (qNum == null || qNum >= quesList.size()) {
 			questionNumber = 0;
 			sess.setAttribute("questionNumber", questionNumber);
 			sess.setAttribute("currentScore", 0);
 			sess.setAttribute("currentTime", new Long(0));
 			sess.setAttribute("randomSeed", System.nanoTime());
 
-		} else
+		} else {
 			questionNumber = qNum;
+		}
+		Question curr;
+		while(true) {
+			curr = quesList.get(questionNumber);
+			if(!isPracticeMode) break;
+			int uses = usedQuestions.get(curr.getID());
+			System.out.println("Question " + curr.getID() + " has " + uses + " uses left.");
+			if(uses > 0) {
+				break;
+			}
+			questionNumber++;
+			if( questionNumber >= quesList.size()) questionNumber = 0;
+		}
+		sess.setAttribute("questionNumber", questionNumber);
+		quesList = new ArrayList<Question>();
+		quesList.add(curr);
+	}
+	if (q.isRandomVal()) {
+		long seed;
+		if( q.isOnePage() ) seed = System.nanoTime();
+		else seed = (Long) sess.getAttribute("randomSeed");
+		Collections.shuffle(quesList, new Random(seed));
+	}
+	if(!q.isOnePage()) {
+		
 	}
 %>
 
@@ -47,28 +82,18 @@
 		<h1 class="quiz-title"><%= q.getDescription() %></h1>
 		<form id="quiz-submit-form" action="CheckAnswerServlet" method="post">
 		<% 
-			ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
-			if (q.isRandomVal()) {
-				long seed;
-				if( q.isOnePage() ) seed = System.nanoTime();
-				else seed = (Long) sess.getAttribute("randomSeed");
-				Collections.shuffle(quesList, new Random(seed));
-			}
-			if(!q.isOnePage()) {
-				Question curr = quesList.get(questionNumber);
-				quesList = new ArrayList<Question>();
-				quesList.add(curr);
-			}
-			
 			int counter = 0;
 			for (Question ques : quesList) {
+				if(isPracticeMode && usedQuestions.get(ques.getID()) == 0) {
+					continue;
+				}
 				counter++;
-				request.getSession().setAttribute(String.valueOf(ques.getID()), ques); //G: why?
+				//request.getSession().setAttribute(String.valueOf(ques.getID()), ques); //G: why?
 				int type = ques.getQuesType();
 				out.print("<div class='quiz-question content-box' type='" + type + "'>");
 				out.print("<input type='hidden' name='question" + counter + "' value='" + ques.getID() + "'>");
 				out.print("<input type='hidden' name='question" + counter + "type' value='" + type + "'>");
-				request.getSession().setAttribute("quesID", ques.getID()); //G: why?
+				//request.getSession().setAttribute("quesID", ques.getID()); //G: why?
 
 				switch (type) {
 				case Question.SINGLE_STR_ANS:
@@ -94,7 +119,7 @@
 					out.print("<h3 class='quiz-question-header'>Select the correct answer(s):</h3>");
 					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
 					out.print("<div class='quiz-answers multi-option'>");
-					HashMap<String, Integer> options = ques.displayAnswers();
+					HashMap<String, Integer> options = ques.displayAnswers(stmt);
 					int i = 0;
 					for (String str : options.keySet()) {
 						i++;
@@ -109,6 +134,9 @@
 		%>
 		<input id="quiz-submit-button" class="action-button button" type="submit" value="Submit Answers">
 	</form>
+	<% if (isPracticeMode) { %>
+		<a class="escape-button button" href="QuizSummary.jsp?id=<%= quizID %>" >Leave Practice Mode</a>
+	<% } %>
 	</div>
 	</div>
 </body>

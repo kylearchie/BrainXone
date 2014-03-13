@@ -1,6 +1,7 @@
 package brainxone;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -145,19 +146,18 @@ public class TakenEvent extends Event
 	}
 
 	public static boolean CheckQualifiedGreatest(String userName, int quizID, Statement stmt) {
+		if(userName == null) return false;
 		ResultSet rs;
 		String numberOneUserName = null;
-		int count = 0;
 		try {
 			rs = stmt.executeQuery("SELECT userName FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 1");
 			while (rs.next()) {
 				numberOneUserName = rs.getString("userName");
-				count++;
 		    }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (count == 1) {
+		if (numberOneUserName != null) {
 			return userName.equals(numberOneUserName);
 		}
 		return true;

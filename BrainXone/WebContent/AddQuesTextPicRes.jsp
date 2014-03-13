@@ -22,9 +22,6 @@ Input Image URL: <input type = "text" name = "quesImgURL">
 
 <input type = hidden name = "isOrdered">
 
-Add Tags? Separate by <b>spaces</b>
-<input type = "text" name = "tags">  <br> <br>
-
 <input type = "submit" value = "Add answer">
 </form>
 

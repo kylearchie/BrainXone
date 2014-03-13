@@ -1,7 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import = "java.sql.*, backend.*, java.util.*, brainxone.*, java.text.SimpleDateFormat, java.util.Date" %>
-    
+
+<%
+	HttpSession sess = request.getSession();
+	Boolean b = (Boolean) sess.getAttribute("isPracticeMode");
+	if( b != null && b ) {
+		sess.setAttribute("isPracticeMode", new Boolean(false));
+		sess.removeAttribute("questionNumber");
+		sess.removeAttribute("currentScore");
+		sess.removeAttribute("currentTime");
+		sess.removeAttribute("randomSeed");
+	}
+
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -19,11 +32,11 @@
     Statement stmt = (Statement) servletContext.getAttribute("Statement");
     String userName = (String) session.getAttribute("currentUser");
 	int quizID = Integer.parseInt(request.getParameter("id"));
-	Quiz q = Quiz.getQuizUsingID(quizID);
 	
 	
 	
 	
+	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	User creator = User.retrieveByUserName(q.getCreatorName(), stmt);
 	String createrName;
@@ -41,6 +54,11 @@
 		}
 	}
 	
+	
+	out.print("Quiz Description: " + q.getDescription() + "<br>");
+	out.print("Creator Name: <a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>" + "<br>");
+	out.print("List of User's Past Performance: <br>");
+
 	out.print("List of Highest Performance of All Time: <br>");
 	ArrayList<TakenEvent> highestPerformance = TakenEvent.getBestPerformance(quizID, stmt);
 	int n = 0;
@@ -133,7 +151,13 @@
 		out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
 	}
 	
-	
+	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
+	for(Review r : reviews){
+		out.print("From reviewer: <a href = \"public-profile.jsp?name=" + r.reviewerName + "\">" + r.reviewerName + "</a>" + "<br");
+		out.print("Stars: " + r.stars + "<br>");
+		out.print("Text Review: " + r.textReview + "<br>");
+	}
+	out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
 	
 	if(q.hasPracticeMode()){
 	%>
@@ -144,6 +168,8 @@
 	</form>
 	
 	<%
+	} else {
+		request.getSession().setAttribute("isPracticeMode", false);
 	}
 	
 	

@@ -21,12 +21,10 @@ public class StringResponse extends Question{
 	 * @return
 	 */
 	@Override
-	public int checkAnswer(ArrayList<String> answers){
+	public int checkAnswer(ArrayList<String> answers, Statement stmt){
 		points = 0;
 		int isOrdered = -1;
-		HashMap<Integer, String> answerKeys = new HashMap<Integer, String>();
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+		HashMap<Integer, ArrayList<String>> answerKeys = new HashMap<Integer, ArrayList<String>>();
 
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT isOrdered FROM ques WHERE quesID = " + quesID);
@@ -35,32 +33,42 @@ public class StringResponse extends Question{
 			}	
 			rs = stmt.executeQuery("SELECT ans, ansIndex FROM indexAnswer WHERE quesID = " + quesID);
 			while(rs.next()){
-				answerKeys.put(Integer.parseInt(rs.getString(2)), rs.getString(1));
+				String key = rs.getString(1);
+				int index = Integer.parseInt(rs.getString(2));
+				ArrayList<String> newKeys;
+				if(answerKeys.containsKey(index))
+					newKeys = answerKeys.get(index);
+				else
+					newKeys = new ArrayList<String>();
+				newKeys.add(key);
+				answerKeys.put(index, newKeys);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		System.out.println("answers " + answers);
 		System.out.println("Keys " + answerKeys);
 		
 		int keysCount = answerKeys.size();
 		for(int i = 0; i < answers.size(); i++){
 			String oneAns = answers.get(i);
-			if(!answerKeys.values().contains(oneAns))
-				continue;
 			for(int j = 1; j <= keysCount; j++){
-				if(answerKeys.containsKey(j) && answerKeys.get(j).equals(oneAns)){
-					if(isOrdered == 0 ){
-						answerKeys.remove(j);
-						points++;
-						System.out.print("points: " + points);
-					}
-					else if(isOrdered == 1){
-						if((i + 1) == j){
-							answerKeys.remove(j);
-							points++;
-							System.out.println("points: " + points);
+				if(answerKeys.containsKey(j)){
+					for(String key : answerKeys.get(j)){
+						if(key.equals(oneAns)){
+							if(isOrdered == 0 ){
+								answerKeys.remove(j);
+								points++;
+								System.out.print("points: " + points);
+							}
+							else if(isOrdered == 1){
+								if((i + 1) == j){
+									answerKeys.remove(j);
+									points++;
+									System.out.println("points: " + points);
+								}
+							}
 						}
 					}
 					}
@@ -76,15 +84,15 @@ public class StringResponse extends Question{
 	 * to SET the answers into the indexedAnswerDB
 	 * @param answerKeys
 	 */
-	public void setAnswer(ArrayList<String> answerKeys, int maxPoints){
+	public void setAnswer(ArrayList<ArrayList<String>> answerKeys, int maxPoints, Statement stmt){
 		this.maxPoints = maxPoints;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		
 		// index starting from 1
 		for(int i = 0; i < answerKeys.size(); i++){
 			try {
-				stmt.executeUpdate("INSERT INTO indexAnswer VALUES (\"" + quesID +"\",\"" + answerKeys.get(i) + "\",\"" + (i + 1) + "\");");
+				for(String key : answerKeys.get(i)){
+					stmt.executeUpdate("INSERT INTO indexAnswer VALUES (\"" + quesID +"\",\"" + key + "\",\"" + (i + 1) + "\");");
+				}	
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 public class Quiz {
 	private static int ID = 0;
+	private String quizName = "";
 	private String description = "";
 	private ArrayList<String> tags;
 	private ArrayList<Question> questions;
 	private String creatorName = "";
 	private String category = "";
-	private ArrayList<Review> reviews;
 	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 
 	/**
@@ -23,10 +23,11 @@ public class Quiz {
 	 * @param creatorID
 	 * @param category
 	 */
-	public Quiz(boolean isPlayerMode, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
+	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
 		if(!isPlayerMode) 
 			ID++;
 		this.description = description;
+		this.quizName = quizName;
 		this.creatorName = creatorName;
 		this.category = category;
 		this.isRandom = isRandom;
@@ -34,7 +35,6 @@ public class Quiz {
 		this.isPracticeMode = isPracticeMode;
 
 		questions = new ArrayList<Question>();
-		reviews = new ArrayList<Review>();
 		tags = new ArrayList<String>();
 	}
 
@@ -43,43 +43,52 @@ public class Quiz {
 		ID = oldID;
 	}
 	
-	public void pushToQuizDB(){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void pushToQuizDB(Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
+			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
 	}
 
-	public void addQuestionToDB(Question q, int type, int isOrdered){
+	public void addQuestionToDB(Question q, int type, int isOrdered, Statement stmt){
 		questions.add(q);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
-			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\",\"" + q.getMaxPoints() +"\");");
+			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\",\"" + q.getMaxPoints(stmt) +"\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
 	}
 
-	public void addReview(Review r){
-		reviews.add(r);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public static void addReviewAndRating(int quizID, String reviewerName, String textReview, int stars, Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO review VALUES (\"" + ID +"\",\"" + r.getID() + "\"," + r.getStars() + "\",\"" + r.getText() + "\");");
+			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\"," + stars + "\",\"" + textReview + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public static ArrayList<Review> getReviewByQuizID(int quizID, Statement stmt){
+		ArrayList<Review> reviews = new ArrayList<Review>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\"");
+			while(rs.next()){				
+				String reviewerName = rs.getString(1);
+				int stars = Integer.parseInt(rs.getString(2));
+				String textReview = rs.getString(3);
+				Review r = new Review(stars, textReview, reviewerName);
+				reviews.add(r);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reviews;
+	}
 
 
-	public void addTagsToDB(String t){
+	public void addTagsToDB(String t, Statement stmt){
 		tags.add(t);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			stmt.executeUpdate("INSERT INTO tag VALUES (\"" + ID +"\",\"" + t + "\");");
 		} catch (SQLException e) {
@@ -87,10 +96,8 @@ public class Quiz {
 		}	
 	}
 
-	public ArrayList<Player> getTopPlayers(int n){
+	public ArrayList<Player> getTopPlayers(int n, Statement stmt){
 		ArrayList<Player> topPlayers = new ArrayList<Player>();
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT TOP " + n + " userName, score, timeTaken FROM quizPlayer WHERE quizID = " + ID + " ORDER BY score DESC, timeTaken ASC;");
 			if(rs != null){
@@ -110,18 +117,17 @@ public class Quiz {
 	}
 
 
-	public static Quiz getQuizUsingID(int quizID){
+	public static Quiz getQuizUsingID(int quizID, Statement stmt){
 		if(quizID == 0) return null;
 		String creatorName = "";
-		String description = "", category = "";
+		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
-				description = rs.getString(2);
+				quizName = rs.getString(2);
+				//description = rs.getString(2);
 				category = rs.getString(3);
 				isRandom = Integer.parseInt(rs.getString(4));
 				isOnePage = Integer.parseInt(rs.getString(5));
@@ -131,7 +137,7 @@ public class Quiz {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, description, "1", category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, quizName, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	
@@ -143,11 +149,9 @@ public class Quiz {
 		return description;
 	}
 	// to be used as q.getQuestion // player mode
-	public static ArrayList<Question> getQuesListUsingID(int quizID){
+	public static ArrayList<Question> getQuesListUsingID(int quizID, Statement stmt){
 		ArrayList<Question> qList = new ArrayList<Question>();
 
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
 			if(rs != null){
@@ -172,10 +176,8 @@ public class Quiz {
 		return qList;
 	}
 	
-	public static int getNumQuestionsUsingID(int quizID){
+	public static int getNumQuestionsUsingID(int quizID, Statement stmt){
 		int result = 0;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT count(quesID) FROM ques WHERE quizID = \"" + quizID + "\"");
 			if(rs != null){
@@ -222,18 +224,14 @@ public class Quiz {
 		return isPracticeMode == 1;
 	}
 	
-	public void deleteQuizByCreatorName(String creatorName){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\"");	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	public void deleteQuizByQuizID(int quizID){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void deleteQuizByQuizID(int quizID, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\"");	
 		} catch (SQLException e) {
@@ -243,5 +241,19 @@ public class Quiz {
 	
 	public boolean isTimedQuiz() {
 		return true;
+	}
+	
+	public static ArrayList<Integer> getQuizIDByTag(String tag, Statement stmt){
+		ArrayList<Integer> quizIDList = new ArrayList<Integer>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quizID FROM tag WHERE tag = \"" + tag + "\"");
+			while(rs.next()){
+				quizIDList.add(Integer.parseInt(rs.getString(1)));
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return quizIDList;
 	}
 }

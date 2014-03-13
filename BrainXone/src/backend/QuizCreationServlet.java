@@ -1,8 +1,10 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,17 +39,23 @@ public class QuizCreationServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		String quizName = (String) request.getParameter("quizName");
 		String description = (String) request.getParameter("description");
 		String category = (String) request.getParameter("category");
 		int isRandom = Integer.parseInt((String) request.getParameter("isRandom"));
 		int isOnePage = Integer.parseInt((String) request.getParameter("isOnePage"));
 		int isPracticeMode = Integer.parseInt((String) request.getParameter("isPracticeMode"));
 		
-		Quiz q = new Quiz(false, description, "1", category, isRandom, isOnePage, isPracticeMode);
-		q.pushToQuizDB();
+		String allTags = (String)request.getParameter("tags");
+		request.getSession().setAttribute("tags", allTags);
+
+		// userName hardcoded 1 here.
+		Quiz q = new Quiz(false, quizName, description, "1", category, isRandom, isOnePage, isPracticeMode);
+		q.pushToQuizDB(stmt);
 		hs.setAttribute("quiz", q);
 		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");
         rd.forward(request, response);
 	}
-
 }

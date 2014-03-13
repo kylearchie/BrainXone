@@ -14,6 +14,8 @@
 <%
 	HashMap<Question, Integer> curScore = (HashMap<Question, Integer>) request.getSession().getAttribute("curScore");
 	request.getSession().setAttribute("curScore", curScore);	
+	ServletContext servletContext = getServletContext();
+	Statement stmt = (Statement) servletContext.getAttribute("Statement");
 	System.out.println("+++++++" + curScore.values());
 	request.getSession().setAttribute("isPracticeMode", 1);	
 	int count = 0;
@@ -49,7 +51,7 @@
 				%>
 					<form action="CheckAnswerServlet" method="post">
 					<%
-					HashMap<String, Integer> options = ques.displayAnswers();
+					HashMap<String, Integer> options = ques.displayAnswers(stmt);
 					int i = 0;
 					for (String str : options.keySet()) {
 					//out.print("<input type = 'checkbox' name = 'selected' value='selectedOption"+ (i + 1) + "'> " + str + " <br>");

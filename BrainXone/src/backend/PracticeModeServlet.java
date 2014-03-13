@@ -1,10 +1,12 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,22 +41,24 @@ public class PracticeModeServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		int quizID = Integer.parseInt(request.getParameter("quizID"));
 
-		Quiz q = Quiz.getQuizUsingID(quizID);
+//		Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 
-		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
+		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
 		
-		HashMap<Question, Integer> curScore = new HashMap<Question, Integer>();
+		HashMap<Integer, Integer> usedQuestions = new HashMap<Integer, Integer>();
 		
-		for(Question ques : quesList){
-			curScore.put(ques, 0);
+		for(int i = 0; i < quesList.size(); i++){
+			usedQuestions.put(quesList.get(i).getID(), 3);
 		}
 
-		hs.setAttribute("curScore" , curScore);
+		hs.setAttribute("usedQuestions" , usedQuestions);
+		hs.setAttribute("isPracticeMode", true);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("PracticeMode.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("ShowQuiz.jsp?id=" + quizID);
         rd.forward(request, response);
 	}
 
