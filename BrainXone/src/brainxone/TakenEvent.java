@@ -144,7 +144,7 @@ public class TakenEvent extends Event
 		String numberOneUserName = null;
 		int count = 0;
 		try {
-			rs = stmt.executeQuery("SELECT userName FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 1;");
+			rs = stmt.executeQuery("SELECT userName FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 1");
 			while (rs.next()) {
 				numberOneUserName = rs.getString("userName");
 				count++;

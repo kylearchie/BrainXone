@@ -90,9 +90,9 @@ public class CheckAnswerServlet extends HttpServlet {
 	        rd.forward(request, response);
 		} else{
 			int scoreTotal = 0;
-			String quizIDString = (String) hs.getAttribute("quizID");
+			Integer quizIDString = (Integer) hs.getAttribute("quizID");
 			int quizID = 0;
-			if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+			if( quizIDString != null) quizID = quizIDString;
 			Quiz currQuiz = Quiz.getQuizUsingID(quizID);
 			
 			int counter = 0;
@@ -144,7 +144,7 @@ public class CheckAnswerServlet extends HttpServlet {
 					RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
 					dispatch.forward(request, response);
 				} else {
-					RequestDispatcher dispatch = request.getRequestDispatcher("showQuiz.jsp");
+					RequestDispatcher dispatch = request.getRequestDispatcher("ShowQuiz.jsp");
 					dispatch.forward(request, response);
 				}
 
