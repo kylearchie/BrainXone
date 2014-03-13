@@ -3,7 +3,6 @@ package backend;
 import java.io.IOException;
 import java.sql.Statement;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class QuizCreationServlet
+ * Servlet implementation class AddReviewServlet
  */
-@WebServlet("/QuizCreationServlet")
-public class QuizCreationServlet extends HttpServlet {
+@WebServlet("/AddReviewServlet")
+public class AddReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public QuizCreationServlet() {
+    public AddReviewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,21 +40,16 @@ public class QuizCreationServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		String quizName = (String) request.getParameter("quizName");
-		String description = (String) request.getParameter("description");
-		String category = (String) request.getParameter("category");
-		int isRandom = Integer.parseInt((String) request.getParameter("isRandom"));
-		int isOnePage = Integer.parseInt((String) request.getParameter("isOnePage"));
-		int isPracticeMode = Integer.parseInt((String) request.getParameter("isPracticeMode"));
+		Integer quizIDObj = (Integer) hs.getAttribute("quizID");
+		int quizID = 0;
+		if( quizIDObj != null) quizID = quizIDObj;
 		
-		String allTags = (String)request.getParameter("tags");
-		request.getSession().setAttribute("tags", allTags);
-
-		// userName hardcoded 1 here.
-		Quiz q = new Quiz(false, quizName, description, "1", category, isRandom, isOnePage, isPracticeMode);
-		q.pushToQuizDB(stmt);
-		hs.setAttribute("quiz", q);
-		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");
-        rd.forward(request, response);
+		String textReview = request.getParameter("textReview");
+		int stars = Integer.parseInt(request.getParameter("stars"));
+		
+		//TODO how to get the reviewer's name?
+		//String reviewerName = (String) hs.getAttribute("userName");
+		Quiz.addReviewAndRating(quizID, reviewerName, textReview, stars, stmt);
 	}
+
 }

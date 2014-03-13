@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 public class Quiz {
 	private static int ID = 0;
+	private String quizName = "";
 	private String description = "";
 	private ArrayList<String> tags;
 	private ArrayList<Question> questions;
 	private String creatorName = "";
 	private String category = "";
-	private ArrayList<Review> reviews;
 	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 
 	/**
@@ -23,10 +23,11 @@ public class Quiz {
 	 * @param creatorID
 	 * @param category
 	 */
-	public Quiz(boolean isPlayerMode, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
+	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
 		if(!isPlayerMode) 
 			ID++;
 		this.description = description;
+		this.quizName = quizName;
 		this.creatorName = creatorName;
 		this.category = category;
 		this.isRandom = isRandom;
@@ -34,7 +35,6 @@ public class Quiz {
 		this.isPracticeMode = isPracticeMode;
 
 		questions = new ArrayList<Question>();
-		reviews = new ArrayList<Review>();
 		tags = new ArrayList<String>();
 	}
 
@@ -45,7 +45,7 @@ public class Quiz {
 	
 	public void pushToQuizDB(Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
+			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -60,13 +60,30 @@ public class Quiz {
 		}	
 	}
 
-	public void addReview(Review r, Statement stmt){
-		reviews.add(r);
+	public static void addReviewAndRating(int quizID, String reviewerName, String textReview, int stars, Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO review VALUES (\"" + ID +"\",\"" + r.getID() + "\"," + r.getStars() + "\",\"" + r.getText() + "\");");
+			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\"," + stars + "\",\"" + textReview + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static ArrayList<Review> getReviewByQuizID(int quizID, Statement stmt){
+		ArrayList<Review> reviews = new ArrayList<Review>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\"");
+			while(rs.next()){				
+				String reviewerName = rs.getString(1);
+				int stars = Integer.parseInt(rs.getString(2));
+				String textReview = rs.getString(3);
+				Review r = new Review(stars, textReview, reviewerName);
+				reviews.add(r);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reviews;
 	}
 
 
@@ -103,23 +120,24 @@ public class Quiz {
 	public static Quiz getQuizUsingID(int quizID, Statement stmt){
 		if(quizID == 0) return null;
 		String creatorName = "";
-		String description = "", category = "";
+		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
-				description = rs.getString(2);
-				category = rs.getString(3);
-				isRandom = Integer.parseInt(rs.getString(4));
-				isOnePage = Integer.parseInt(rs.getString(5));
-				isPracticeMode = Integer.parseInt(rs.getString(6));
+				quizName = rs.getString(2);
+				description = rs.getString(3);
+				category = rs.getString(4);
+				isRandom = Integer.parseInt(rs.getString(5));
+				isOnePage = Integer.parseInt(rs.getString(6));
+				isPracticeMode = Integer.parseInt(rs.getString(7));
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, description, "1", category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	

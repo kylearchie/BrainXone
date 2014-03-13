@@ -35,6 +35,14 @@
 			%>
 			<p>You scored <%= score %> point <% if( score != 1 ) out.print("s"); %></p>
 			<p>It took you <%= time/1000 %> seconds</p>
+			<br><br>
+			
+			<form action ="AddReviewServlet" method= "post">
+			Rate it (1-5): <input type ="text" name = "stars"> <br>
+			Give a text review (NA if not-applicable):  <input type ="text" name = "textReview">
+			<input type = "submit" value = "Submit Review">
+			</form>
+					
 		</div>
 	</div>
 </body>

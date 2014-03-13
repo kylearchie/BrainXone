@@ -14,7 +14,9 @@
 <%@ include file="header.html" %>
 <%
 	int quizID = Integer.parseInt(request.getParameter("id"));
-	Quiz q = Quiz.getQuizUsingID(quizID);
+	ServletContext servletContext = getServletContext();
+	Statement stmt = (Statement) servletContext.getAttribute("Statement");
+	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	out.print("Creator Name: " + q.getCreatorName() + "<br>");
 	out.print("List of User's Past Performance: <br>");
@@ -23,6 +25,13 @@
 	out.print("List of Performance of Recent Test Takers: <br>");
 	out.print("List of tags: <br>");
 	out.print("Summary of staticstics of how well users have performed on quiz: <br> <br><br>");
+	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
+	for(Review r : reviews){
+		//TODO hyper link of user name here
+		out.print("From reviewer: " + r.reviewerName + "<br");
+		out.print("Stars: " + r.stars + "<br>");
+		out.print("Text Review: " + r.textReview + "<br>");
+	}
 	out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
 	if(q.hasPracticeMode()){
 	%>

@@ -11,6 +11,7 @@
 <h1> Step 1: Please input the description and category of this quiz and hit submit when you're ready to input questions </h1> <br>
 
 <form action="QuizCreationServlet" method = "post">
+Input a name for the quiz: <input type = "text" name = "quizName"> <br>
 Input description: <input type = "text" name = "description"> <br>
 Select category: <select name = "category">  
 <option value = "Food"> Food </option>
