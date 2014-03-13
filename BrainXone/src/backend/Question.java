@@ -69,21 +69,19 @@ public class Question {
 		return quesType;
 	}
 	
-	public int checkAnswer(ArrayList<String> answers){
+	public int checkAnswer(ArrayList<String> answers, Statement stmt){
 		return points;
 	}
 	
-	public int checkAnswer(HashSet<String> mapB){
+	public int checkAnswer(HashSet<String> mapB, Statement stmt){
 		return points;
 	}
 	
-	public HashMap<String, Integer> displayAnswers(){
+	public HashMap<String, Integer> displayAnswers(Statement stmt){
 		return null;
 	}
 	
-	public int getMaxPoints() {
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public int getMaxPoints(Statement stmt) {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT maxPoints FROM ques WHERE quesID = " + quesID);
 			if(rs.next()){

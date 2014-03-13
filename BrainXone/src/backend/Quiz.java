@@ -43,9 +43,7 @@ public class Quiz {
 		ID = oldID;
 	}
 	
-	public void pushToQuizDB(){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void pushToQuizDB(Statement stmt){
 		try {
 			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
 		} catch (SQLException e) {
@@ -53,21 +51,17 @@ public class Quiz {
 		}	
 	}
 
-	public void addQuestionToDB(Question q, int type, int isOrdered){
+	public void addQuestionToDB(Question q, int type, int isOrdered, Statement stmt){
 		questions.add(q);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
-			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\",\"" + q.getMaxPoints() +"\");");
+			stmt.executeUpdate("INSERT INTO ques VALUES (\"" + q.getID() +"\",\"" + ID + "\",\"" + type  +"\",\"" + q.getQuesText() +"\",\"" + isOrdered +"\",\"" + q.getMaxPoints(stmt) +"\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
 	}
 
-	public void addReview(Review r){
+	public void addReview(Review r, Statement stmt){
 		reviews.add(r);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			stmt.executeUpdate("INSERT INTO review VALUES (\"" + ID +"\",\"" + r.getID() + "\"," + r.getStars() + "\",\"" + r.getText() + "\");");
 		} catch (SQLException e) {
@@ -76,10 +70,8 @@ public class Quiz {
 	}
 
 
-	public void addTagsToDB(String t){
+	public void addTagsToDB(String t, Statement stmt){
 		tags.add(t);
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			stmt.executeUpdate("INSERT INTO tag VALUES (\"" + ID +"\",\"" + t + "\");");
 		} catch (SQLException e) {
@@ -87,10 +79,8 @@ public class Quiz {
 		}	
 	}
 
-	public ArrayList<Player> getTopPlayers(int n){
+	public ArrayList<Player> getTopPlayers(int n, Statement stmt){
 		ArrayList<Player> topPlayers = new ArrayList<Player>();
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT TOP " + n + " userName, score, timeTaken FROM quizPlayer WHERE quizID = " + ID + " ORDER BY score DESC, timeTaken ASC;");
 			if(rs != null){
@@ -110,13 +100,11 @@ public class Quiz {
 	}
 
 
-	public static Quiz getQuizUsingID(int quizID){
+	public static Quiz getQuizUsingID(int quizID, Statement stmt){
 		if(quizID == 0) return null;
 		String creatorName = "";
 		String description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
 			if(rs.next()){				
@@ -143,11 +131,9 @@ public class Quiz {
 		return description;
 	}
 	// to be used as q.getQuestion // player mode
-	public static ArrayList<Question> getQuesListUsingID(int quizID){
+	public static ArrayList<Question> getQuesListUsingID(int quizID, Statement stmt){
 		ArrayList<Question> qList = new ArrayList<Question>();
 
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
 			if(rs != null){
@@ -172,10 +158,8 @@ public class Quiz {
 		return qList;
 	}
 	
-	public static int getNumQuestionsUsingID(int quizID){
+	public static int getNumQuestionsUsingID(int quizID, Statement stmt){
 		int result = 0;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT count(quesID) FROM ques WHERE quizID = \"" + quizID + "\"");
 			if(rs != null){
@@ -222,18 +206,14 @@ public class Quiz {
 		return isPracticeMode == 1;
 	}
 	
-	public void deleteQuizByCreatorName(String creatorName){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\"");	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	public void deleteQuizByQuizID(int quizID){
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
+	public void deleteQuizByQuizID(int quizID, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\"");	
 		} catch (SQLException e) {

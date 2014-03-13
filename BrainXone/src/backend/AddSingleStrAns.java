@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,14 +42,14 @@ public class AddSingleStrAns extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String singleStrAnsTxt = (String) request.getParameter("singleStrAnsTxt");
 		StringResponse ques = (StringResponse) hs.getAttribute("question");
 		ArrayList<String> answerKeys = new ArrayList<String>();
 		answerKeys.add(singleStrAnsTxt);
-		ques.setAnswer(answerKeys, 1);
+		ques.setAnswer(answerKeys, 1, stmt);
 		
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			stmt.executeUpdate("UPDATE ques SET maxPoints = " + 1 + " WHERE quesID = " + ques.getID());
 		} catch (SQLException e) {

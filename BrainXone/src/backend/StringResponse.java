@@ -21,12 +21,10 @@ public class StringResponse extends Question{
 	 * @return
 	 */
 	@Override
-	public int checkAnswer(ArrayList<String> answers){
+	public int checkAnswer(ArrayList<String> answers, Statement stmt){
 		points = 0;
 		int isOrdered = -1;
 		HashMap<Integer, String> answerKeys = new HashMap<Integer, String>();
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT isOrdered FROM ques WHERE quesID = " + quesID);
@@ -76,10 +74,8 @@ public class StringResponse extends Question{
 	 * to SET the answers into the indexedAnswerDB
 	 * @param answerKeys
 	 */
-	public void setAnswer(ArrayList<String> answerKeys, int maxPoints){
+	public void setAnswer(ArrayList<String> answerKeys, int maxPoints, Statement stmt){
 		this.maxPoints = maxPoints;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		
 		// index starting from 1
 		for(int i = 0; i < answerKeys.size(); i++){

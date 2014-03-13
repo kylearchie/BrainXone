@@ -1,9 +1,11 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +40,8 @@ public class AddQuestionServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String quesText = (String) request.getParameter("quesText");
 		String quesImgURL = (String) request.getParameter("quesImgURL");
 		int quesType = (Integer)request.getSession().getAttribute("quesType");
@@ -65,15 +69,15 @@ public class AddQuestionServlet extends HttpServlet {
 		
 		StringTokenizer st = new StringTokenizer(allTags);
 		while (st.hasMoreTokens()) {
-			q.addTagsToDB(st.nextToken());
+			q.addTagsToDB(st.nextToken(), stmt);
 		}
 
 		if(quesType == Question.MULTI_STR_ANS) {
 			int isOrdered = Integer.parseInt((String) request.getParameter("isOrdered"));
-			q.addQuestionToDB(ques, quesType, isOrdered);
+			q.addQuestionToDB(ques, quesType, isOrdered, stmt);
 		}
 		else
-			q.addQuestionToDB(ques, quesType, 0);
+			q.addQuestionToDB(ques, quesType, 0, stmt);
 
 		hs.setAttribute("question", ques);
 		String nextPage = "";

@@ -1,10 +1,12 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,12 +41,13 @@ public class PracticeModeServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
-		
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		int quizID = Integer.parseInt(request.getParameter("quizID"));
 
-		Quiz q = Quiz.getQuizUsingID(quizID);
+		Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 
-		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
+		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
 		
 		HashMap<Question, Integer> curScore = new HashMap<Question, Integer>();
 		

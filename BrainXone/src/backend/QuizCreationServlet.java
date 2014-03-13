@@ -1,8 +1,10 @@
 package backend;
 
 import java.io.IOException;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +39,8 @@ public class QuizCreationServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String description = (String) request.getParameter("description");
 		String category = (String) request.getParameter("category");
 		int isRandom = Integer.parseInt((String) request.getParameter("isRandom"));
@@ -44,7 +48,7 @@ public class QuizCreationServlet extends HttpServlet {
 		int isPracticeMode = Integer.parseInt((String) request.getParameter("isPracticeMode"));
 		
 		Quiz q = new Quiz(false, description, "1", category, isRandom, isOnePage, isPracticeMode);
-		q.pushToQuizDB();
+		q.pushToQuizDB(stmt);
 		hs.setAttribute("quiz", q);
 		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");
         rd.forward(request, response);
