@@ -52,7 +52,8 @@ public class QuizCreationServlet extends HttpServlet {
 		request.getSession().setAttribute("tags", allTags);
 
 		// userName hardcoded 1 here.
-		Quiz q = new Quiz(false, quizName, description, "1", category, isRandom, isOnePage, isPracticeMode);
+		String creatorName = (String) hs.getAttribute("currentUser");
+		Quiz q = new Quiz(false, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		q.pushToQuizDB(stmt);
 		hs.setAttribute("quiz", q);
 		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");

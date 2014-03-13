@@ -32,11 +32,14 @@
     Statement stmt = (Statement) servletContext.getAttribute("Statement");
     String userName = (String) session.getAttribute("currentUser");
 	int quizID = Integer.parseInt(request.getParameter("id"));
+
 	
-	
-	
-	
+
+	HttpSession hs = request.getSession();
+
+
 	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+	out.print("Name of the quiz: " + q.getName() + "<br>");
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	User creator = User.retrieveByUserName(q.getCreatorName(), stmt);
 	String createrName;
@@ -171,11 +174,19 @@
 	} else {
 		request.getSession().setAttribute("isPracticeMode", false);
 	}
+
 	
 	
 	
 	
 	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
+
+
+	if(q.getCreatorName().equals(userName)){
+		%>
+		out.print("<li><b><a href=\"EditQuiz.jsp?id=" + quizID + "\"> Edit this quiz </a></li>");
+		<%	
+	}
 
 %>
 
