@@ -134,17 +134,17 @@ public class CheckAnswerServlet extends HttpServlet {
 			} else {
 				int qNum = (Integer) hs.getAttribute("questionNumber");
 				int currScore = (Integer) hs.getAttribute("currentScore");
-				int currTime = (Integer) hs.getAttribute("currentTime");
+				long currTime = (Long) hs.getAttribute("currentTime");
 				
 				hs.setAttribute("questionNumber", qNum+1);
 				hs.setAttribute("currentScore", currScore + scoreTotal);
-				hs.setAttribute("currentTime", currTime + Integer.parseInt(request.getParameter("elapsedTime")));
+				hs.setAttribute("currentTime", currTime + Long.parseLong(request.getParameter("elapsedTime")));
 				
-				if( qNum == Quiz.getNumQuestionsUsingID(quizID) ) {
+				if( qNum+1 == Quiz.getNumQuestionsUsingID(quizID) ) {
 					RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
 					dispatch.forward(request, response);
 				} else {
-					RequestDispatcher dispatch = request.getRequestDispatcher("ShowQuiz.jsp");
+					RequestDispatcher dispatch = request.getRequestDispatcher("ShowQuiz.jsp?id=" + quizID);
 					dispatch.forward(request, response);
 				}
 

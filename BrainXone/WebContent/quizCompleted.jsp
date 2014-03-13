@@ -16,15 +16,15 @@
 		<div class="content-pane">
 			<%
 				HttpSession hs = request.getSession();
-				String quizIDString = (String) hs.getAttribute("quizID");
+				Integer quizIDObj = (Integer) hs.getAttribute("quizID");
 				int quizID = 0;
-				if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+				if( quizIDObj != null) quizID = quizIDObj;
 				Quiz currQuiz = Quiz.getQuizUsingID(quizID);
 				int score = 0;
 				Integer scoreObject = (Integer) hs.getAttribute("currentScore");
 				if( scoreObject != null ) score = scoreObject;
-				double time = 0;
-				Double timeObject = (Double) hs.getAttribute("currentTime");
+				long time = 0;
+				Long timeObject = (Long) hs.getAttribute("currentTime");
 				if( timeObject != null ) time = timeObject;
 				hs.removeAttribute("currentScore");
 				hs.removeAttribute("currentTime");

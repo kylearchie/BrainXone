@@ -13,11 +13,11 @@
 	int questionNumber = -1;
 	if (!q.isOnePage()) {
 		Integer qNum = (Integer) sess.getAttribute("questionNumber");
-		if (qNum == null) {
+		if (qNum == null || qNum >= Quiz.getNumQuestionsUsingID(quizID)) {
 			questionNumber = 0;
 			sess.setAttribute("questionNumber", questionNumber);
 			sess.setAttribute("currentScore", 0);
-			sess.setAttribute("currentTime", 0);
+			sess.setAttribute("currentTime", new Long(0));
 			sess.setAttribute("randomSeed", System.nanoTime());
 
 		} else
