@@ -127,6 +127,7 @@ public class CheckAnswerServlet extends HttpServlet {
 			if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 				TakenEvent.UpdateGreatestAchievements(userName, stmt);
 			}
+			TakenEvent.UpdateTakenAchievements(userName, stmt);
 			
 			if( currQuiz.isOnePage() ) {
 				RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");

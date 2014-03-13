@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import = "java.sql.*, backend.*, java.util.*" %>
+<%@ page import = "java.sql.*, backend.*, java.util.*, brainxone.*, java.text.SimpleDateFormat, java.util.Date" %>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,17 +13,128 @@
 <body>
 <%@ include file="header.html" %>
 <%
+
+    
+    ServletContext servletContext = getServletContext();
+    Statement stmt = (Statement) servletContext.getAttribute("Statement");
+    String userName = (String) session.getAttribute("currentUser");
 	int quizID = Integer.parseInt(request.getParameter("id"));
 	Quiz q = Quiz.getQuizUsingID(quizID);
+	
+	
+	
+	
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
-	out.print("Creator Name: " + q.getCreatorName() + "<br>");
-	out.print("List of User's Past Performance: <br>");
+	User creator = User.retrieveByUserName(q.getCreatorName(), stmt);
+	String createrName;
+	if (!creator.isPrivate() || creator.getFriends().contains(userName)) {
+		createrName = "<a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>";
+	} else {
+		createrName = "anonymous";
+	}		
+	out.println("Creator Name: " + createrName);	
+	if (!userName.equals("guest")) {
+		out.print("List of User's Past Performance: <br>");
+		ArrayList<TakenEvent> pastPerformance = TakenEvent.getPastPerformance(userName, quizID, stmt);
+		for (TakenEvent past: pastPerformance) {
+			out.print("At " + past.getTime() + ", you spend " + past.getTimeTaken() + "ms taking this quiz with a score of " + past.getScore());
+		}
+	}
+	
 	out.print("List of Highest Performance of All Time: <br>");
+	ArrayList<TakenEvent> highestPerformance = TakenEvent.getBestPerformance(quizID, stmt);
+	int n = 0;
+	for (TakenEvent best: highestPerformance) {
+		n++;
+		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
+		String takerNameURL;
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
+		} else {
+			takerNameURL = "anonymous";
+		}		
+		out.print(n +".At " + best.getTime() + ", " + takerNameURL + " spend " + best.getTimeTaken() + "ms taking this quiz with a score of " + best.getScore());
+	}
+	
+	
 	out.print("List of Highest Performance in the Last Day: <br>");
+	Date now = new Date();
+	int dateOfToday = now.getDate();
+	int dateOfYesterday = dateOfToday - 1;
+	now.setDate(dateOfYesterday);
+	String pattern = "yyyy-MM-dd HH:mm:ss";
+	SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+	String yesterday = formatter.format(now);
+	ArrayList<TakenEvent> yesterdaysHighestPerformance = TakenEvent.getYesterdaysBestPerformance(quizID, yesterday, stmt);
+	n = 0;
+	for (TakenEvent best: yesterdaysHighestPerformance) {
+		n++;
+		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
+		String takerNameURL;
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
+		} else {
+			takerNameURL = "anonymous";
+		}		
+		out.print(n +".At " + best.getTime() + ", " + takerNameURL + " spend " + best.getTimeTaken() + "ms taking this quiz with a score of " + best.getScore());
+	}
+	
 	out.print("List of Performance of Recent Test Takers: <br>");
+	ArrayList<TakenEvent> recentPerformance = TakenEvent.getRecentPerformance(quizID, stmt);
+	n = 0;
+	for (TakenEvent best: recentPerformance) {
+		n++;
+		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
+		String takerNameURL;
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
+		} else {
+			takerNameURL = "anonymous";
+		}		
+		out.print(n +".At " + best.getTime() + ", " + takerNameURL + " spend " + best.getTimeTaken() + "ms taking this quiz with a score of " + best.getScore());
+	}
+	
 	out.print("List of tags: <br>");
+	try {
+		ResultSet rs = stmt.executeQuery("SELECT * FROM tag WHERE quizID =" + quizID + ";");
+		while (rs.next()) {
+			String tag = rs.getString("tag");
+	    	out.println(tag + ",");
+	    }
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	    
+	
 	out.print("Summary of staticstics of how well users have performed on quiz: <br> <br><br>");
-	out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
+	if (recentPerformance.size() == 0) {
+		out.println("No one has taken this quiz yet.");
+	} else {
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT count(*) AS number, avg(score) AS avgScore, avg(timeTaken) AS avgTimeTaken FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + ";");	
+			while (rs.next()) {
+				int count = rs.getInt("number");
+		    	double avgScore = rs.getDouble("avgScore");
+		    	double avgTimeTaken = rs.getDouble("avgTimeTaken");
+		    	out.println("This quiz has been taken " + count + " times with an average score of " + avgScore + " and an average time of " + avgTimeTaken + ".");
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	if (userName.equals("guest")) {
+		out.println("You have to register in order to take this quiz.");
+	} else {
+		out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
+	}
+	
+	
+	
 	if(q.hasPracticeMode()){
 	%>
 	
@@ -34,8 +145,50 @@
 	
 	<%
 	}
+	
+	
+	
+	
 	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
 
 %>
+
+	<form action="ListFriendsServlet.jsp" method = "post">
+	<input type = "submit" value = "Challenge a Friend!">
+	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	</form>
+	
+	<form action="ReportServelrt" method = "post">
+	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	<input type = "submit" value = "Report quiz as inappropiate">	
+	</form>
+	
+	
+<%
+User user = User.retrieveByUserName(userName, stmt);
+if (user.isAdmin()) {
+    %>	
+	<form action="DeleteQuizServlet" method = "post">
+	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	<input type = "submit" value = "Delete this quiz">
+	</form>
+	
+	<form action="DeleteQuizHistoryServlet" method = "post">
+	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	<input type = "submit" value = "Delete this quiz's history">
+	</form>
+	
+	
+	
+	
+	
+	<%
+}
+
+
+%>
+	
+	
+	
 </body>
 </html>

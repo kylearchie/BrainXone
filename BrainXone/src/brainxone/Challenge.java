@@ -1,7 +1,9 @@
 package brainxone;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Challenge extends Message
 {
@@ -16,11 +18,14 @@ public class Challenge extends Message
 
 	public Challenge(String from, String to, String t, String body, int quiz, Statement stmt) {	
 		super(from, to, t, body, false);		
-		timeSent = "" + System.currentTimeMillis();
+		Date now = new Date();
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+		timeSent = formatter.format(now);
 		quizID = quiz;
 		try {
-			stmt.executeUpdate("INSERT INTO messages VALUES(\"" + fromID + "\",\"" + toID + "\",\"" + 
-		timeSent + "\",\"" + type + "\",\"" + text + "\"," + quizID + ", NULL);");
+			stmt.executeUpdate("INSERT INTO messages VALUES(\"" + from + "\",\"" + to + "\",\"" + 
+		timeSent + "\",\"" + t + "\",\"" + body + "\"," + quiz + ", NULL);");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -70,6 +75,42 @@ public class Challenge extends Message
 			e.printStackTrace();
 			
 		}	    
+	}
+	
+	public static ArrayList<Challenge> getReports(String userName,Statement stmt) {
+		ArrayList<Challenge> challenges = new ArrayList<Challenge>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM messages WHERE toUserName = \"" + userName + 
+					"\" AND messageType = \"report\" ORDER BY timeSent DESC;");
+			while (rs.next()) {
+		    	String fromUserName = rs.getString("fromUserName");
+		    	String timeSent = rs.getString("timeSent");
+		    	String messageType = rs.getString("messageType");
+		    	String text = rs.getString("text");
+		    	int quizID = rs.getInt("quizID");
+		    	boolean hasBeenRead = rs.getBoolean("hasBeenRead");
+                Challenge challenge = new Challenge(fromUserName, userName, timeSent, messageType, text, quizID, hasBeenRead);
+                challenges.add(challenge);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return challenges;
+	}
+	
+	public static void deleteReport(String reportUser, int quizID,Statement stmt) {
+		ArrayList<String> admins = User.getAllAdminUserName(stmt);
+		for (String admin: admins) {
+			try {
+				stmt.executeUpdate("DELETE FROM messages WHERE messageType = \"report\" AND toUserName = \"" + admin + "\" AND fromUserName = \"" + reportUser + "\" AND quizID = " + quizID + ";");		
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}	    
+		}
 	}
 	
 }
