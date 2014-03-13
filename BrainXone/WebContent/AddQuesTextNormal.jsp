@@ -21,9 +21,6 @@ Input Question Text: <input type = "text" name = "quesText">
 
 <input type = hidden name = "isOrdered">
 
-Add Tags? Separate by <b>spaces</b>
-<input type = "text" name = "tags">  <br> <br>
-
 <input type = "submit" value = "Add answer">
 </form>
 

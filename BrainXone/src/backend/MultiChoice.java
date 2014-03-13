@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 class MultiChoice extends Question{		
 
 	public MultiChoice(boolean isPlayerMode, int quesID, int quesType, String quesText) {
@@ -17,10 +19,8 @@ class MultiChoice extends Question{
 	 * CREATOR MODE
 	 * 
 	 */
-	public int setAnswer(HashMap<String, Integer> answerKeys) {
+	public int setAnswer(HashMap<String, Integer> answerKeys, Statement stmt) {
 		maxPoints = 0;
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			for(Map.Entry<String, Integer> ans : answerKeys.entrySet()){
 				String option = ans.getKey();
@@ -41,9 +41,9 @@ class MultiChoice extends Question{
 	 * @return
 	 */
 	@Override
-	public int checkAnswer(HashSet<String> mapB){
+	public int checkAnswer(HashSet<String> mapB, Statement stmt){
 		points = 0;
-		HashMap<String, Integer> mapA = displayAnswers();
+		HashMap<String, Integer> mapA = displayAnswers(stmt);
 		for(String ans : mapB){
 			if(mapA.containsKey(ans) && mapA.get(ans) == 1) {
 				points++;
@@ -58,10 +58,8 @@ class MultiChoice extends Question{
 	 * @return
 	 */
 	@Override
-	public HashMap<String, Integer> displayAnswers(){
+	public HashMap<String, Integer> displayAnswers(Statement stmt){
 		HashMap<String, Integer> mapA = new HashMap<String, Integer>();
-		DBConnection conn = new DBConnection();
-		Statement stmt = conn.getStmt();
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT ansOption, isVaid FROM ansOptions WHERE quesID = " + quesID);
 			while(rs.next()){

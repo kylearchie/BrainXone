@@ -11,6 +11,7 @@
 <h1> Step 1: Please input the description and category of this quiz and hit submit when you're ready to input questions </h1> <br>
 
 <form action="QuizCreationServlet" method = "post">
+Input a name for the quiz: <input type = "text" name = "quizName"> <br>
 Input description: <input type = "text" name = "description"> <br>
 Select category: <select name = "category">  
 <option value = "Food"> Food </option>
@@ -29,6 +30,10 @@ Display all questions in One Page?
 Is the quiz available for practice? 
 <input type = "radio" name = "isPracticeMode" value = "1"> YES &nbsp;
 <input type = "radio" name = "isPracticeMode" value = "0"> NO <br> <br>
+
+Add Tags: Separate by <b>spaces</b>
+<input type = "text" name = "tags">  <br> <br>
+
 
 <input type = "submit" value = "Move to add questions">
 </form>

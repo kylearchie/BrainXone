@@ -1,19 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.sql.*,backend.*,java.util.*"%>
+<%@ page import= "java.sql.Statement" %>
 
 <%
 	HttpSession sess = request.getSession();
+	ServletContext servletContext = getServletContext();
+	Statement stmt = (Statement) servletContext.getAttribute("Statement");
 	Integer quizID = Integer.parseInt(request.getParameter("id"));
 	sess.setAttribute("quizID", quizID);
 	sess.setAttribute("isPracticeMode", 0);
 
-	Quiz q = Quiz.getQuizUsingID(quizID);
+	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
 
 	int questionNumber = -1;
 	if (!q.isOnePage()) {
 		Integer qNum = (Integer) sess.getAttribute("questionNumber");
-		if (qNum == null || qNum >= Quiz.getNumQuestionsUsingID(quizID)) {
+		if (qNum == null || qNum >= Quiz.getNumQuestionsUsingID(quizID, stmt)) {
 			questionNumber = 0;
 			sess.setAttribute("questionNumber", questionNumber);
 			sess.setAttribute("currentScore", 0);
@@ -47,7 +50,7 @@
 		<h1 class="quiz-title"><%= q.getDescription() %></h1>
 		<form id="quiz-submit-form" action="CheckAnswerServlet" method="post">
 		<% 
-			ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID);
+			ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
 			if (q.isRandomVal()) {
 				long seed;
 				if( q.isOnePage() ) seed = System.nanoTime();
@@ -94,7 +97,7 @@
 					out.print("<h3 class='quiz-question-header'>Select the correct answer(s):</h3>");
 					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
 					out.print("<div class='quiz-answers multi-option'>");
-					HashMap<String, Integer> options = ques.displayAnswers();
+					HashMap<String, Integer> options = ques.displayAnswers(stmt);
 					int i = 0;
 					for (String str : options.keySet()) {
 						i++;

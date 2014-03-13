@@ -43,6 +43,8 @@ public class CheckAnswerServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession hs = request.getSession();
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String userName = (String) hs.getAttribute("currentUser");
 
 		int isPracticeMode = (Integer)hs.getAttribute("isPracticeMode");
@@ -59,16 +61,16 @@ public class CheckAnswerServlet extends HttpServlet {
 			case Question.SINGLE_STR_ANS:
 			case Question.FIB:
 			case Question.PICTURE_RESPONSE:
-				points = practiceSingleStrResponse(request, (StringResponse) ques);
-				max = ques.getMaxPoints();
+				points = practiceSingleStrResponse(request, (StringResponse) ques, stmt);
+				max = ques.getMaxPoints(stmt);
 				if(points == max){
 					int score = curScore.get(ques);
 					curScore.put(ques, (score + 1));
 				}
 				break;
 			case Question.MULTI_STR_ANS:
-				points = practiceMultiStrResponse(request, (StringResponse) ques);
-				max = ques.getMaxPoints();
+				points = practiceMultiStrResponse(request, (StringResponse) ques, stmt);
+				max = ques.getMaxPoints(stmt);
 				if(points == max){
 					int score = curScore.get(ques);
 					curScore.put(ques, (score + 1));
@@ -76,8 +78,8 @@ public class CheckAnswerServlet extends HttpServlet {
 				break;
 			case Question.MULTI_CHOICE_C:
 			case Question.MULTI_CHOICE_R:
-				points = practiceMultiChoice(request, (MultiChoice) ques);
-				max = ques.getMaxPoints();
+				points = practiceMultiChoice(request, (MultiChoice) ques, stmt);
+				max = ques.getMaxPoints(stmt);
 				if(points == max){
 					int score = curScore.get(ques);
 					curScore.put(ques, (score + 1));
@@ -92,8 +94,8 @@ public class CheckAnswerServlet extends HttpServlet {
 			int scoreTotal = 0;
 			Integer quizIDString = (Integer) hs.getAttribute("quizID");
 			int quizID = 0;
-			if( quizIDString != null) quizID = quizIDString;
-			Quiz currQuiz = Quiz.getQuizUsingID(quizID);
+			if( quizIDString != null) quizID = Integer.parseInt(quizIDString);
+			Quiz currQuiz = Quiz.getQuizUsingID(quizID, stmt);
 			
 			int counter = 0;
 			while( true ) {
@@ -110,19 +112,17 @@ public class CheckAnswerServlet extends HttpServlet {
 				case Question.FIB:
 				case Question.PICTURE_RESPONSE:
 				case Question.MULTI_STR_ANS:
-					scoreTotal += solveMultiString( request, q, id );
+					scoreTotal += solveMultiString( request, q, id , stmt);
 					break;
 				case Question.MULTI_CHOICE_C:
 				case Question.MULTI_CHOICE_R:
-					scoreTotal += solveMultiChoice( request, q, id, type );			
+					scoreTotal += solveMultiChoice( request, q, id, type , stmt);			
 				}
 			}
 			System.out.println(scoreTotal);
 			System.out.println(request.getParameter("elapsedTime"));
 
 			long taken = Long.parseLong(request.getParameter("elapsedTime"));
-			ServletContext servletContext = getServletContext();
-			Statement stmt = (Statement) servletContext.getAttribute("Statement");
 			TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
 			if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 				TakenEvent.UpdateGreatestAchievements(userName, stmt);
@@ -142,7 +142,7 @@ public class CheckAnswerServlet extends HttpServlet {
 				hs.setAttribute("currentScore", currScore + scoreTotal);
 				hs.setAttribute("currentTime", currTime + taken);
 				
-				if( qNum+1 == Quiz.getNumQuestionsUsingID(quizID) ) {
+				if( qNum == Quiz.getNumQuestionsUsingID(quizID, stmt) ) {
 					RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
 					dispatch.forward(request, response);
 				} else {
@@ -167,7 +167,7 @@ public class CheckAnswerServlet extends HttpServlet {
 //	}
 
 	/* G: BUG -- What happens when answers to different questions are the same? */
-	private int solveMultiString(HttpServletRequest request, String q, int quesID) {
+	private int solveMultiString(HttpServletRequest request, String q, int quesID, Statement stmt) {
 		ArrayList<String> answers = new ArrayList<String>();
 		int counter = 0;
 		while(true) {
@@ -177,12 +177,12 @@ public class CheckAnswerServlet extends HttpServlet {
 			answers.add(answer);
 		}
 		StringResponse sr = new StringResponse(true, quesID, Question.MULTI_STR_ANS, null);
-		int points = sr.checkAnswer(answers);
+		int points = sr.checkAnswer(answers, stmt);
 		System.out.println(points + " for SR");
 		return points;
 	}
 
-	private int solveMultiChoice(HttpServletRequest request, String q, int quesID, int type) {
+	private int solveMultiChoice(HttpServletRequest request, String q, int quesID, int type, Statement stmt) {
 		HashSet<String> selectedOptions = new HashSet<String>();
 		int counter = 0;
 		while(true) {
@@ -198,29 +198,29 @@ public class CheckAnswerServlet extends HttpServlet {
 		}
 		MultiChoice mc = new MultiChoice(true, quesID, Question.MULTI_CHOICE, null);
 		
-		int points = mc.checkAnswer(selectedOptions);
+		int points = mc.checkAnswer(selectedOptions, stmt);
 		System.out.println(points + " for MC");
 		return points;
 	}
 	
-	private int practiceMultiStrResponse(HttpServletRequest request, StringResponse ques){
+	private int practiceMultiStrResponse(HttpServletRequest request, StringResponse ques, Statement stmt){
 		ArrayList<String> answers = new ArrayList<String>();
 		for(int i = 0; i < 3; i ++)
 		{
 			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
 			answers.add(answer);
 		}
-		return ques.checkAnswer(answers);
+		return ques.checkAnswer(answers, stmt);
 	}
 	
-	private int practiceSingleStrResponse(HttpServletRequest request, StringResponse ques){
+	private int practiceSingleStrResponse(HttpServletRequest request, StringResponse ques, Statement stmt){
 		ArrayList<String> answers = new ArrayList<String>();
 		String answer = (String) request.getParameter("answer");
 		answers.add(answer);
-		return ques.checkAnswer(answers);
+		return ques.checkAnswer(answers, stmt);
 	}
 	
-	private int practiceMultiChoice(HttpServletRequest request, MultiChoice ques){
+	private int practiceMultiChoice(HttpServletRequest request, MultiChoice ques, Statement stmt){
 		HttpSession hs = request.getSession();
 		HashSet<String> selectedOptions = new HashSet<String>();
 		for(int i = 0; i < 2; i ++)
@@ -230,7 +230,7 @@ public class CheckAnswerServlet extends HttpServlet {
 			if(isValid.equals("1"))
 				selectedOptions.add(option);
 		}
-		return ques.checkAnswer(selectedOptions);
+		return ques.checkAnswer(selectedOptions, stmt);
 	}
 	
 	

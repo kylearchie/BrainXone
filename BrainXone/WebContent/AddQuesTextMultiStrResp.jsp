@@ -23,9 +23,6 @@ Are the answers ordered?
 <input type = "radio" name = "isOrdered" value = "1"> YES &nbsp;
 <input type = "radio" name = "isOrdered" value = "0"> NO <br> <br>
 
-Add Tags? Separate by <b>spaces</b>
-<input type = "text" name = "tags">  <br> <br>
-
 <input type = "submit" value = "Add answer">
 </form>
 

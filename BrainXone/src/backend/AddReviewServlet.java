@@ -2,10 +2,7 @@ package backend;
 
 import java.io.IOException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class PracticeModeServlet
+ * Servlet implementation class AddReviewServlet
  */
-@WebServlet("/PracticeModeServlet")
-public class PracticeModeServlet extends HttpServlet {
+@WebServlet("/AddReviewServlet")
+public class AddReviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PracticeModeServlet() {
+    public AddReviewServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,22 +40,16 @@ public class PracticeModeServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		int quizID = Integer.parseInt(request.getParameter("quizID"));
-
-		Quiz q = Quiz.getQuizUsingID(quizID, stmt);
-
-		ArrayList<Question> quesList = Quiz.getQuesListUsingID(quizID, stmt);
+		Integer quizIDObj = (Integer) hs.getAttribute("quizID");
+		int quizID = 0;
+		if( quizIDObj != null) quizID = quizIDObj;
 		
-		HashMap<Question, Integer> curScore = new HashMap<Question, Integer>();
+		String textReview = request.getParameter("textReview");
+		int stars = Integer.parseInt(request.getParameter("stars"));
 		
-		for(Question ques : quesList){
-			curScore.put(ques, 0);
-		}
-
-		hs.setAttribute("curScore" , curScore);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("PracticeMode.jsp");
-        rd.forward(request, response);
+		//TODO how to get the reviewer's name?
+		String reviewerName = (String) hs.getAttribute("currentUser");
+		Quiz.addReviewAndRating(quizID, reviewerName, textReview, stars, stmt);
 	}
 
 }
