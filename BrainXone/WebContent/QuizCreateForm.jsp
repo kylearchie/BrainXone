@@ -30,6 +30,10 @@ Is the quiz available for practice?
 <input type = "radio" name = "isPracticeMode" value = "1"> YES &nbsp;
 <input type = "radio" name = "isPracticeMode" value = "0"> NO <br> <br>
 
+Add Tags: Separate by <b>spaces</b>
+<input type = "text" name = "tags">  <br> <br>
+
+
 <input type = "submit" value = "Move to add questions">
 </form>
 </body>

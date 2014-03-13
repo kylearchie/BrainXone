@@ -45,9 +45,6 @@ public class AddQuestionServlet extends HttpServlet {
 		String quesText = (String) request.getParameter("quesText");
 		String quesImgURL = (String) request.getParameter("quesImgURL");
 		int quesType = (Integer)request.getSession().getAttribute("quesType");
-		String allTags = (String)request.getParameter("tags");
-
-		System.out.println(allTags);
 		int type = quesType % 2;
 		String toParse ="";
 
@@ -56,7 +53,6 @@ public class AddQuestionServlet extends HttpServlet {
 		else
 			toParse = quesText;
 
-		
 		Question ques = null;
 
 		if(type == Question.STRING_RESPONSE){
@@ -67,6 +63,9 @@ public class AddQuestionServlet extends HttpServlet {
 
 		Quiz q = (Quiz) hs.getAttribute("quiz");
 		
+		// TAGS TAGS TAGS
+		String allTags = (String) request.getSession().getAttribute("tags");
+		System.out.println(allTags);
 		StringTokenizer st = new StringTokenizer(allTags);
 		while (st.hasMoreTokens()) {
 			q.addTagsToDB(st.nextToken(), stmt);

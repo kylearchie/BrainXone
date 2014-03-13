@@ -47,11 +47,13 @@ public class QuizCreationServlet extends HttpServlet {
 		int isOnePage = Integer.parseInt((String) request.getParameter("isOnePage"));
 		int isPracticeMode = Integer.parseInt((String) request.getParameter("isPracticeMode"));
 		
+		String allTags = (String)request.getParameter("tags");
+		request.getSession().setAttribute("tags", allTags);
+
 		Quiz q = new Quiz(false, description, "1", category, isRandom, isOnePage, isPracticeMode);
 		q.pushToQuizDB(stmt);
 		hs.setAttribute("quiz", q);
 		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");
         rd.forward(request, response);
 	}
-
 }

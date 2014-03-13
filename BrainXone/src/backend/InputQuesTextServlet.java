@@ -1,6 +1,7 @@
 package backend;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,13 +42,13 @@ public class InputQuesTextServlet extends HttpServlet {
 		
 		int quesType = Integer.parseInt((String) request.getParameter("quesType"));
 		request.getSession().setAttribute("quesType", quesType);
-		
+				
 		int type = quesType % 2;
 		
 		Question.init();
 		String instructions = Question.INSTRUCTIONS.get(quesType);
 		request.getSession().setAttribute("instructions", instructions);
-
+		
 		String nextPage = "";
 		switch(quesType){
 		case Question.SINGLE_STR_ANS: 
