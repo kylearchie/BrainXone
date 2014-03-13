@@ -48,7 +48,7 @@ public class AddReviewServlet extends HttpServlet {
 		int stars = Integer.parseInt(request.getParameter("stars"));
 		
 		//TODO how to get the reviewer's name?
-		//String reviewerName = (String) hs.getAttribute("userName");
+		String reviewerName = (String) hs.getAttribute("currentUser");
 		Quiz.addReviewAndRating(quizID, reviewerName, textReview, stars, stmt);
 	}
 
