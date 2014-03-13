@@ -242,4 +242,18 @@ public class Quiz {
 	public boolean isTimedQuiz() {
 		return true;
 	}
+	
+	public static ArrayList<Integer> getQuizIDByTag(String tag, Statement stmt){
+		ArrayList<Integer> quizIDList = new ArrayList<Integer>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quizID FROM tag WHERE tag = \"" + tag + "\"");
+			while(rs.next()){
+				quizIDList.add(Integer.parseInt(rs.getString(1)));
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return quizIDList;
+	}
 }
