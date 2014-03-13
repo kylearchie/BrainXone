@@ -145,12 +145,14 @@ public class CheckAnswerServlet extends HttpServlet {
 			if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 				TakenEvent.UpdateGreatestAchievements(userName, stmt);
 			}
+
 			if(isPracticeMode && allZeroes(usedQuestions)) {
 					hs.setAttribute("isPracticeMode", new Boolean(false));
 					RequestDispatcher dispatch = request.getRequestDispatcher("QuizSummary.jsp?id=" + quizID);
 					dispatch.forward(request, response);
 					return;
 			}
+
 			if( currQuiz.isOnePage() ) {
 				 if(isPracticeMode) {
 					RequestDispatcher dispatch = request.getRequestDispatcher("ShowQuiz.jsp?id=" + quizID);

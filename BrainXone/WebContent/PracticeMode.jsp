@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.*,backend.*,java.util.*"%>
+<%@ page import="java.sql.*,backend.*,java.util.*, brainxone.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -69,7 +69,15 @@
 		}
 		}
 	if(count == 0){
+		String userName = (String) session.getAttribute("currentUser");
+		ServletContext servletContext = getServletContext();
+		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		if (!TakenEvent.checkPractice(userName, stmt)) {
+			TakenEvent.UpdatePractivechievements(userName, stmt);
+		}
 		System.out.println("finished practice!");
+		
+		
 	}
 %>
 

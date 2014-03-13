@@ -60,17 +60,39 @@
 	out.println("<ul>");
 	for (Challenge c : challenges) 
 	{
-		out.println("<li> Challenge from " + c.getFromID() + " </li>");
-		out.println("<li> " + c.getText() + " </li>");		
-		out.println("<form action=\"quiz.jsp?id="+ c.getQuizID() + "\" method=\"post\">");
+		out.println("<p> Challenge from " + c.getFromID() + "on" + c.getQuizID() + "</p>");
+		out.println("<li> " + c.getText() + " </li>");	
+		out.println(c.getFromID() + "'s best score on" + c.getQuizID() + " is " + TakenEvent.bestScore(c.getFromID(), c.getQuizID(), stmt));
+		//out.println("<form action=\"QuizSummary.jsp?id="+ c.getQuizID() + "\" method=\"post\">");
+		out.println("<form action=\"AcceptChallengeServlet\" method=\"post\">");
 		out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
 		out.println("<input type=\"hidden\" name=\"friendUser\" value=\"" + c.getFromID() + "\"/>");
-		out.println("<input type=\"hidden\" name=\"timeSent\" value=\"" + c.getTimeSent() + "\"/>");	
+		out.println("<input type=\"hidden\" name=\"quizID\" value=" + c.getQuizID() + ">");
+		out.println("<input type=\"hidden\" name=\"timeSent\" value=\"" + c.getTimeSent() + "\"/>");
 		out.println("<input type=\"hidden\" name=\"type\" value=\"challenge\"/>");
 	    out.println("<input type=\"submit\" value=\"Take the challenge\"/>");
 	    out.println("</form>");	
 	}
 	out.println("</ul>");
+	
+	ArrayList<Challenge> reports = Challenge.getReports(userName, stmt);
+	out.println("<h4> Reports </h4>");
+	out.println("<ul>");
+	for (Challenge r : reports) 
+	{
+		out.println("<p> Report from " + r.getFromID() + "on" + r.getQuizID() + "</p>");
+		out.println("<li> " + r.getText() + " </li>");	
+		out.println("<form action=\"ReadReportServlet\" method=\"post\">");
+		out.println("<input type=\"hidden\" name=\"currentUser\" value=\"" + userName + "\"/>");
+		out.println("<input type=\"hidden\" name=\"reportUser\" value=\"" + r.getFromID() + "\"/>");
+		out.println("<input type=\"hidden\" name=\"quizID\" value=" + r.getQuizID() + ">");
+		out.println("<input type=\"hidden\" name=\"timeSent\" value=\"" + r.getTimeSent() + "\"/>");
+		out.println("<input type=\"hidden\" name=\"type\" value=\"report\"/>");
+	    out.println("<input type=\"submit\" value=\"See the quiz\"/>");
+	    out.println("</form>");	
+	}
+	out.println("</ul>");
+	
 	
 	
 

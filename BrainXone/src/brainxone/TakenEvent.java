@@ -19,14 +19,14 @@ public class TakenEvent extends Event
 	public TakenEvent(String userName, int quiz, int points, long taken, Statement stmt) 
 	{
 		super(userName, quiz);
-		timeCreated = "" + System.currentTimeMillis();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date now = new Date();
-		String timeString = dateFormat.format(now);
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+		timeCreated = formatter.format(now);
 		score = points;
 		timeTaken = taken;
 		try {
-			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeString + "\",\"" + userName + "\"," + 
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\",\"" + userName + "\"," + 
 					quizID + "," + score + "," +  timeTaken + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -210,7 +210,93 @@ public class TakenEvent extends Event
 		return score;
 	}
 	
+	public static ArrayList<TakenEvent> getPastPerformance(String userName, int quizID, Statement stmt) {
+		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE quizID = " + quizID + " AND score IS NOT NULL AND timeTaken IS NOT NULL AND userName = \"" + userName + "\" ORDER BY timeCreated DESC;");
+			while (rs.next()) {
+		    	String time = rs.getString("timeCreated");
+		    	int score = rs.getInt("score");
+		    	long timeTaken = rs.getLong("timeTaken");
+                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                takenEvents.add(takenEvent);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return takenEvents;
+	}
 	
+	public static ArrayList<TakenEvent> getBestPerformance(int quizID, Statement stmt) {
+		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 10");
+			while (rs.next()) {
+				String userName = rs.getString("userName");
+		    	String time = rs.getString("timeCreated");
+		    	int score = rs.getInt("score");
+		    	long timeTaken = rs.getLong("timeTaken");
+                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                takenEvents.add(takenEvent);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return takenEvents;
+	}
+	
+	public static ArrayList<TakenEvent> getYesterdaysBestPerformance(int quizID, String yesterday, Statement stmt) {
+		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE timeCreated > \"" + yesterday + "\" AND score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 10");
+			while (rs.next()) {
+				String userName = rs.getString("userName");
+		    	String time = rs.getString("timeCreated");
+		    	int score = rs.getInt("score");
+		    	long timeTaken = rs.getLong("timeTaken");
+                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                takenEvents.add(takenEvent);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return takenEvents;
+	}
+	
+	public static ArrayList<TakenEvent> getRecentPerformance(int quizID, Statement stmt) {
+		ArrayList<TakenEvent> takenEvents = new ArrayList<TakenEvent>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY timeCreated DESC LIMIT 10");
+			while (rs.next()) {
+				String userName = rs.getString("userName");
+		    	String time = rs.getString("timeCreated");
+		    	int score = rs.getInt("score");
+		    	long timeTaken = rs.getLong("timeTaken");
+                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                takenEvents.add(takenEvent);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return takenEvents;
+	}
+	
+	public static void deleteQuizHistory(int quizID, Statement stmt) {
+		try {
+			stmt.executeUpdate("DELETE FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + ";");			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+	}
 	
 	
 }
