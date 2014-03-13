@@ -1,6 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import = "java.sql.*, backend.*, java.util.*" %>
+<%
+	HttpSession sess = request.getSession();
+	Boolean b = (Boolean) sess.getAttribute("isPracticeMode");
+	if( b != null && b ) {
+		sess.setAttribute("isPracticeMode", new Boolean(false));
+		sess.removeAttribute("questionNumber");
+		sess.removeAttribute("currentScore");
+		sess.removeAttribute("currentTime");
+		sess.removeAttribute("randomSeed");
+	}
+
+%>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -41,6 +53,8 @@
 	</form>
 	
 	<%
+	} else {
+		request.getSession().setAttribute("isPracticeMode", false);
 	}
 	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
 

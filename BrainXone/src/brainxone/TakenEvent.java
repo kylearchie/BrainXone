@@ -1,7 +1,10 @@
 package brainxone;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import backend.DBConnection;
 
@@ -17,10 +20,13 @@ public class TakenEvent extends Event
 	{
 		super(userName, quiz);
 		timeCreated = "" + System.currentTimeMillis();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date now = new Date();
+		String timeString = dateFormat.format(now);
 		score = points;
 		timeTaken = taken;
 		try {
-			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\",\"" + userName + "\"," + 
+			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeString + "\",\"" + userName + "\"," + 
 					quizID + "," + score + "," +  timeTaken + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,19 +146,18 @@ public class TakenEvent extends Event
 	}
 
 	public static boolean CheckQualifiedGreatest(String userName, int quizID, Statement stmt) {
+		if(userName == null) return false;
 		ResultSet rs;
 		String numberOneUserName = null;
-		int count = 0;
 		try {
 			rs = stmt.executeQuery("SELECT userName FROM events WHERE score IS NOT NULL AND timeTaken IS NOT NULL AND quizID = " + quizID + " ORDER BY score DESC, timeTaken ASC LIMIT 1");
 			while (rs.next()) {
 				numberOneUserName = rs.getString("userName");
-				count++;
 		    }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (count == 1) {
+		if (numberOneUserName != null) {
 			return userName.equals(numberOneUserName);
 		}
 		return true;

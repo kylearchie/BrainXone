@@ -127,17 +127,17 @@ public class Quiz {
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
-				description = rs.getString(3);
-				category = rs.getString(4);
-				isRandom = Integer.parseInt(rs.getString(5));
-				isOnePage = Integer.parseInt(rs.getString(6));
-				isPracticeMode = Integer.parseInt(rs.getString(7));
+				//description = rs.getString(2);
+				category = rs.getString(3);
+				isRandom = Integer.parseInt(rs.getString(4));
+				isOnePage = Integer.parseInt(rs.getString(5));
+				isPracticeMode = Integer.parseInt(rs.getString(6));
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, quizName, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	
