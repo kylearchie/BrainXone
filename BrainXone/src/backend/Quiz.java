@@ -145,6 +145,10 @@ public class Quiz {
 		return creatorName;
 	}
 
+	public String getName(){
+		return quizName;
+	}
+	
 	public String getDescription(){
 		return description;
 	}

@@ -14,9 +14,11 @@
 <%@ include file="header.html" %>
 <%
 	int quizID = Integer.parseInt(request.getParameter("id"));
+	HttpSession hs = request.getSession();
 	ServletContext servletContext = getServletContext();
 	Statement stmt = (Statement) servletContext.getAttribute("Statement");
 	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+	out.print("Name of the quiz: " + q.getName() + "<br>");
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	out.print("Creator Name: <a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>" + "<br>");
 	out.print("List of User's Past Performance: <br>");
@@ -42,8 +44,12 @@
 	
 	<%
 	}
-	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
-
+	String userName = (String) hs.getAttribute("currentUser");
+	if(q.getCreatorName().equals(userName)){
+		%>
+		out.print("<li><b><a href=\"EditQuiz.jsp?id=" + quizID + "\"> Edit this quiz </a></li>");
+		<%	
+	}
 %>
 </body>
 </html>

@@ -56,6 +56,7 @@ public class AddMultiStrAns extends HttpServlet {
 
 		StringResponse ques = (StringResponse) hs.getAttribute("question");
 		int maxPoints = Integer.parseInt((String) request.getParameter("maxPoints"));
+		maxPoints = Math.max(maxPoints, answerKeys.size());
 		ques.setAnswer(answerKeys, maxPoints, stmt);
 		
 		try {
