@@ -129,6 +129,8 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 			
 			if( currQuiz.isOnePage() ) {
+				hs.setAttribute("currentScore", scoreTotal);
+				hs.setAttribute("currentTime", taken);
 				RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");
 				dispatch.forward(request, response);
 			} else {
@@ -138,7 +140,7 @@ public class CheckAnswerServlet extends HttpServlet {
 				
 				hs.setAttribute("questionNumber", qNum+1);
 				hs.setAttribute("currentScore", currScore + scoreTotal);
-				hs.setAttribute("currentTime", currTime + Long.parseLong(request.getParameter("elapsedTime")));
+				hs.setAttribute("currentTime", currTime + taken);
 				
 				if( qNum+1 == Quiz.getNumQuestionsUsingID(quizID) ) {
 					RequestDispatcher dispatch = request.getRequestDispatcher("quizCompleted.jsp");

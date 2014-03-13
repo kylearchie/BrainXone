@@ -30,7 +30,7 @@
 				hs.removeAttribute("currentTime");
 				hs.removeAttribute("currentQuestion");
 			%>
-			<p>You scored <%= score %> point <% if( score != 1 ) out.print("s"); %></p>
+			<p>You scored <%= score %> point<% if( score != 1 ) out.print("s"); %></p>
 			<p>It took you <%= time/1000 %> seconds</p>
 		</div>
 	</div>
