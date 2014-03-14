@@ -67,7 +67,7 @@ public class Quiz {
 	public static ArrayList<Review> getReviewByQuizID(int quizID, Statement stmt){
 		ArrayList<Review> reviews = new ArrayList<Review>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\";");
 			while(rs.next()){				
 				String reviewerName = rs.getString(1);
 				int stars = Integer.parseInt(rs.getString(2));
@@ -78,7 +78,6 @@ public class Quiz {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return reviews;
 	}
 
@@ -118,15 +117,15 @@ public class Quiz {
 		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
-				//description = rs.getString(2);
-				category = rs.getString(3);
-				isRandom = Integer.parseInt(rs.getString(4));
-				isOnePage = Integer.parseInt(rs.getString(5));
-				isPracticeMode = Integer.parseInt(rs.getString(6));
+				description = rs.getString(3);
+				category = rs.getString(4);
+				isRandom = Integer.parseInt(rs.getString(5));
+				isOnePage = Integer.parseInt(rs.getString(6));
+				isPracticeMode = Integer.parseInt(rs.getString(7));
 			}
 				
 		} catch (SQLException e) {
@@ -142,15 +141,15 @@ public class Quiz {
 		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
-				//description = rs.getString(2);
-				category = rs.getString(3);
-				isRandom = Integer.parseInt(rs.getString(4));
-				isOnePage = Integer.parseInt(rs.getString(5));
-				isPracticeMode = Integer.parseInt(rs.getString(6));
+				description = rs.getString(3);
+				category = rs.getString(4);
+				isRandom = Integer.parseInt(rs.getString(5));
+				isOnePage = Integer.parseInt(rs.getString(6));
+				isPracticeMode = Integer.parseInt(rs.getString(7));
 			}
 				
 		} catch (SQLException e) {
@@ -176,7 +175,7 @@ public class Quiz {
 		ArrayList<Question> qList = new ArrayList<Question>();
 
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\";");
 			if(rs != null){
 				while(rs.next()){
 					int quesID = Integer.parseInt(rs.getString(1));

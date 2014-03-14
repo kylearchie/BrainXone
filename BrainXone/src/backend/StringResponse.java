@@ -60,7 +60,7 @@ public class StringResponse extends Question{
 							if(isOrdered == 0 ){
 								answerKeys.remove(j);
 								points++;
-								System.out.print("points: " + points);
+								System.out.println("points: " + points);
 							}
 							else if(isOrdered == 1){
 								if((i + 1) == j){

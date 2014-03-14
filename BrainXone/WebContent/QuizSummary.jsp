@@ -158,6 +158,7 @@
 	
 	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
 	for(Review r : reviews){
+
 		User reviewer = User.retrieveByUserName(r.reviewerName, stmt);
 		String creatorNameURL;
 		if (!reviewer.isPrivate() || reviewer.getFriends().contains(userName) || reviewer.getUserName().equals(userName)) {
@@ -167,6 +168,7 @@
 		}		
 		out.print("From reviewer: " + creatorNameURL + "<br");
 		out.print("<br>");
+		//out.print("Stars: " + String.valueOf(r.stars) + "<br>");
 		out.print("Text Review: " + r.textReview + "<br>");
 		out.print("Stars: " + r.stars + "<br>");
 	}

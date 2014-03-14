@@ -11,8 +11,7 @@
 <%
 	HttpSession hs = request.getSession();
 	ServletContext servletContext = getServletContext();
-	Statement stmt = (Statement) servletContext
-			.getAttribute("Statement");
+	Statement stmt = (Statement) servletContext.getAttribute("Statement");
 	Question ques = (Question) hs.getAttribute("Question");
 	hs.setAttribute("Question", ques);
 %>
