@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" 
  pageEncoding="UTF-8"%>
- <%@ page import = "java.sql.*, brainxone.*, java.util.*" %> 
+ <%@ page import = "java.sql.*, brainxone.*, java.util.*, backend.*" %> 
 <!DOCTYPE html> 
 <html> 
 <head> 
@@ -24,6 +24,7 @@
 <%
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
+
 User user = User.retrieveByUserName(userName, stmt);
 if (user.isAdmin()) {
 	out.println("<form action=\"MakeAnnouncementServlet\" method=\"post\">");
@@ -109,6 +110,27 @@ if(isPrivate) status = "ON";
 %>
  <a href="quizTaken.jsp"> You have taken <%= numTakenEvents %> quizes.</a>  	 
 
+<p>
+Most popular quizzes:
+<% 
+    ArrayList<Integer> popIDs = Quiz.getTopQuiz(stmt);
+    for (Integer id : popIDs) {
+    	String name = null;
+    	try {
+   			ResultSet rs = stmt.executeQuery("SELECT quizName FROM quiz WHERE quizID = " + id +";");
+   			while (rs.next()) {
+   		    	name = rs.getString("quizName");    	
+   		    }
+    		
+    	} catch (SQLException e) {
+    			// TODO Auto-generated catch block
+    		e.printStackTrace();
+   		}	    	
+   		String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + name  + "</a>";	
+   		out.println("<li> QUIZ: " + quiz + "</li>");   	   
+    } 
+%>
+</p>
 
 <p>
 Recently created quizzes:
@@ -194,6 +216,12 @@ Your friends have recently earned achievements:
 <input type="text" name="searchTerm"/>
 <input type="submit" value="Search"/>
 </form>
+
+<p>Use the search box below to find quizzes by tag!</p>
+
+<form action="findQuizServlet" method="post">
+<input type="text" name="searchTerm"/>
+<input type="submit" value="Search"/>
 
 <h1>Select which mode you want to play in: </h1> <br>
 

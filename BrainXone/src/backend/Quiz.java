@@ -141,6 +141,30 @@ public class Quiz {
 		return q;
 	}
 	
+	public static Quiz getQuizUsingID(Integer quizID, Statement stmt){
+		if(quizID == 0) return null;
+		String creatorName = "";
+		String quizName = "", description = "", category = "";
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
+			if(rs.next()){				
+				creatorName = rs.getString(1);
+				quizName = rs.getString(2);
+				//description = rs.getString(2);
+				category = rs.getString(3);
+				isRandom = Integer.parseInt(rs.getString(4));
+				isOnePage = Integer.parseInt(rs.getString(5));
+				isPracticeMode = Integer.parseInt(rs.getString(6));
+			}
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Quiz q = new Quiz(true, quizName, quizName, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		return q;
+	}
+	
 	public String getCreatorName(){
 		return creatorName;
 	}
@@ -154,6 +178,34 @@ public class Quiz {
 	}
 	// to be used as q.getQuestion // player mode
 	public static ArrayList<Question> getQuesListUsingID(int quizID, Statement stmt){
+		ArrayList<Question> qList = new ArrayList<Question>();
+
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
+			if(rs != null){
+				while(rs.next()){
+					int quesID = Integer.parseInt(rs.getString(1));
+					int quesType = Integer.parseInt(rs.getString(2));
+					String quesText = rs.getString(3);
+					int isOrdered = Integer.parseInt(rs.getString(4));
+					
+					Question q = null;
+					if(quesType % 2 == Question.MULTI_CHOICE) {
+						q = new MultiChoice(true, quesID, quesType, quesText);
+					} else if(quesType % 2 == Question.STRING_RESPONSE) {
+						q = new StringResponse(true, quesID, quesType, quesText);
+					}
+					qList.add(q);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return qList;
+	}
+	
+	
+	public static ArrayList<Question> getQuesListUsingID(Integer quizID, Statement stmt){
 		ArrayList<Question> qList = new ArrayList<Question>();
 
 		try {
@@ -260,4 +312,20 @@ public class Quiz {
 		}
 		return quizIDList;
 	}
+	
+	public static ArrayList<Integer> getTopQuiz(Statement stmt) {
+		ArrayList<Integer> quizzes = new ArrayList<Integer>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT quizID from review GROUP BY quizID ORDER BY AVG(stars) LIMIT 10;");
+			while(rs.next()){
+				int quizID = rs.getInt("quizID");
+				quizzes.add(quizID);
+				}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return quizzes;
+	}
+	
+	
 }
