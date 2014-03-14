@@ -18,7 +18,7 @@ out.println("<h4> Taken Quizes History </h4>");
 out.println("<ul>");
 for (TakenEvent takenEvent : takenEvents) 
 {
-	String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+	String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";	
 	out.println("<li>" + name + "</li>");
 }
 %>

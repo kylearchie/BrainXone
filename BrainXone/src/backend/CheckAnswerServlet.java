@@ -95,8 +95,10 @@ public class CheckAnswerServlet extends HttpServlet {
 		//} else{
 			int scoreTotal = 0;
 			Integer quizIDString = (Integer) hs.getAttribute("quizID");
+			
 			int quizID = 0;
 			if( quizIDString != null) quizID = quizIDString;
+			
 			Quiz currQuiz = Quiz.getQuizUsingID(quizID, stmt);
 			
 			int counter = 0;
@@ -141,6 +143,9 @@ public class CheckAnswerServlet extends HttpServlet {
 			}
 			
 			long taken = Long.parseLong(request.getParameter("elapsedTime"));
+			
+			System.out.println("*********" + quizID);
+			
 			TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
 			if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 				TakenEvent.UpdateGreatestAchievements(userName, stmt);

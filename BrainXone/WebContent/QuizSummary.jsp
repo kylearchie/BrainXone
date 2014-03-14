@@ -46,7 +46,7 @@
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	User creator = User.retrieveByUserName(q.getCreatorName(), stmt);
 	String createrName;
-	if (!creator.isPrivate() || creator.getFriends().contains(userName)) {
+	if (!creator.isPrivate() || creator.getFriends().contains(userName) || creator.getUserName().equals(userName)) {
 		createrName = "<a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>";
 	} else {
 		createrName = "anonymous";
@@ -63,7 +63,6 @@
 	}
 	
 	
-	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	out.print("Creator Name: <a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>" + "<br>");
 	out.print("List of User's Past Performance: <br>");
 
@@ -74,7 +73,7 @@
 		n++;
 		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
 		String takerNameURL;
-		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName) || bestUser.getUserName().equals(userName)) {
 			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
 		} else {
 			takerNameURL = "anonymous";
@@ -97,7 +96,7 @@
 		n++;
 		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
 		String takerNameURL;
-		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName) || bestUser.getUserName().equals(userName)) {
 			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
 		} else {
 			takerNameURL = "anonymous";
@@ -112,7 +111,7 @@
 		n++;
 		User bestUser = User.retrieveByUserName(best.getUserName(), stmt);
 		String takerNameURL;
-		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)) {
+		if (!bestUser.isPrivate() || bestUser.getFriends().contains(userName)  || bestUser.getUserName().equals(userName)) {
 			takerNameURL = "<a href = \"public-profile.jsp?name=" + best.getUserName() + "\">" + best.getUserName() + "</a>";
 		} else {
 			takerNameURL = "anonymous";
@@ -151,7 +150,6 @@
 		
 	}
 	
-	String guest = "guest";
 	if (userName.equals(guest)) {
 		out.println("You have to <a href=\"create_new_account.jsp\"> register </a> in order to take this quiz.");
 	} else {
@@ -160,9 +158,17 @@
 	
 	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
 	for(Review r : reviews){
-		out.print("From reviewer: <a href = \"public-profile.jsp?name=" + r.reviewerName + "\">" + r.reviewerName + "</a>" + "<br");
-		out.print("Stars: " + r.stars + "<br>");
+		User reviewer = User.retrieveByUserName(r.reviewerName, stmt);
+		String creatorNameURL;
+		if (!reviewer.isPrivate() || reviewer.getFriends().contains(userName) || reviewer.getUserName().equals(userName)) {
+			creatorNameURL = "<a href = \"public-profile.jsp?name=" + r.reviewerName + "\">" + r.reviewerName + "</a>";
+		} else {
+			creatorNameURL = "anonymous";
+		}		
+		out.print("From reviewer: " + creatorNameURL + "<br");
+		out.print("<br>");
 		out.print("Text Review: " + r.textReview + "<br>");
+		out.print("Stars: " + r.stars + "<br>");
 	}
 	
 	ArrayList<String> tags = Quiz.getTagsByQuizID(quizID, stmt);

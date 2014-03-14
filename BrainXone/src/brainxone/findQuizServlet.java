@@ -41,7 +41,6 @@ public class findQuizServlet extends HttpServlet {
 		session.setAttribute("tag", search);
 		RequestDispatcher dispatch = request.getRequestDispatcher("quiz-results.jsp");
 		dispatch.forward(request, response);
-
 	}
 
 }

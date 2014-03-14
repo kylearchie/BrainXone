@@ -15,6 +15,7 @@ public class TakenEvent extends Event
 	private int quizID;
 	private int score;
 	private long timeTaken;
+	
 
 	public TakenEvent(String userName, int quiz, int points, long taken, Statement stmt) 
 	{
@@ -27,7 +28,7 @@ public class TakenEvent extends Event
 		timeTaken = taken;
 		try {
 			stmt.executeUpdate("INSERT INTO events VALUES(\"" + timeCreated + "\",\"" + userName + "\"," + 
-					quizID + "," + score + "," +  timeTaken + ");");
+					quiz + "," + score + "," +  timeTaken + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -74,10 +75,11 @@ public class TakenEvent extends Event
 			rs = stmt.executeQuery("SELECT events.* FROM events,friends WHERE events.score IS NOT NULL AND timeTaken IS NOT NULL AND friends.userName1 = \"" + userName + "\" AND friends.userName2 = events.userName ORDER BY timeCreated DESC;");
 			while (rs.next()) {
 		    	String time = rs.getString("timeCreated");
+		    	String friendUserName = rs.getString("userName");
 		    	int quizID = rs.getInt("quizID");
 		    	int score = rs.getInt("score");
 		    	long timeTaken = rs.getLong("timeTaken");
-                TakenEvent takenEvent = new TakenEvent(time, userName, quizID, score, timeTaken);
+                TakenEvent takenEvent = new TakenEvent(time, friendUserName, quizID, score, timeTaken);
                 takenEvents.add(takenEvent);
 		    }
 		} catch (SQLException e) {

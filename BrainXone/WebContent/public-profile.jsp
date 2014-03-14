@@ -89,7 +89,7 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
      out.println("<ul>");
      for (Event createEvent : createEvents) 
      {
-	    String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	    String name = "<a href = \"QuizSummary.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
 	    out.println("<li>" + name + "</li>");
      }
 %>   
@@ -102,7 +102,7 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
      out.println("<ul>");
      for (TakenEvent takenEvent : takenEvents)  
      {
-		String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
 		out.println("<li>" + name + "</li>");
 	 }
 %>  

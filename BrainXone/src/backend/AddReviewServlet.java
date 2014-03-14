@@ -3,6 +3,7 @@ package backend;
 import java.io.IOException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,6 +51,9 @@ public class AddReviewServlet extends HttpServlet {
 		//my first touch on userName
 		String reviewerName = (String) hs.getAttribute("currentUser");
 		Quiz.addReviewAndRating(quizID, reviewerName, textReview, stars, stmt);
+		
+		RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
+		dispatch.forward(request, response);
 	}
 
 }

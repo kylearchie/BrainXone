@@ -58,7 +58,7 @@ public class Quiz {
 
 	public static void addReviewAndRating(int quizID, String reviewerName, String textReview, int stars, Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\"," + stars + "\",\"" + textReview + "\");");
+			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\",\"" + stars + "\",\"" + textReview + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -299,7 +299,7 @@ public class Quiz {
 		try {
 			ResultSet rs = stmt.executeQuery("SELECT quizID FROM allTags WHERE tag = \"" + tag + "\";");
 			while(rs.next()){
-				quizIDList.add(Integer.parseInt(rs.getString(1)));
+				quizIDList.add(rs.getInt("quizID"));
 			}
 				
 		} catch (SQLException e) {
@@ -311,7 +311,7 @@ public class Quiz {
 	public static ArrayList<Integer> getTopQuiz(Statement stmt) {
 		ArrayList<Integer> quizzes = new ArrayList<Integer>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quizID from review GROUP BY quizID ORDER BY AVG(stars) LIMIT 10;");
+			ResultSet rs = stmt.executeQuery("SELECT quizID from review GROUP BY quizID ORDER BY AVG(stars) DESC LIMIT 10;");
 			while(rs.next()){
 				int quizID = rs.getInt("quizID");
 				quizzes.add(quizID);

@@ -18,7 +18,7 @@ out.println("<h4> Created Events </h4>");
 out.println("<ul>");
 for (Event createEvent : createEvents) 
 {
-	String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	String name = "<a href = \"QuizSummary.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
 	out.println("<li>" + name + "</li>");
 }
 %>
