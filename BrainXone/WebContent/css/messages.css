@@ -1,38 +1,5 @@
 @CHARSET "UTF-8";
 
-.message-box {
-	display: block;
-}
-
-.message-box > * {
-	display: table-cell;
-	vertical-align: middle;
-	padding-right: 10px;
-}
-
-.message-box input[type=checkbox] {
-	margin: 0px;
-}
-
-.message-unread-marker {
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	background-color: #75144e;
-}
-
-.read .message-unread-marker {
-	visibility: hidden;
-}
-
-.unread .message-title {
-	font-weight: 600;
-}
-
-.message-box.unread {
-	background-color: #f4f4f4;
-}
-
-.message-box.unread:hover {
-	background-color: #f0f0f0;
+.message-group h3, .message-group h4 {
+	margin-top: 0px;
 }

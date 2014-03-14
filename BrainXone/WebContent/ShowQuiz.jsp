@@ -126,12 +126,14 @@
 					for (String str : options.keySet()) {
 						i++;
 						out.print("<div class='quiz-answer-option'><input type='hidden' name='question" + counter + "option" + i + "' value='" + str + "'>");
-						if(type == Question.MULTI_CHOICE_R) out.print("<input type='radio' name='question" + counter + "valid' value='" + i + "'> " + str + "</div>");
-						else out.print("<input type='checkbox' name='question" + counter + "valid" + i + "' value='" + i + "'> <span>" + str + "</span></div>");
+						if(type == Question.MULTI_CHOICE_R) out.print("<input type='radio' name='question" + counter + "valid' value='" + i + "'> " + str);
+						else out.print("<input type='checkbox' name='question" + counter + "valid" + i + "' value='" + i + "'> <span>" + str + "</span>");
+						out.print("</div>");
 					}
+					out.print("</div>");
 					break;
 				}
-				out.println("</div>");
+				out.print("</div>");
 			} 
 		%>
 		<input id="quiz-submit-button" class="action-button button" type="submit" value="Submit Answers">
