@@ -172,6 +172,7 @@ public class CheckAnswerServlet extends HttpServlet {
 		while(true) {
 			counter++;
 			String answer = request.getParameter(q + "answer" + counter);
+			System.out.println(answer);
 			if(answer == null) break;
 			answers.add(answer);
 		}

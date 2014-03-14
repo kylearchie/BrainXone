@@ -61,12 +61,14 @@ public class StringResponse extends Question{
 								answerKeys.remove(j);
 								points++;
 								System.out.println("points: " + points);
+								break;
 							}
 							else if(isOrdered == 1){
 								if((i + 1) == j){
 									answerKeys.remove(j);
 									points++;
 									System.out.println("points: " + points);
+									break;
 								}
 							}
 						}
@@ -108,11 +110,14 @@ public class StringResponse extends Question{
 	public void setAnswer(ArrayList<ArrayList<String>> answerKeys, int maxPoints, Statement stmt){
 		this.maxPoints = maxPoints;
 		
+		System.out.println(answerKeys);
 		// index starting from 1
 		for(int i = 0; i < answerKeys.size(); i++){
 			try {
 				for(String key : answerKeys.get(i)){
-					stmt.executeUpdate("INSERT INTO indexAnswer VALUES (\"" + quesID +"\",\"" + key + "\",\"" + (i + 1) + "\");");
+					String sql = "INSERT INTO indexAnswer VALUES (\"" + quesID +"\",\"" + key + "\",\"" + (i + 1) + "\");";
+					System.out.println(sql);
+					stmt.executeUpdate(sql);
 				}	
 			} catch (SQLException e) {
 				e.printStackTrace();
