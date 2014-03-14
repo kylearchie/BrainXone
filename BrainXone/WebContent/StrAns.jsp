@@ -12,8 +12,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
+	
 <% if(ques.getType() == Question.MULTI_STR_ANS) { %>
+	<link rel="stylesheet" href="css/multi-choice.css">
 	<script src="js/addQuestions.js"></script>
 <% } %>
 	<script src="js.addVariants.js"></script>
@@ -54,7 +57,7 @@
 				<% if(quiz.hasPracticeMode()) { %>
 				<fieldset class="content-box">
 					<label for="max-points">Points required to be considered correct in practice mode:</label>
-					<input type="number" name="max-points" value ="1">
+					<input type="number" name="maxPoints" value ="1">
 				</fieldset>
 				<% } %>
 				<input id="submit-multi-choice" class="button action-button" type="submit">
