@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.HashSet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,7 +53,11 @@ public class EditQuesServlet extends HttpServlet {
 		case Question.PICTURE_RESPONSE:
 		case Question.MULTI_STR_ANS:
 			updateStringResponse(request, stmt);
-		
+			break;
+		case Question.MULTI_CHOICE_C:
+		case Question.MULTI_CHOICE_R:
+			updateMultiChoice(request, stmt);
+			break;
 		}
 	}
 	
@@ -59,6 +65,7 @@ public class EditQuesServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		int ansCount = (Integer) hs.getAttribute("ansCount");
 		StringResponse ques = (StringResponse) hs.getAttribute("Question");
+		int maxPoints = Integer.parseInt((String) hs.getAttribute("maxPoints")); 
 		for(int i = 1; i <= ansCount; i++){
 			String oneKey = (String) request.getParameter("ans" + i);
 			try {
@@ -68,6 +75,12 @@ public class EditQuesServlet extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+		maxPoints = Math.max(maxPoints, ansCount);
+		try {
+			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -75,16 +88,33 @@ public class EditQuesServlet extends HttpServlet {
 		HttpSession hs = request.getSession();
 		int ansCount = (Integer) hs.getAttribute("ansCount");
 		MultiChoice ques = (MultiChoice) hs.getAttribute("Question");
-		for(int i = 1; i <= ansCount; i++){
-			String oneKey = (String) request.getParameter("ans" + i);
+		
+		try {
+			stmt.executeUpdate("DELETE FROM ansOptions WHERE quesID = \"" + ques.getID() + "\";");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		int maxPoints = 0;
+		for(int i = 1; i <= ansCount; i ++)
+		{
+			String option = (String) request.getParameter("options" + i);
+			int isValid = Integer.parseInt((String)(request.getParameter("isValid" + i)));
+			if(isValid == 1)
+				maxPoints++;
 			try {
-				String sql = "UPDATE indexAnswer SET ans = " + oneKey + " WHERE quesID = " + ques.getID() + " AND ansIndex = " + i;
-				stmt.executeUpdate(sql);
-				System.out.println(sql);
+				stmt.executeUpdate("INSERT INTO ansOptions VALUES (\"" + ques.getID() +"\",\"" + option + "\",\"" + isValid + "\");");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		try {
+			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

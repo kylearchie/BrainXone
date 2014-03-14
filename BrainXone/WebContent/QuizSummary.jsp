@@ -52,7 +52,9 @@
 		createrName = "anonymous";
 	}		
 	out.println("Creator Name: " + createrName);	
-	if (!userName.equals("guest")) {
+	
+	String guest = "guest";
+	if (!userName.equals(guest)) {
 		out.print("List of User's Past Performance: <br>");
 		ArrayList<TakenEvent> pastPerformance = TakenEvent.getPastPerformance(userName, quizID, stmt);
 		for (TakenEvent past: pastPerformance) {
@@ -163,7 +165,15 @@
 		out.print("Text Review: " + r.textReview + "<br>");
 	}
 	
-	
+	ArrayList<String> tags = Quiz.getTagsByQuizID(quizID, stmt);
+	out.print("Tags for this quiz: ");
+	for(int i = 0; i < tags.size(); i++){
+		String t = tags.get(i);
+		if(i == (tags.size() - 1))
+			out.print(t + "<br>");
+		else
+			out.print(t + ", ");
+	}
 	if(q.hasPracticeMode() && !userName.equals(guest)){
 	%>
 	
