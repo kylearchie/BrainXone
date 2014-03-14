@@ -45,18 +45,38 @@ public class AddMultiStrAns extends HttpServlet {
 		HttpSession hs = request.getSession();
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		Quiz q = (Quiz) hs.getAttribute("quiz");
 		
-		ArrayList<String> answerKeys = new ArrayList<String>();
+		ArrayList< ArrayList<String> > answerKeys = new ArrayList< ArrayList<String> >();
 		
-		for(int i = 0; i < 3; i ++)
-		{
-			String answer = (String) request.getParameter("multiStringAns" + (i + 1));
-			answerKeys.add(answer);
+		StringResponse ques = (StringResponse) hs.getAttribute("question");
+		
+		int answerCounter = 0;
+			while( true ) {
+				answerCounter++;
+				if(ques.getType() != Question.MULTI_STR_ANS && answerCounter > 1) break; //Just in case.
+				String a = "answer" + answerCounter;
+				int optionCounter = 0;
+				String ao, aoString;
+				ArrayList<String> options = new ArrayList<String>();
+				while( true ) {
+					optionCounter++;
+					ao = a + "option" + optionCounter;
+					aoString = request.getParameter(ao);
+					if(aoString == null) break;
+					options.add(aoString);
+				}
+				if(aoString == null) break;
+				answerKeys.add(options);
+			
 		}
 
-		StringResponse ques = (StringResponse) hs.getAttribute("question");
-		int maxPoints = Integer.parseInt((String) request.getParameter("maxPoints"));
-		maxPoints = Math.max(maxPoints, answerKeys.size());
+		int maxPoints = 0;
+		if(q.hasPracticeMode()) {
+			maxPoints = Integer.parseInt((String) request.getParameter("maxPoints"));
+			maxPoints = Math.max(maxPoints, answerKeys.size());
+
+		}
 		ques.setAnswer(answerKeys, maxPoints, stmt);
 		
 		try {

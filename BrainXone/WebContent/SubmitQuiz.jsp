@@ -14,6 +14,7 @@ String userName = (String) session.getAttribute("currentUser");
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
 Event event = new Event(userName, 1, stmt);
+Event.UpdateCreateAchievements(userName, stmt);
 %>
 </body>
 </html>

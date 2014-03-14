@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" 
  pageEncoding="UTF-8"%>
- <%@ page import = "java.sql.*, brainxone.*, java.util.*" %> 
+ <%@ page import = "java.sql.*, brainxone.*, java.util.*, backend.*" %> 
 <!DOCTYPE html> 
 <html> 
 <head> 
@@ -24,11 +24,15 @@
 <%
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
+
 User user = User.retrieveByUserName(userName, stmt);
 if (user.isAdmin()) {
 	out.println("<form action=\"MakeAnnouncementServlet\" method=\"post\">");
 	out.println("Your announcement: <input type=\"text\" name=\"announcement\"/>");
-    out.println("<input type=\"submit\" value=\"Make Announcement\"/>");   
+    out.println("<input type=\"submit\" value=\"Make Announcement\"/>");  
+    ArrayList<Challenge> reports = Challenge.getReports(userName, stmt);
+    int numReports = reports.size();
+    out.println("<a href=\"inbox.jsp\"> You have " + numReports + " reports.</a>");
     out.println("</form>");
     out.println("<h4>Site statistics:</h4>");
     out.println("There are " + (User.getNumberOfUsers(stmt) - 1) + " users registered.");
@@ -87,12 +91,16 @@ if(isPrivate) status = "ON";
      ArrayList<Challenge> challenges = Challenge.getChallenges(userName, stmt);
      int numChallenges = challenges.size();
 %>
+
+
 <a href="inbox.jsp"> You have <%= numChallenges %> challenges.</a>
 
 <%
      ArrayList<Event>  createEvents = Event.getCreateEvents(userName, stmt);
      int numCreateEvents = createEvents.size();
 %>
+
+
 <a href="quizCreated.jsp"> You have created <%= numCreateEvents %> quizes.</a>    
 
 
@@ -102,7 +110,42 @@ if(isPrivate) status = "ON";
 %>
  <a href="quizTaken.jsp"> You have taken <%= numTakenEvents %> quizes.</a>  	 
 
+<p>
+Most popular quizzes:
+<% 
+    ArrayList<Integer> popIDs = Quiz.getTopQuiz(stmt);
+    for (Integer id : popIDs) {
+    	String name = null;
+    	try {
+   			ResultSet rs = stmt.executeQuery("SELECT quizName FROM quiz WHERE quizID = " + id +";");
+   			while (rs.next()) {
+   		    	name = rs.getString("quizName");    	
+   		    }
+    		
+    	} catch (SQLException e) {
+    			// TODO Auto-generated catch block
+    		e.printStackTrace();
+   		}	    	
+   		String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + name  + "</a>";	
+   		out.println("<li> QUIZ: " + quiz + "</li>");   	   
+    } 
+%>
+</p>
 
+<p>
+Recently created quizzes:
+<% 
+    ArrayList<Event>  recentCreateEvents = Event.getRecentCreatedQuiz(stmt);
+    for (Event recent : recentCreateEvents) {
+    	String creatorName = recent.getUserName();
+    	int quizID = recent.getQuizID();    	
+    	String creatorNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
+    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
+    	out.println("<li>" + creatorNameURL + " created " + quizURL + "</li>");
+    	   
+    } 
+%>
+</p>
 
 
 <p>
@@ -115,7 +158,7 @@ Your friends have created quizes:
     	System.out.println(friendName);
     	int quizID = friendCreateEvent.getQuizID();    	
     	String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-    	String quizURL = "<a href = \"ShowQuiz.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
+    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
     	out.println("<li>" + friendNameURL + " created " + quizURL + "</li>");
     	   
     }  
@@ -131,7 +174,7 @@ Your friends have taken quizes:
 	String friendName = friendTakenEvent.getUserName();
 	int quizID = friendTakenEvent.getQuizID();    	
 	String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-	String quizURL = "<a href = \"ShowQuiz.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
+	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
 	out.println("<li>" + friendNameURL + " took " + quizURL + "</li>");
 }  
 %>
@@ -161,6 +204,8 @@ Your friends have recently earned achievements:
 %>
 <p>
 
+
+
 <form action="logoutServlet" method="post">
 <input type="submit" value="Logout"/>
 </form>
@@ -171,6 +216,12 @@ Your friends have recently earned achievements:
 <input type="text" name="searchTerm"/>
 <input type="submit" value="Search"/>
 </form>
+
+<p>Use the search box below to find quizzes by tag!</p>
+
+<form action="findQuizServlet" method="post">
+<input type="text" name="searchTerm"/>
+<input type="submit" value="Search"/>
 
 <h1>Select which mode you want to play in: </h1> <br>
 

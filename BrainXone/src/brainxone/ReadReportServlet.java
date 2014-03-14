@@ -1,6 +1,7 @@
 package brainxone;
 
 import java.io.IOException;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -9,21 +10,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import java.sql.Statement;
 
 /**
- * Servlet implementation class UpdatePrivacyServlet
+ * Servlet implementation class ReadReportServlet
  */
-@WebServlet("/UpdatePrivacyServlet")
-public class UpdatePrivacyServlet extends HttpServlet {
+@WebServlet("/ReadReportServlet")
+public class ReadReportServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdatePrivacyServlet() {
+    public ReadReportServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,11 +39,12 @@ public class UpdatePrivacyServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		HttpSession session = request.getSession();
-		String userName = (String) session.getAttribute("currentUser");
-		User user = User.retrieveByUserName(userName, stmt);
-		user.changePrivacy(stmt);
-		RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
+	    String currentUser = request.getParameter("currentUser");
+		String reportUser = request.getParameter("reportUser");
+		String timeSent = request.getParameter("timeSent");
+		int quizID = Integer.parseInt(request.getParameter("quizID"));
+		Challenge.deleteReport(reportUser, quizID, stmt);
+		RequestDispatcher dispatch = request.getRequestDispatcher("QuizSummary.jsp?id="+ quizID);
 		dispatch.forward(request, response);
 	}
 

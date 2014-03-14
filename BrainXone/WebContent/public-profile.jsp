@@ -113,5 +113,7 @@ for (TakenEvent takenEvent : takenEvents)
 }
 %>    	
 
+
+
 </body>
 </html>

@@ -5,6 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
+import backend.DBConnection;
+
 
 public class User {
 	private String userName;
@@ -257,6 +259,33 @@ public class User {
 			e.printStackTrace();
 		}	    
 		return count;
+	}
+	
+	public static void deleteQuizByQuizID(int quizID, Statement stmt){
+		try {
+			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = " + quizID + ";");
+			stmt.executeUpdate("DELETE FROM events WHERE quizID = " + quizID + ";");
+			stmt.executeUpdate("DELETE FROM messages WHERE quizID = " + quizID + ";");
+			stmt.executeUpdate("DELETE FROM ques WHERE quizID = " + quizID + ";");
+			stmt.executeUpdate("DELETE FROM tag WHERE quizID = " + quizID + ";");
+			stmt.executeUpdate("DELETE FROM review WHERE quizID = " + quizID + ";");	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<String> getAllAdminUserName(Statement stmt) {
+		ArrayList<String> users = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT userName FROM users WHERE isAdmin = TRUE;");
+		    while (rs.next()) {
+		    	String adminName = rs.getString("userName");
+		    	users.add(adminName);
+		    }		   
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		return users;
 	}
 	
 	

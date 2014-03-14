@@ -1,7 +1,10 @@
 package brainxone;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.*;
+
 
 public class Event 
 {
@@ -10,8 +13,11 @@ public class Event
 	private int quizID;
 
 	public Event(String userName, int quiz, Statement stmt)
-	{
-		timeCreated = "" + System.currentTimeMillis();
+	{   
+		Date now = new Date();
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+		timeCreated = formatter.format(now);
 		this.userName = userName;
 		quizID = quiz;
 		try {
@@ -170,5 +176,28 @@ public class Event
 	
 		return count==1;
 	}
+	
+	public static ArrayList<Event> getRecentCreatedQuiz(Statement stmt) {
+		ArrayList<Event> Events = new ArrayList<Event>();
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery("SELECT * FROM events WHERE score IS NULL AND timeTaken IS NULL ORDER BY timeCreated DESC LIMIT 10;");
+			while (rs.next()) {
+				String userName = rs.getString("userName");
+		    	String time = rs.getString("timeCreated");
+		    	int quizID = rs.getInt("quizID");
+		    	int score = rs.getInt("score");
+		    	long timeTaken = rs.getLong("timeTaken");
+                Event event = new TakenEvent(time, userName, quizID, score, timeTaken);
+                Events.add(event);
+		    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    
+		return Events;
+	}
+	
+	
 	
 }

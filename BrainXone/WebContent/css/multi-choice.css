@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+
+#multi-choice-form-choices {
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#multi-choice-form h2 {
+	margin: 10px 10px 15px;
+	text-align: center;
+}
+
+.multi-choice-choice {
+	display: table-row;
+}
+
+.multi-choice-choice > * {
+	display: table-cell;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.multi-choice-choice input[type=checkbox] {
+	display: inline-block;
+}
+
+#add-another-answer, #submit-multi-choice {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#submit-multi-choice {
+	margin-top: 20px;
+}
+
+.choice-remove-button {
+	position: relative;
+	width: 25px;
+	height: 25px;
+	margin-right: 15px;
+}
+
+.choice-remove-button:not(.hidden) {
+	border-radius: 50%;
+	background-color: #ccc;
+	cursor: pointer;
+}
+
+.choice-remove-button:not(.hidden):hover {
+	background-color: #aaa;
+}
+
+.choice-remove-button:not(.hidden):after {
+	content: "";
+	position: absolute;
+	top: 43%;
+	left: 20%;
+	width: 60%;
+	height: 14%;
+	background-color: #fff;
+}

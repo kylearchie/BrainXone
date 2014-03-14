@@ -3,7 +3,6 @@ package brainxone;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,19 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.sql.Statement;
-
 /**
- * Servlet implementation class UpdatePrivacyServlet
+ * Servlet implementation class findQuizServlet
  */
-@WebServlet("/UpdatePrivacyServlet")
-public class UpdatePrivacyServlet extends HttpServlet {
+@WebServlet("/findQuizServlet")
+public class findQuizServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdatePrivacyServlet() {
+    public findQuizServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,14 +36,12 @@ public class UpdatePrivacyServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletContext servletContext = getServletContext();
-		Statement stmt = (Statement) servletContext.getAttribute("Statement");
+		String search = (String) request.getParameter("searchTerm");
 		HttpSession session = request.getSession();
-		String userName = (String) session.getAttribute("currentUser");
-		User user = User.retrieveByUserName(userName, stmt);
-		user.changePrivacy(stmt);
-		RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
+		session.setAttribute("tag", search);
+		RequestDispatcher dispatch = request.getRequestDispatcher("quiz-results.jsp");
 		dispatch.forward(request, response);
+
 	}
 
 }
