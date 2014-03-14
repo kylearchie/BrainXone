@@ -161,7 +161,7 @@
 	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
 	for(Review r : reviews){
 		out.print("From reviewer: <a href = \"public-profile.jsp?name=" + r.reviewerName + "\">" + r.reviewerName + "</a>" + "<br");
-		out.print("Stars: " + r.stars + "<br>");
+		out.print("Stars: " + String.valueOf(r.stars) + "<br>");
 		out.print("Text Review: " + r.textReview + "<br>");
 	}
 	
