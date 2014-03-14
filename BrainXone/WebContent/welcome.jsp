@@ -126,7 +126,7 @@ Most popular quizzes:
     			// TODO Auto-generated catch block
     		e.printStackTrace();
    		}	    	
-   		String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + name  + "</a>";	
+   		String quiz = "<a href = \"QuizSummary.jsp?id=" + id + "\"> Quiz " + id  + "</a>";	
    		out.println("<li> QUIZ: " + quiz + "</li>");   	   
     } 
 %>
@@ -138,10 +138,17 @@ Recently created quizzes:
     ArrayList<Event>  recentCreateEvents = Event.getRecentCreatedQuiz(stmt);
     for (Event recent : recentCreateEvents) {
     	String creatorName = recent.getUserName();
-    	int quizID = recent.getQuizID();    	
-    	String creatorNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
+    	User creator = User.retrieveByUserName(creatorName, stmt);
+    	int quizID = recent.getQuizID(); 
+    	
+    	String createrNameURL;
+    	if (!creator.isPrivate() || creator.getFriends().contains(userName)) {
+    		createrNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
+    	} else {
+    		createrNameURL = "anonymous";
+    	}		
     	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-    	out.println("<li>" + creatorNameURL + " created " + quizURL + "</li>");
+    	out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
     	   
     } 
 %>
@@ -170,13 +177,14 @@ Your friends have taken quizes:
 <%
     ArrayList<TakenEvent>  friendsTakenEvents = TakenEvent.getFriendsTakenEvents(userName, stmt);
     for (int i = 0; i < friendsTakenEvents.size() && i < 10; i++) {
-	TakenEvent friendTakenEvent = friendsTakenEvents.get(i);
-	String friendName = friendTakenEvent.getUserName();
-	int quizID = friendTakenEvent.getQuizID();    	
-	String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-	out.println("<li>" + friendNameURL + " took " + quizURL + "</li>");
-}  
+		TakenEvent friendTakenEvent = friendsTakenEvents.get(i);
+		String friendName = friendTakenEvent.getUserName();
+		System.out.println(friendName);
+		int quizID = friendTakenEvent.getQuizID();    	
+		String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
+		String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
+		out.println("<li>" + friendNameURL + " took " + quizURL + "</li>");
+	}  
 %>
 </p>
 
@@ -222,6 +230,7 @@ Your friends have recently earned achievements:
 <form action="findQuizServlet" method="post">
 <input type="text" name="searchTerm"/>
 <input type="submit" value="Search"/>
+</form>
 
 <h1>Select which mode you want to play in: </h1> <br>
 

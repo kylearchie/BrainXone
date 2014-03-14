@@ -60,7 +60,7 @@ public class StringResponse extends Question{
 							if(isOrdered == 0 ){
 								answerKeys.remove(j);
 								points++;
-								System.out.print("points: " + points);
+								System.out.println("points: " + points);
 							}
 							else if(isOrdered == 1){
 								if((i + 1) == j){
@@ -77,6 +77,27 @@ public class StringResponse extends Question{
 		return points;
 	}
 
+	public HashMap<Integer, ArrayList<String>> getAnswerKeys(Statement stmt){
+		
+		HashMap<Integer, ArrayList<String>> answerKeys = new HashMap<Integer, ArrayList<String>>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT ans, ansIndex FROM indexAnswer WHERE quesID = " + quesID);
+			while(rs.next()){
+				String key = rs.getString(1);
+				int index = Integer.parseInt(rs.getString(2));
+				ArrayList<String> newKeys;
+				if(answerKeys.containsKey(index))
+					newKeys = answerKeys.get(index);
+				else
+					newKeys = new ArrayList<String>();
+				newKeys.add(key);
+				answerKeys.put(index, newKeys);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return answerKeys;
+	}
 	/**
 	 * For the CREATOR MODE
 	 * To be ideally used when the creator hits "create quiz"

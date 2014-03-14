@@ -4,13 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Quiz {
 	private static int ID = 0;
 	private String quizName = "";
 	private String description = "";
-	private ArrayList<String> tags;
 	private ArrayList<Question> questions;
 	private String creatorName = "";
 	private String category = "";
@@ -33,9 +31,7 @@ public class Quiz {
 		this.isRandom = isRandom;
 		this.isOnePage = isOnePage;
 		this.isPracticeMode = isPracticeMode;
-
 		questions = new ArrayList<Question>();
-		tags = new ArrayList<String>();
 	}
 
 
@@ -62,7 +58,7 @@ public class Quiz {
 
 	public static void addReviewAndRating(int quizID, String reviewerName, String textReview, int stars, Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\"," + stars + "\",\"" + textReview + "\");");
+			stmt.executeUpdate("INSERT INTO review VALUES (\"" + quizID +"\",\"" + reviewerName + "\",\"" + stars + "\",\"" + textReview + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +67,7 @@ public class Quiz {
 	public static ArrayList<Review> getReviewByQuizID(int quizID, Statement stmt){
 		ArrayList<Review> reviews = new ArrayList<Review>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT reviewUserName, stars, text FROM review WHERE quizID = \"" + quizID + "\";");
 			while(rs.next()){				
 				String reviewerName = rs.getString(1);
 				int stars = Integer.parseInt(rs.getString(2));
@@ -82,15 +78,13 @@ public class Quiz {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return reviews;
 	}
 
 
 	public void addTagsToDB(String t, Statement stmt){
-		tags.add(t);
 		try {
-			stmt.executeUpdate("INSERT INTO tag VALUES (\"" + ID +"\",\"" + t + "\");");
+			stmt.executeUpdate("INSERT INTO allTags VALUES (\"" + ID +"\",\"" + t + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -123,21 +117,21 @@ public class Quiz {
 		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
-				//description = rs.getString(2);
-				category = rs.getString(3);
-				isRandom = Integer.parseInt(rs.getString(4));
-				isOnePage = Integer.parseInt(rs.getString(5));
-				isPracticeMode = Integer.parseInt(rs.getString(6));
+				description = rs.getString(3);
+				category = rs.getString(4);
+				isRandom = Integer.parseInt(rs.getString(5));
+				isOnePage = Integer.parseInt(rs.getString(6));
+				isPracticeMode = Integer.parseInt(rs.getString(7));
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, quizName, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	
@@ -147,21 +141,21 @@ public class Quiz {
 		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
-				//description = rs.getString(2);
-				category = rs.getString(3);
-				isRandom = Integer.parseInt(rs.getString(4));
-				isOnePage = Integer.parseInt(rs.getString(5));
-				isPracticeMode = Integer.parseInt(rs.getString(6));
+				description = rs.getString(3);
+				category = rs.getString(4);
+				isRandom = Integer.parseInt(rs.getString(5));
+				isOnePage = Integer.parseInt(rs.getString(6));
+				isPracticeMode = Integer.parseInt(rs.getString(7));
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, quizName, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
 		return q;
 	}
 	
@@ -181,7 +175,7 @@ public class Quiz {
 		ArrayList<Question> qList = new ArrayList<Question>();
 
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\";");
 			if(rs != null){
 				while(rs.next()){
 					int quesID = Integer.parseInt(rs.getString(1));
@@ -209,7 +203,7 @@ public class Quiz {
 		ArrayList<Question> qList = new ArrayList<Question>();
 
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT quesID, quesType, quesText, isOrdered FROM ques WHERE quizID = \"" + quizID + "\";");
 			if(rs != null){
 				while(rs.next()){
 					int quesID = Integer.parseInt(rs.getString(1));
@@ -235,7 +229,7 @@ public class Quiz {
 	public static int getNumQuestionsUsingID(int quizID, Statement stmt){
 		int result = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT count(quesID) FROM ques WHERE quizID = \"" + quizID + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT count(quesID) FROM ques WHERE quizID = \"" + quizID + "\";");
 			if(rs != null){
 				while(rs.next()){
 					result = rs.getInt(1);
@@ -282,14 +276,14 @@ public class Quiz {
 	
 	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
 		try {
-			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\"");	
+			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\";");	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	public void deleteQuizByQuizID(int quizID, Statement stmt){
 		try {
-			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\"");	
+			stmt.executeUpdate("DELETE FROM quiz WHERE quizID = \"" + quizID + "\";");	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -302,9 +296,9 @@ public class Quiz {
 	public static ArrayList<Integer> getQuizIDByTag(String tag, Statement stmt){
 		ArrayList<Integer> quizIDList = new ArrayList<Integer>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quizID FROM tag WHERE tag = \"" + tag + "\"");
+			ResultSet rs = stmt.executeQuery("SELECT quizID FROM allTags WHERE tag = \"" + tag + "\";");
 			while(rs.next()){
-				quizIDList.add(Integer.parseInt(rs.getString(1)));
+				quizIDList.add(rs.getInt("quizID"));
 			}
 				
 		} catch (SQLException e) {
@@ -316,7 +310,7 @@ public class Quiz {
 	public static ArrayList<Integer> getTopQuiz(Statement stmt) {
 		ArrayList<Integer> quizzes = new ArrayList<Integer>();
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT quizID from review GROUP BY quizID ORDER BY AVG(stars) LIMIT 10;");
+			ResultSet rs = stmt.executeQuery("SELECT quizID from review GROUP BY quizID ORDER BY AVG(stars) DESC LIMIT 10;");
 			while(rs.next()){
 				int quizID = rs.getInt("quizID");
 				quizzes.add(quizID);
@@ -327,5 +321,17 @@ public class Quiz {
 		return quizzes;
 	}
 	
-	
+	public static ArrayList<String> getTagsByQuizID(int quizID, Statement stmt){
+		ArrayList<String> tags = new ArrayList<String>();
+		try {
+			ResultSet rs = stmt.executeQuery("SELECT tag FROM allTags WHERE quizID = \"" + quizID + "\";");
+			while(rs.next()){
+				String oneTag = rs.getString(1);
+				tags.add(oneTag);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tags;
+	}
 }

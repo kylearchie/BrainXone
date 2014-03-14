@@ -40,9 +40,8 @@ public class GuestServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    HttpSession session = request.getSession();
 		session.setAttribute("currentUser", "guest");
-	
-			RequestDispatcher dispatch = request.getRequestDispatcher("welcome_guest.jsp");
-			dispatch.forward(request, response);
+		RequestDispatcher dispatch = request.getRequestDispatcher("welcome_guest.jsp");
+		dispatch.forward(request, response);
 	
 	}
 

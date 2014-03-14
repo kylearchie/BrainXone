@@ -66,7 +66,7 @@ public class AddQuestionServlet extends HttpServlet {
 		// TAGS TAGS TAGS
 		String allTags = (String) request.getSession().getAttribute("tags");
 		System.out.println(allTags);
-		StringTokenizer st = new StringTokenizer(allTags);
+		StringTokenizer st = new StringTokenizer(allTags, ",");
 		while (st.hasMoreTokens()) {
 			q.addTagsToDB(st.nextToken(), stmt);
 		}

@@ -17,8 +17,8 @@
 <%
 	HashMap<Integer, String> quizList = (HashMap<Integer, String>) request.getSession().getAttribute("quizList");
 	for(int quizID : quizList.keySet()){
-    		String description = quizList.get(quizID);
-    		out.print("<li><a href=\"QuizSummary.jsp?id=" + quizID + "\">" + description + "</a></li>");
+    		String quizName = quizList.get(quizID);
+    		out.print("<li><a href=\"QuizSummary.jsp?id=" + quizID + "\">" + quizName + "</a></li>");
     }
 %>
 

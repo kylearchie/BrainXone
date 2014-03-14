@@ -13,7 +13,9 @@ ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
 String userName = (String) session.getAttribute("currentUser");
 String searchTerm = (String) session.getAttribute("tag");
+
 ArrayList<Integer> quizes = Quiz.getQuizIDByTag(searchTerm, stmt);
+System.out.println("****" + quizes.size());
 out.println("<ul>");
 for (Integer id : quizes) 
 {   
@@ -27,7 +29,7 @@ for (Integer id : quizes)
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}	    	
-	String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + name  + "</a>";	
+	String quiz = "<a href = \"QuizSummary.jsp?id=" + id + "\"> " + id  + "</a>";	
 	out.println("<li> QUIZ: " + quiz + "</li>");
 }
 out.println("</ul>");

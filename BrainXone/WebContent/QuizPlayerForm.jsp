@@ -17,8 +17,14 @@
 
 			<form id="category-choice-form" action="CategorySelectionServlet" method="post">
 				<select name="category">
-					<option value="Food">Food</option>
-					<option value="Drink">Drink</option>
+					<option value = "LangVocab"> Language And Vocabulary </option>
+					<option value = "Math"> Math </option>
+					<option value = "Science"> Science </option>
+					<option value = "History"> History </option>
+					<option value = "Geography"> Geography </option>
+					<option value = "Arts"> Arts </option>
+					<option value = "Computers"> Computers </option>
+					<option value = "Other"> Other </option>
 				</select> 
 				<input class="action-button button" type="submit" value="See quizzes">
 			</form>
