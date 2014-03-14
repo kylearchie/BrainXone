@@ -6,8 +6,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Quiz Search Results</title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title">Quiz Search Results</h1>
 <%
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
@@ -35,5 +43,6 @@ for (Integer id : quizes)
 out.println("</ul>");
 
 %>
+</div></div>
 </body>
 </html>

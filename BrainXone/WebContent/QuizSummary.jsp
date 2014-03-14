@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<%@ page import = "java.sql.*, backend.*, java.util.*, brainxone.*, java.text.SimpleDateFormat, java.util.Date" %>
+	pageEncoding="ISO-8859-1"%>
+<%@ page
+	import="java.sql.*, backend.*, java.util.*, brainxone.*, java.text.SimpleDateFormat, java.util.Date"%>
 
 <%
 	HttpSession sess = request.getSession();
@@ -18,13 +19,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" href="css/header.css">
-	<link rel="stylesheet" href="css/main.css">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/main.css">
 <title>Quiz Summary!</title>
 </head>
 <body>
-<%@ include file="header.html" %>
+<%@ include file="header.html"%>
 <%
 
     
@@ -184,43 +185,31 @@
 	}
 	if(q.hasPracticeMode() && !userName.equals(guest)){
 	%>
-	
-	<form action="PracticeModeServlet" method = "post">
-	<input type = "submit" value = "Practice Mode">
-	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	</form>
-	
-	<%
+
+<form action="PracticeModeServlet" method="post"><input
+	type="submit" value="Practice Mode"> <input type="hidden"
+	name="quizID" value='<%= request.getParameter("id") %>'></form>
+
+<%
 	} else {
 		request.getSession().setAttribute("isPracticeMode", false);
 	}
 
-	
-	
-	
-	
-	//out.print("<li><a href=\"EDITXXXXXXX.jsp?id=" + quizID + "\"> EDIT QUIZ </a> </b></li>");
-
-
 	if(q.getCreatorName().equals(userName)){
-		%>
-		out.print("<li><b><a href=\"EditQuiz.jsp?id=" + quizID + "\"> Edit this quiz </a></li>");
-		<%	
+		out.print("<li><b><a href=\"EditQuiz.jsp?id=" + quizID + "\"> Edit this quiz </a></li>");	
 	}
  
     if (!userName.equals(guest)) {
     	%>
-    
-    	<form action="ListFriendsServlet.jsp" method = "post">
-	    <input type = "submit" value = "Challenge a Friend!">
-	    <input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	    </form>
-	
-	   <form action="ReportServelrt" method = "post">
-	   <input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	   <input type = "submit" value = "Report quiz as inappropiate">	
-	   </form>
-   <%
+
+<form action="ListFriendsServlet.jsp" method="post"><input
+	type="submit" value="Challenge a Friend!"> <input type="hidden"
+	name="quizID" value='<%= request.getParameter("id") %>'></form>
+
+<form action="ReportServelrt" method="post"><input type="hidden"
+	name="quizID" value='<%= request.getParameter("id") %>'> <input
+	type="submit" value="Report quiz as inappropiate"></form>
+<%
    }
 
 	
@@ -229,28 +218,25 @@
 
 User user = User.retrieveByUserName(userName, stmt);
 if (user.isAdmin()) {
-    %>	
-	<form action="DeleteQuizServlet" method = "post">
-	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	<input type = "submit" value = "Delete this quiz">
-	</form>
-	
-	<form action="DeleteQuizHistoryServlet" method = "post">
-	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	<input type = "submit" value = "Delete this quiz's history">
-	</form>
-	
-	
-	
-	
-	
-	<%
+    %>
+<form action="DeleteQuizServlet" method="post"><input
+	type="hidden" name="quizID" value='<%= request.getParameter("id") %>'>
+<input type="submit" value="Delete this quiz"></form>
+
+<form action="DeleteQuizHistoryServlet" method="post"><input
+	type="hidden" name="quizID" value='<%= request.getParameter("id") %>'>
+<input type="submit" value="Delete this quiz's history"></form>
+
+
+
+
+
+<%
 }
 
 
 %>
-	
-	
-	
+</div>
+</div>
 </body>
 </html>

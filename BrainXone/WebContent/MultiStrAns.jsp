@@ -5,9 +5,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Multi String Answers</title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1> Enter the correct answers</h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title"> Enter the correct answers</h1>
 <form action="AddMultiStrAns" method="post">
 
 <% for(int i = 0; i < 3; i++) {
@@ -18,6 +25,6 @@
 
 <input type = "submit" value = "Add All Answers">
 </form>
-
+</div></div>
 </body>
 </html>

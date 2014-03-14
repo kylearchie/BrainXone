@@ -202,7 +202,9 @@
                                 } else {
                                     createrNameURL = "anonymous";
                                 }
-                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName() + "</a>";
+                                String quizName = q.getName(quizID, stmt);
+                                System.out.println( q.getName(quizID, stmt) );
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
 
                             }
@@ -224,7 +226,7 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\"> " + q.getName() + "</a>";
+                                        + "\"> " + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " created " + quizURL
                                         + "</li>");
 
@@ -248,7 +250,7 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\">" + q.getName() + "</a>";
+                                        + "\">" + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " took " + quizURL
                                         + "</li>");
                             }

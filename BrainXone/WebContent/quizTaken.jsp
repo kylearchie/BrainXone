@@ -6,9 +6,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Quizes you have taken</title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1>Quizes you have taken</h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title">Quizzes you have taken</h1>
 <%
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
@@ -23,6 +30,6 @@ for (TakenEvent takenEvent : takenEvents)
 }
 %>
 
-
+</div></div>
 </body>
 </html>

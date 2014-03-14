@@ -5,9 +5,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Multi Choice Answers With Multiple Corr Ans</title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1> Type in all the answers, select if answer is correct ans or not </h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title"> Type in all the answers, select if answer is correct ans or not </h1>
 
 <form action = "AddMultiChoiceAns" method = "post">
 
@@ -22,5 +29,6 @@ for(int i = 0; i < 2; i++)
 <br>
 <input type = "submit" value = "Add All Answers">
 </form>
+</div></div>
 </body>
 </html>

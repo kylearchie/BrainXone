@@ -17,9 +17,16 @@ User user = User.retrieveByUserName(userName, stmt);
 %>
 
 <title><%=(String)request.getParameter("name")%></title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1><%=(String)request.getParameter("name")%></h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title"><%=(String)request.getParameter("name")%></h1>
 <% 
 ArrayList<String> friends = user.getFriends();
 String profileName = (String)request.getParameter("name");
@@ -110,6 +117,6 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
 <form action="logoutServlet" method="post">
 <input type="submit" value="Logout"/>
 </form>
-
+</div></div>
 </body>
 </html>
