@@ -34,6 +34,9 @@
 	int quizID = Integer.parseInt(request.getParameter("id"));
 
 	
+	
+	
+	
 
 	HttpSession hs = request.getSession();
 
@@ -148,10 +151,9 @@
 		
 	}
 	
-	
-	
+	String guest = "guest";
 	if (userName.equals(guest)) {
-		out.println("You have to register in order to take this quiz.");
+		out.println("You have to <a href=\"create_new_account.jsp\"> register </a> in order to take this quiz.");
 	} else {
 		out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
 	}
@@ -162,7 +164,6 @@
 		out.print("Stars: " + r.stars + "<br>");
 		out.print("Text Review: " + r.textReview + "<br>");
 	}
-	out.print("<li><b><a href=\"ShowQuiz.jsp?id=" + quizID + "\"> PLAY QUIZ </a></li>");
 	
 	ArrayList<String> tags = Quiz.getTagsByQuizID(quizID, stmt);
 	out.print("Tags for this quiz: ");
@@ -173,7 +174,7 @@
 		else
 			out.print(t + ", ");
 	}
-	if(q.hasPracticeMode()){
+	if(q.hasPracticeMode() && !userName.equals(guest)){
 	%>
 	
 	<form action="PracticeModeServlet" method = "post">
@@ -198,21 +199,26 @@
 		out.print("<li><b><a href=\"EditQuiz.jsp?id=" + quizID + "\"> Edit this quiz </a></li>");
 		<%	
 	}
+ 
+    if (!userName.equals(guest)) {
+    	%>
+    
+    	<form action="ListFriendsServlet.jsp" method = "post">
+	    <input type = "submit" value = "Challenge a Friend!">
+	    <input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	    </form>
+	
+	   <form action="ReportServelrt" method = "post">
+	   <input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
+	   <input type = "submit" value = "Report quiz as inappropiate">	
+	   </form>
+   <%
+   }
 
-%>
+	
+	
+	
 
-	<form action="ListFriendsServlet.jsp" method = "post">
-	<input type = "submit" value = "Challenge a Friend!">
-	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	</form>
-	
-	<form action="ReportServelrt" method = "post">
-	<input type = "hidden" name = "quizID" value = '<%= request.getParameter("id") %>' >
-	<input type = "submit" value = "Report quiz as inappropiate">	
-	</form>
-	
-	
-<%
 User user = User.retrieveByUserName(userName, stmt);
 if (user.isAdmin()) {
     %>	
