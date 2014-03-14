@@ -85,11 +85,11 @@ public class AddQuestionServlet extends HttpServlet {
 		case Question.SINGLE_STR_ANS: 
 		case Question.PICTURE_RESPONSE:
 		case Question.FIB:
-			nextPage = "SingleStrAns.jsp";
-			break;
+//			nextPage = "SingleStrAns.jsp";
+//			break;
 
 		case Question.MULTI_STR_ANS:
-			nextPage = "MultiStrAns.jsp";
+			nextPage = "StrAns.jsp";
 			break;
 
 		case Question.MULTI_CHOICE_C:
