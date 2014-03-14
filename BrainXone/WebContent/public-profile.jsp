@@ -85,35 +85,31 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
 <%
      ArrayList<Event>  createEvents = Event.getCreateEvents(profileName, stmt);
      int numCreateEvents = createEvents.size();
-%>
-
-<%
-out.println(profileUser + "<h4>has created" + numCreateEvents + "quizzes: </h4>");
-out.println("<ul>");
-for (Event createEvent : createEvents) 
-{
-	String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
-	out.println("<li>" + name + "</li>");
-}
+     out.println("<h4>" + profileName + " has created " + numCreateEvents + " quizzes: </h4>");
+     out.println("<ul>");
+     for (Event createEvent : createEvents) 
+     {
+	    String name = "<a href = \"ShowQuiz.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	    out.println("<li>" + name + "</li>");
+     }
 %>   
 
 
 <%
      ArrayList<TakenEvent>  takenEvents= TakenEvent.getTakenEvents(profileName, stmt);
 	 int numTakenEvents = takenEvents.size();    
-%>
+	 out.println("<h4>" + profileName + " has taken " + numTakenEvents + " quizzes: </h4>");
+     out.println("<ul>");
+     for (TakenEvent takenEvent : takenEvents)  
+     {
+		String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+		out.println("<li>" + name + "</li>");
+	 }
+%>  
 
-<%
-out.println(profileUser + "<h4>has taken" + numTakenEvents + "quizzes: </h4>");
-out.println("<ul>");
-for (TakenEvent takenEvent : takenEvents) 
-{
-	String name = "<a href = \"ShowQuiz.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
-	out.println("<li>" + name + "</li>");
-}
-%>    	
-
-
+<form action="logoutServlet" method="post">
+<input type="submit" value="Logout"/>
+</form>
 
 </body>
 </html>
