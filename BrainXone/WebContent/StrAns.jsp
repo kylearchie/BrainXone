@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="css/multi-choice.css">
 	<script src="js/addQuestions.js"></script>
 <% } %>
-	<script src="js.addVariants.js"></script>
+	<script src="js/addVariants.js"></script>
 
 
 <title>Insert title here</title>
@@ -36,14 +36,14 @@
 						<div class="multi-choice-choice">
 							<span></span>
 							<span>Answer option</span>
-							<span>Add variants?</span>
+							<span>Add variant</span>
 						</div>
-						<div class="multi-choice-choice">
+						<div class="multi-choice-choice" id="answer1">
 							<div>
 								<div class="choice-remove-button hidden"></div>
 							</div>
 							<div>
-								<input type="text" name="option1answer1">
+								<input type="text" name="answer1option1">
 							</div>
 							<div>
 								<div class="variant-add-button"></div>
