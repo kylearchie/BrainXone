@@ -101,11 +101,11 @@
 				case Question.FIB:
 				case Question.PICTURE_RESPONSE:
 					out.print("<h3 class='quiz-question-header'>Fill in the blank below:</h3>");
-					out.print("<p class='quiz-question'>" + ques.getQuesText(counter) + "</p>");
+					out.print("<p class='quiz-question'>" + ques.getParsedQuesText(counter) + "</p>");
 					break;
 				case Question.MULTI_STR_ANS:
 					out.print("<h3 class='quiz-question-header'>Fill in all the blank spaces below:</h3>");
-					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
+					out.print("<p class='quiz-question'>" + ques.getParsedQuesText() + "</p>");
 					out.print("<div class='quiz-answers multi-option'>");
 					StringResponse sr = (StringResponse) ques;
 					int numQuestions = sr.getAnswerKeys(stmt).keySet().size();
@@ -114,11 +114,12 @@
 						out.print("<input type='text' name='question" + counter + "answer" + (i + 1) + "'>");
 						out.print("</div>");
 					}
+					out.print("</div>");
 					break;
 				case Question.MULTI_CHOICE_C:
 				case Question.MULTI_CHOICE_R:
 					out.print("<h3 class='quiz-question-header'>Select the correct answer(s):</h3>");
-					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
+					out.print("<p class='quiz-question'>" + ques.getParsedQuesText() + "</p>");
 					out.print("<div class='quiz-answers multi-option'>");
 					HashMap<String, Integer> options = ques.displayAnswers(stmt);
 					int i = 0;
@@ -130,7 +131,7 @@
 					}
 					break;
 				}
-				out.println("</div></div>");
+				out.println("</div>");
 			} 
 		%>
 		<input id="quiz-submit-button" class="action-button button" type="submit" value="Submit Answers">

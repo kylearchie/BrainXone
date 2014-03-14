@@ -27,6 +27,15 @@ select {
 	background-position: top 50% right -1em;
 }
 
+a {
+	text-decoration: none;
+	color: #2100A3;
+}
+
+a:hover {
+	color: #555;
+}
+
 .central-content {
 	max-width: 800px;
 	margin-left: auto;
@@ -43,6 +52,14 @@ input[type=text], input[type=password], input[type=number] {
 	border: 1px solid #ccc;
 	width: 20em;
 	padding: 0.5em;
+}
+
+.positive-text {
+	color: rgb(50, 175, 50);
+}
+
+.negative-text {
+	color: rgb(221, 87, 69);
 }
 
 .positive-button {
@@ -75,7 +92,6 @@ input[type=text], input[type=password], input[type=number] {
 }
 
 a.button {
-	text-decoration: none;
 	max-width: 20em;
 	box-sizing: border-box;
 	text-align: center;
@@ -113,4 +129,24 @@ a.button {
 form > * {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+/* Lists */
+
+ul.striped-list {
+	margin: 0px;
+	padding: 0px;
+}
+
+ul.striped-list > li {
+	display: block;
+	padding: 5px;
+}
+
+ul.striped-list > li:nth-child(even) {
+	background-color: rgb(240, 240, 240);
+}
+
+ul.striped-list > li:nth-child(odd) {
+	background-color: rgb(250, 250, 250);
 }

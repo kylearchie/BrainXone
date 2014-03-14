@@ -58,7 +58,7 @@ public class Question {
 		return quesID;
 	}
 
-	public String getQuesText( int counter ){
+	public String getParsedQuesText( int counter ){
 		String result = "<span>";
 		String questionParsing = quesText;
 		int quesIndex = quesText.indexOf("#QTEXT");
@@ -74,17 +74,25 @@ public class Question {
 			if( blankIndex != -1 ) {
 				result += questionParsing.substring(0, blankIndex) + "</span>";
 				result += "<input type='text' name='question" + counter + "answer1'>";
-				result += questionParsing.substring(blankIndex + "#BLANK".length() + 1);
+				if(blankIndex + "#BLANK".length() + 1 < questionParsing.length()) {
+					result += questionParsing.substring(blankIndex + "#BLANK".length() + 1);
+				}
 			} else {
 				result += questionParsing + "</span><div class='quiz-answers'>";
 				result += "<input type='text' name='question" + counter + "answer1'></div>";
 			}
-		} 
+		} else {
+			result += questionParsing;
+		}
 		return result;
 	}
 	
-	public String getQuesText(){
-		return getQuesText( -1 );
+	public String getParsedQuesText(){
+		return getParsedQuesText( -1 );
+	}
+	
+	public String getQuesText() {
+		return quesText;
 	}
 
 	public static void initMinID(int oldID){

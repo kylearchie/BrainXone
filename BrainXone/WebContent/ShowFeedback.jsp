@@ -89,9 +89,9 @@
 			}
 			out.print("which is </span>");
 			if (allCorrect) {
-				out.print("<span class='correct-answer'>correct!</span>");
+				out.print("<span class='positive-text'>correct!</span>");
 			} else {
-				out.print("<span class='incorrect-answer'>incorrect.</span> <span>Sorry!</span>");
+				out.print("<span class='negative-text'>incorrect.</span> <span>Sorry!</span>");
 			}
 
 			out.print("</div></div>");

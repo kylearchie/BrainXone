@@ -36,24 +36,86 @@
 <div class="main-page-content">
         <div class="left-content">
             <div class="section">
-                <div class="section-header">Your friends' activity</div>
-                <div class="section-content">This is some content in a section.</div>
+                <div class="section-header">Messages</div>
+                <div class="section-content">
+                    <%
+                         ArrayList<Message> unreadMessages = Message.getUnReadMessages(userName, stmt);
+                         int numUnReadMessages = unreadMessages.size();
+                    %>
+                    <p>You have <%= numUnReadMessages %> notes.</p>
+                    <%
+                         ArrayList<Message> friends = Message.getFriendRequests(userName, stmt);
+                         int numRequests = friends.size();
+                    %>
+                    <p> You have <%= numRequests %> friend requests.</p>
+                    <%
+                         ArrayList<Challenge> challenges = Challenge.getChallenges(userName, stmt);
+                         int numChallenges = challenges.size();
+                    %>
+                    <p> You have <%= numChallenges %> challenges.</p>
+                    <a href="inbox.jsp">Read messages</a>
+                </div>
             </div>
             <div class="section">
-                <div class="section-header">Recently created quizzes</div>
-                <div class="section-content">Here's some more content. This is a bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus voluptatum sint at ad explicabo maxime officiis. Fuga, dicta porro error.</div>
+                <div class="section-header">Your Stats</div>
+                <div class="section-content">
+                    <%
+                         ArrayList<Event>  createEvents = Event.getCreateEvents(userName, stmt);
+                         int numCreateEvents = createEvents.size();
+                    %>
+                    <p><a href="quizCreated.jsp"> You have created <%= numCreateEvents %> quizes.</a></p>    
+                    <%
+                         ArrayList<TakenEvent>  takenEvents= TakenEvent.getTakenEvents(userName, stmt);
+                         int numTakenEvents = takenEvents.size();    
+                    %>
+                     <p><a href="quizTaken.jsp"> You have taken <%= numTakenEvents %> quizes.</a></p>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-header">Your Achievments</div>
+                <div class="section-content">
+                    <ul class="striped-list">
+                    <%
+                        try {
+                            ResultSet rs = stmt.executeQuery("SELECT * FROM achievements WHERE userName = \"" + userName + "\";");
+                            while (rs.next()) {
+                                String achievement = rs.getString("achievement");
+                                out.println("<li>" + achievement + "</li>");
+                            }
+                        } catch (SQLException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }       
+                    %>
+                    </ul>
+                </div>
+             </div>
+            <div class="section">
+                <div class="section-header">Privacy</div>
+                <div class="section-content">
+                    <%
+                        boolean isPrivate = user.isPrivate();
+                        String status = "<span class='negative-text'> OFF </span>";
+                        if(isPrivate) status = "<span class='positive-text'> ON </span>";
+                    %>
+                    <p>Privacy is currently: <%= status %></p>
+                    <form action="UpdatePrivacyServlet" method="post">
+                        <input class="move-on-button button" type="submit" value="change privacy"/>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="center-content">
             <div class="section welcome-banner">
                 <h1>Welcome, <%= userName %>!</h1>
+                <a class="logout-text" href="logoutServlet">Logout</a>
             </div>
             <div class="section">
                 <div class="section-header">Announcements</div>
                 <div class="section-content">
                 <% 
                     ArrayList<Message> announcements = Message.getAnnouncements(stmt);
-                    if(announcements.size() == 0) out.println("<p class='no-announcements'-- >No announcements --</p>");
+                    if(announcements.size() == 0) out.println("<p class='no-announcements'> -- No announcements -- </p>");
                     else {
                         out.println("<ul>");
                         for (int i = 0; i < announcements.size() && i < 10; i++) {
@@ -90,194 +152,141 @@
                     
             <div class="section">
                 <div class="section-header">Take these popular quizzes!</div>
-                <div class="section-content"><img src="http://www.placekitten.com/600/600" alt=""></div>
+                <div class="section-content">
+                    <ul class="striped-list">
+                        <% 
+                            ArrayList<Integer> popIDs = Quiz.getTopQuiz(stmt);
+                            for (Integer id : popIDs) {
+                                String name = null;
+                                try {
+                                    ResultSet rs = stmt.executeQuery("SELECT quizName FROM quiz WHERE quizID = " + id +";");
+                                    while (rs.next()) {
+                                        name = rs.getString("quizName");        
+                                    }
+                                    
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }            
+                                out.println("<li><a href = 'QuizSummary.jsp?id=" + id + "'> Quiz " + name  + "</a></li>");       
+                            } 
+                        %>
+                    </ul>
+                </div>
             </div>
+            
         </div>
         <div class="right-content">
             <div class="section">
-                <div class="section-header">Messages for you:</div>
+                <div class="section-header">Search</div>
                 <div class="section-content"></div>
             </div>
             <div class="section">
-                <div class="section-header">Your history</div>
-                <div class="section-content"></div>
+                <div class="section-header">News</div>
+                <div class="section-content">
+                    <p>Recently created quizzes:
+                    <ul class="striped-list">
+                        <%
+                            ArrayList<Event> recentCreateEvents = Event
+                                    .getRecentCreatedQuiz(stmt);
+                            for (Event recent : recentCreateEvents) {
+                                String creatorName = recent.getUserName();
+                                User creator = User.retrieveByUserName(creatorName, stmt);
+                                int quizID = recent.getQuizID();
+                                Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+
+                                String createrNameURL;
+                                if (!creator.isPrivate()
+                                        || creator.getFriends().contains(userName)) {
+                                    createrNameURL = "<a href = \"public-profile.jsp?name="
+                                            + creatorName + "\">" + creatorName + "</a>";
+                                } else {
+                                    createrNameURL = "anonymous";
+                                }
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName() + "</a>";
+                                out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
+
+                            }
+                        %>
+                    </ul>
+                    </p>
+                    <p>Your friends have created quizes:
+                    <ul class="striped-list">
+                        <%
+                            ArrayList<Event> friendsCreateEvents = Event.getFriendsCreateEvent(
+                                    userName, stmt);
+                            for (int i = 0; i < friendsCreateEvents.size() && i < 10; i++) {
+                                Event friendCreateEvent = friendsCreateEvents.get(i);
+                                String friendName = friendCreateEvent.getUserName();
+                                System.out.println(friendName);
+                                int quizID = friendCreateEvent.getQuizID();
+                                Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+
+                                String friendNameURL = "<a href = \"public-profile.jsp?name="
+                                        + friendName + "\">" + friendName + "</a>";
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
+                                        + "\"> " + q.getName() + "</a>";
+                                out.println("<li>" + friendNameURL + " created " + quizURL
+                                        + "</li>");
+
+                            }
+                        %>
+                    </ul>
+                    </p>
+
+                    <p>Your friends have taken quizes:
+                    <ul class="striped-list">
+                        <%
+                            ArrayList<TakenEvent> friendsTakenEvents = TakenEvent
+                                    .getFriendsTakenEvents(userName, stmt);
+                            for (int i = 0; i < friendsTakenEvents.size() && i < 10; i++) {
+                                TakenEvent friendTakenEvent = friendsTakenEvents.get(i);
+                                String friendName = friendTakenEvent.getUserName();
+                                System.out.println(friendName);
+                                int quizID = friendTakenEvent.getQuizID();
+                                Quiz q = Quiz.getQuizUsingID(quizID, stmt);
+
+                                String friendNameURL = "<a href = \"public-profile.jsp?name="
+                                        + friendName + "\">" + friendName + "</a>";
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
+                                        + "\">" + q.getName() + "</a>";
+                                out.println("<li>" + friendNameURL + " took " + quizURL
+                                        + "</li>");
+                            }
+                        %>
+                    </ul>
+                    </p>
+
+                    <p>Your friends have recently earned achievements:
+                    <ul class="striped-list">
+                        <%
+                            try {
+                                ResultSet rs = stmt
+                                        .executeQuery("SELECT achievements.* FROM achievements,friends WHERE friends.userName1 = \""
+                                                + userName
+                                                + "\" AND friends.userName2 = achievements.userName;");
+                                int count = 0;
+                                while (rs.next()) {
+                                    if (count == 10)
+                                        break;
+                                    String friendName = rs.getString("userName");
+                                    String achievement = rs.getString("achievement");
+                                    String friendNameURL = "<a href = \"public-profile.jsp?name="
+                                            + friendName + "\">" + friendName + "</a>";
+                                    out.println("<li>" + friendNameURL + " earned "
+                                            + achievement + ".</li>");
+                                    count++;
+                                }
+                            } catch (SQLException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        %>
+                    </ul>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-
-<%
-
-
-
-boolean isPrivate = user.isPrivate();
-String status = "OFF";
-if(isPrivate) status = "ON";
-%>
-<p>Privacy is currently: <%= status %></p>
-<form action="UpdatePrivacyServlet" method="post">
-<input type="submit" value="change privacy"/>
-</form>
-
-<h4> Your Achievements </h4>
-<%
-	try {
-		ResultSet rs = stmt.executeQuery("SELECT * FROM achievements WHERE userName = \"" + userName + "\";");
-		while (rs.next()) {
-	    	String achievement = rs.getString("achievement");
-	    	out.println(achievement);
-	    }
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	    
-%>
-
-
-<h4> Inbox </h4>
-
-<%
-	 
-     ArrayList<Message> unreadMessages = Message.getUnReadMessages(userName, stmt);
-     int numUnReadMessages = unreadMessages.size();
-%>
-<a href="inbox.jsp"> You have <%= numUnReadMessages %> messages.</a>
-
-<%
-     ArrayList<Message> friends = Message.getFriendRequests(userName, stmt);
-     int numRequests = friends.size();
-%>
-<a href="inbox.jsp"> You have <%= numRequests %> friend requests.</a>
-
-<%
-     ArrayList<Challenge> challenges = Challenge.getChallenges(userName, stmt);
-     int numChallenges = challenges.size();
-%>
-
-
-<a href="inbox.jsp"> You have <%= numChallenges %> challenges.</a>
-
-<%
-     ArrayList<Event>  createEvents = Event.getCreateEvents(userName, stmt);
-     int numCreateEvents = createEvents.size();
-%>
-
-
-<a href="quizCreated.jsp"> You have created <%= numCreateEvents %> quizes.</a>    
-
-
-<%
-     ArrayList<TakenEvent>  takenEvents= TakenEvent.getTakenEvents(userName, stmt);
-	 int numTakenEvents = takenEvents.size();    
-%>
- <a href="quizTaken.jsp"> You have taken <%= numTakenEvents %> quizes.</a>  	 
-
-<p>
-Most popular quizzes:
-<% 
-    ArrayList<Integer> popIDs = Quiz.getTopQuiz(stmt);
-    for (Integer id : popIDs) {
-    	String name = null;
-    	try {
-   			ResultSet rs = stmt.executeQuery("SELECT quizName FROM quiz WHERE quizID = " + id +";");
-   			while (rs.next()) {
-   		    	name = rs.getString("quizName");    	
-   		    }
-    		
-    	} catch (SQLException e) {
-    			// TODO Auto-generated catch block
-    		e.printStackTrace();
-   		}	    	
-   		String quiz = "<a href = \"QuizSummary.jsp?id=" + id + "\"> Quiz " + id  + "</a>";	
-   		out.println("<li> QUIZ: " + quiz + "</li>");   	   
-    } 
-%>
-</p>
-
-<p>
-Recently created quizzes:
-<% 
-    ArrayList<Event>  recentCreateEvents = Event.getRecentCreatedQuiz(stmt);
-    for (Event recent : recentCreateEvents) {
-    	String creatorName = recent.getUserName();
-    	User creator = User.retrieveByUserName(creatorName, stmt);
-    	int quizID = recent.getQuizID(); 
-    	
-    	String createrNameURL;
-    	if (!creator.isPrivate() || creator.getFriends().contains(userName)) {
-    		createrNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
-    	} else {
-    		createrNameURL = "anonymous";
-    	}		
-    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-    	out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
-    	   
-    } 
-%>
-</p>
-
-
-<p>
-Your friends have created quizes:
-<% 
-    ArrayList<Event>  friendsCreateEvents = Event.getFriendsCreateEvent(userName, stmt);
-    for (int i = 0; i < friendsCreateEvents.size() && i < 10; i++) {
-    	Event friendCreateEvent = friendsCreateEvents.get(i);
-    	String friendName = friendCreateEvent.getUserName();
-    	System.out.println(friendName);
-    	int quizID = friendCreateEvent.getQuizID();    	
-    	String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-    	out.println("<li>" + friendNameURL + " created " + quizURL + "</li>");
-    	   
-    }  
-%>
-</p>
-
-<p>
-Your friends have taken quizes:
-<%
-    ArrayList<TakenEvent>  friendsTakenEvents = TakenEvent.getFriendsTakenEvents(userName, stmt);
-    for (int i = 0; i < friendsTakenEvents.size() && i < 10; i++) {
-		TakenEvent friendTakenEvent = friendsTakenEvents.get(i);
-		String friendName = friendTakenEvent.getUserName();
-		System.out.println(friendName);
-		int quizID = friendTakenEvent.getQuizID();    	
-		String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-		String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-		out.println("<li>" + friendNameURL + " took " + quizURL + "</li>");
-	}  
-%>
-</p>
-
-<p>
-Your friends have recently earned achievements:
-<% 
-
-		
-	try {
-		ResultSet rs = stmt.executeQuery("SELECT achievements.* FROM achievements,friends WHERE friends.userName1 = \"" + userName + "\" AND friends.userName2 = achievements.userName;");
-		int count = 0;
-		while (rs.next()) {
-			if (count == 10) break;
-	    	String friendName = rs.getString("userName");
-            String achievement = rs.getString("achievement");
-            String friendNameURL = "<a href = \"public-profile.jsp?name=" + friendName + "\">" + friendName + "</a>";
-            out.println("<li>" + friendNameURL + " earned " + achievement + ".</li>");
-            count++;
-	    }
-	} catch (SQLException e) {
-			// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	    
-		
-%>
-<p>
-
-
-
-<form action="logoutServlet" method="post">
-<input type="submit" value="Logout"/>
-</form>
 
 <p>Use the search box below to find other users!</p>
 

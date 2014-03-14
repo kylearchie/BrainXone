@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 
+body {
+	background-color: #F7F4FA;
+}
+
 .main-page-content {
 	display: table;
 	height: 500px;
@@ -23,6 +27,9 @@
 	margin-top: 15px;
 	margin-left: 15px;
 	border: 1px solid #ccc;
+	background-color: #fff;
+	border-radius: 3px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
 }
 
 .right-content > .section {
@@ -43,6 +50,18 @@
 	max-width: 100%;
 }
 
+.section-content p {
+	margin-top: 0px;
+}
+
+.section-content p:last-child {
+	margin-bottom: 0px;
+}
+
+.section input {
+	min-width: 0px;
+}
+
 .welcome-banner {
 	padding: 20px;
 	text-align: center;
@@ -55,4 +74,5 @@
 .no-announcements {
 	text-align: center;
 	margin-top: 0px;
+	color: #bbb;
 }

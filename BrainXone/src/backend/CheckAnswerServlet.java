@@ -48,7 +48,9 @@ public class CheckAnswerServlet extends HttpServlet {
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		String userName = (String) hs.getAttribute("currentUser");
 
-		boolean isPracticeMode = (Boolean) hs.getAttribute("isPracticeMode");
+		boolean isPracticeMode = false;
+		Boolean practiceObj = (Boolean) hs.getAttribute("isPracticeMode");
+		if(practiceObj != null) isPracticeMode = practiceObj;
 		HashMap<Integer, Integer> usedQuestions = (HashMap<Integer, Integer>) hs.getAttribute("usedQuestions");
 		ArrayList<String> givenAnswers = null;
 		
@@ -168,6 +170,7 @@ public class CheckAnswerServlet extends HttpServlet {
 	}
 
 	private int solveMultiString(HttpServletRequest request, String q, int quesID, Statement stmt, ArrayList<String> answers) {
+		if(answers == null) answers = new ArrayList<String>();
 		int counter = 0;
 		while(true) {
 			counter++;

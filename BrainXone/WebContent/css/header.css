@@ -33,15 +33,19 @@ nav > ul {
 
 nav > ul > li {
 	display: table-cell;
-	width: 120px;
+	width: 90px;
 	line-height: 50px;
-	font-size: 12pt;
+	font-size: 11pt;
 	text-align: center;
 }
 
 nav > ul > li > a {
 	display: block;
 	text-decoration: none;
+	color: #fff;
+}
+
+nav > ul > li > a:hover {
 	color: #fff;
 }
 
