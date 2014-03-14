@@ -20,35 +20,95 @@
         	}
     		session.setAttribute("currentUser", userName);
         }
+
+        ServletContext servletContext = getServletContext();
+        Statement stmt = (Statement) servletContext.getAttribute("Statement");
+        User user = User.retrieveByUserName(userName, stmt);
 %>
 <title>Welcome <%= userName %></title>
 	<link rel="stylesheet" href="css/header.css">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/quiz-page.css">
+	<link rel="stylesheet" href="css/main-page.css">
 
 </head>
 <body>
 <%@ include file="header.jsp" %>
-	<div class="central-content">
-		<div class="content-pane">
-<h1>Welcome <%= userName %></h1>
-<%
-ServletContext servletContext = getServletContext();
-Statement stmt = (Statement) servletContext.getAttribute("Statement");
+<div class="main-page-content">
+        <div class="left-content">
+            <div class="section">
+                <div class="section-header">Your friends' activity</div>
+                <div class="section-content">This is some content in a section.</div>
+            </div>
+            <div class="section">
+                <div class="section-header">Recently created quizzes</div>
+                <div class="section-content">Here's some more content. This is a bit longer. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus voluptatum sint at ad explicabo maxime officiis. Fuga, dicta porro error.</div>
+            </div>
+        </div>
+        <div class="center-content">
+            <div class="section welcome-banner">
+                <h1>Welcome, <%= userName %>!</h1>
+            </div>
+            <div class="section">
+                <div class="section-header">Announcements</div>
+                <div class="section-content">
+                <% 
+                    ArrayList<Message> announcements = Message.getAnnouncements(stmt);
+                    if(announcements.size() == 0) out.println("<p class='no-announcements'-- >No announcements --</p>");
+                    else {
+                        out.println("<ul>");
+                        for (int i = 0; i < announcements.size() && i < 10; i++) {
+                            Message announcement = announcements.get(i);
+                            out.println("<li>" + announcement.getFromID() + " posted " + announcement.getText() + "</li>");    
+                        }  
+                        out.println("</ul>");
+                    }
+                    if (user.isAdmin()) {
+                        out.println("<p>Make a new announcement:</p>");
+                        out.println("<form action=\"MakeAnnouncementServlet\" method=\"post\">");
+                        out.println("Your announcement: <input type=\"text\" name=\"announcement\"/>");
+                        out.println("<input type=\"submit\" value=\"Make Announcement\"/>");  
+                    }
+                %>
+                </div>
+            </div>
+            <% if(user.isAdmin()){ %>
+                <div class="section">
+                    <div class="section-header">Admin stats</div>
+                    <div class="section-content">
+                        <%
+                            ArrayList<Challenge> reports = Challenge.getReports(userName, stmt);
+                            int numReports = reports.size();
+                            out.println("<a href=\"inbox.jsp\"> You have " + numReports + " reports.</a>");
+                            out.println("</form>");
+                            out.println("<h4>Site statistics:</h4>");
+                            out.println("There are " + (User.getNumberOfUsers(stmt) - 1) + " users registered.");
+                            out.println("There are " + TakenEvent.getNumberOfTakenEvents(stmt) + " quizzes taken.");
+                        %>
+                    </div>
+                </div>
+            <% } %>
+                    
+            <div class="section">
+                <div class="section-header">Take these popular quizzes!</div>
+                <div class="section-content"><img src="http://www.placekitten.com/600/600" alt=""></div>
+            </div>
+        </div>
+        <div class="right-content">
+            <div class="section">
+                <div class="section-header">Messages for you:</div>
+                <div class="section-content"></div>
+            </div>
+            <div class="section">
+                <div class="section-header">Your history</div>
+                <div class="section-content"></div>
+            </div>
+        </div>
+    </div>
 
-User user = User.retrieveByUserName(userName, stmt);
-if (user.isAdmin()) {
-	out.println("<form action=\"MakeAnnouncementServlet\" method=\"post\">");
-	out.println("Your announcement: <input type=\"text\" name=\"announcement\"/>");
-    out.println("<input type=\"submit\" value=\"Make Announcement\"/>");  
-    ArrayList<Challenge> reports = Challenge.getReports(userName, stmt);
-    int numReports = reports.size();
-    out.println("<a href=\"inbox.jsp\"> You have " + numReports + " reports.</a>");
-    out.println("</form>");
-    out.println("<h4>Site statistics:</h4>");
-    out.println("There are " + (User.getNumberOfUsers(stmt) - 1) + " users registered.");
-    out.println("There are " + TakenEvent.getNumberOfTakenEvents(stmt) + " quizzes taken.");
-}
+<%
+
+
+
 boolean isPrivate = user.isPrivate();
 String status = "OFF";
 if(isPrivate) status = "ON";
@@ -57,16 +117,6 @@ if(isPrivate) status = "ON";
 <form action="UpdatePrivacyServlet" method="post">
 <input type="submit" value="change privacy"/>
 </form>
-
-<h4>Admin Announcements:</h4>
-<% 
-    ArrayList<Message> announcements = Message.getAnnouncements(stmt);
-    for (int i = 0; i < announcements.size() && i < 10; i++) {
-		Message announcement = announcements.get(i);
-		out.println("<li>" + announcement.getFromID() + " posted " + announcement.getText() + "</li>");	   
-	}  
-
-%>
 
 <h4> Your Achievements </h4>
 <%

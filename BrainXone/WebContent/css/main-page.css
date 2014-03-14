@@ -8,6 +8,7 @@
 
 .main-page-content > div {
 	display: table-cell;
+	vertical-align: top;
 }
 
 .center-content {
@@ -40,4 +41,18 @@
 
 .section-content img {
 	max-width: 100%;
+}
+
+.welcome-banner {
+	padding: 20px;
+	text-align: center;
+}
+
+.welcome-banner h1 {
+	margin: 0px;
+}
+
+.no-announcements {
+	text-align: center;
+	margin-top: 0px;
 }
