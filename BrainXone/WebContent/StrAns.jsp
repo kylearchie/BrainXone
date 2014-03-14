@@ -12,8 +12,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
+	
 <% if(ques.getType() == Question.MULTI_STR_ANS) { %>
+	<link rel="stylesheet" href="css/multi-choice.css">
 	<script src="js/addQuestions.js"></script>
 <% } %>
 	<script src="js.addVariants.js"></script>

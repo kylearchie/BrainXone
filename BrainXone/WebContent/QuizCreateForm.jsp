@@ -13,22 +13,30 @@
 <form action="QuizCreationServlet" method = "post">
 Input a name for the quiz: <input type = "text" name = "quizName"> <br>
 Input description: <input type = "text" name = "description"> <br>
+
 Select category: <select name = "category">  
-<option value = "Food"> Food </option>
-<option value = "Drink"> Drink </option>
+
+<option value = "LangVocab"> Language And Vocabulary </option>
+<option value = "Math"> Math </option>
+<option value = "Science"> Science </option>
+<option value = "History"> History </option>
+<option value = "Geography"> Geography </option>
+<option value = "Arts"> Arts </option>
+<option value = "Computers"> Computers </option>
+<option value = "Other"> Other </option>
 </select>
 <br> <br>
 
 Display in Random Order? 
 <input type = "radio" name = "isRandom" value = "1"> YES &nbsp;
-<input type = "radio" name = "isRandom" value = "0"> NO <br>
+<input type = "radio" name = "isRandom" value = "0" checked> NO <br>
 
 Display all questions in One Page? 
-<input type = "radio" name = "isOnePage" value = "1"> YES &nbsp;
+<input type = "radio" name = "isOnePage" value = "1" checked> YES &nbsp;
 <input type = "radio" name = "isOnePage" value = "0"> NO <br>
 
 Is the quiz available for practice? 
-<input type = "radio" name = "isPracticeMode" value = "1"> YES &nbsp;
+<input type = "radio" name = "isPracticeMode" value = "1" checked> YES &nbsp;
 <input type = "radio" name = "isPracticeMode" value = "0"> NO <br> <br>
 
 Add Tags: Separate by <b>spaces</b>
