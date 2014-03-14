@@ -22,6 +22,7 @@
 <%
 
 	HashMap<Integer, ArrayList<String>> answerKeys = ques.getAnswerKeys(stmt);
+
 	hs.setAttribute("ansCount", answerKeys.size());
 	for(int i = 1; i <= answerKeys.size(); i++){
 		ArrayList<String> ans = answerKeys.get(i);
@@ -31,6 +32,7 @@
 	}
 
 %>
+	<input type = "text" name = "maxPoints" value = "<%= ques.getMaxPoints(stmt) %>">
 </form>
 </body>
 </html>
