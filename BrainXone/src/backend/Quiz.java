@@ -12,7 +12,7 @@ public class Quiz {
 	private ArrayList<Question> questions;
 	private String creatorName = "";
 	private String category = "";
-	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 
 	/**
 	 * Constructor: To be used by creator
@@ -21,7 +21,7 @@ public class Quiz {
 	 * @param creatorID
 	 * @param category
 	 */
-	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
+	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode, int isImmeCorr){
 		if(!isPlayerMode) 
 			ID++;
 		this.description = description;
@@ -31,6 +31,7 @@ public class Quiz {
 		this.isRandom = isRandom;
 		this.isOnePage = isOnePage;
 		this.isPracticeMode = isPracticeMode;
+		this.isImmeCorr = isImmeCorr;
 		questions = new ArrayList<Question>();
 	}
 
@@ -41,7 +42,7 @@ public class Quiz {
 
 	public void pushToQuizDB(Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
+			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\",\"" + isImmeCorr + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -115,9 +116,9 @@ public class Quiz {
 		if(quizID == 0) return null;
 		String creatorName = "";
 		String quizName = "", description = "", category = "";
-		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode, isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
@@ -126,12 +127,13 @@ public class Quiz {
 				isRandom = Integer.parseInt(rs.getString(5));
 				isOnePage = Integer.parseInt(rs.getString(6));
 				isPracticeMode = Integer.parseInt(rs.getString(7));
+				isImmeCorr = Integer.parseInt(rs.getString(8));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmeCorr);
 		return q;
 	}
 
@@ -139,9 +141,9 @@ public class Quiz {
 		if(quizID == 0) return null;
 		String creatorName = "";
 		String quizName = "", description = "", category = "";
-		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
@@ -150,12 +152,13 @@ public class Quiz {
 				isRandom = Integer.parseInt(rs.getString(5));
 				isOnePage = Integer.parseInt(rs.getString(6));
 				isPracticeMode = Integer.parseInt(rs.getString(7));
+				isImmeCorr = Integer.parseInt(rs.getString(8));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmeCorr);
 		return q;
 	}
 
@@ -163,7 +166,7 @@ public class Quiz {
 		return creatorName;
 	}
 
-	public String getName(int quizID, Statement stmt){
+	public static String getName(int quizID, Statement stmt){
 		String name = "";
 		try {
 			String sql = "SELECT quizName FROM quiz WHERE quizID = \"" + quizID + "\";";
@@ -284,6 +287,10 @@ public class Quiz {
 
 	public boolean hasPracticeMode(){
 		return isPracticeMode == 1;
+	}
+	
+	public boolean hasImmeCorr(){
+		return isImmeCorr == 1;
 	}
 
 	public boolean hasImmediateCorrection() {

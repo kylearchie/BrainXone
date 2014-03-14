@@ -22,7 +22,6 @@ Statement stmt = (Statement) servletContext.getAttribute("Statement");
 String userName = (String) session.getAttribute("currentUser");
 String searchTerm = (String) session.getAttribute("search");
 ArrayList<User> users = User.retrieveByPartialUserName(searchTerm, stmt);
-out.println(users.size());
 out.println("<ul>");
 for (User user : users) 
 {

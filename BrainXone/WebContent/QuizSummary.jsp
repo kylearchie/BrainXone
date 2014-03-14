@@ -43,7 +43,7 @@
 
 
 	Quiz q = Quiz.getQuizUsingID(quizID, stmt);
-	out.print("Name of the quiz: " + q.getName() + "<br>");
+	out.print("<h1 class = \"page-title\"> Quiz: " + q.getName(quizID, stmt) + "</h1><br>");
 	out.print("Quiz Description: " + q.getDescription() + "<br>");
 	User creator = User.retrieveByUserName(q.getCreatorName(), stmt);
 	String createrName;
@@ -208,13 +208,9 @@
 
 <form action="ReportServelrt" method="post"><input type="hidden"
 	name="quizID" value='<%= request.getParameter("id") %>'> <input
-	type="submit" value="Report quiz as inappropiate"></form>
+	type="submit" value="Report quiz as inappropriate"></form>
 <%
    }
-
-	
-	
-	
 
 User user = User.retrieveByUserName(userName, stmt);
 if (user.isAdmin()) {

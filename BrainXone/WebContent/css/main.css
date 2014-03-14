@@ -7,6 +7,24 @@ body {
 	font-size: 12pt;
 }
 
+<<<<<<< HEAD
+=======
+
+input, button, .button, select {
+	display: block;
+	font-size: 1em;
+	border: 0px;
+	border-radius: 3px;
+	min-width: 20em;
+	padding: 0.75em;
+	cursor: pointer;
+}
+
+input[type=text], input[type=number], input[type=password], input[type=submit], button, .button, select {
+	-webkit-appearance: none;
+}
+
+>>>>>>> FETCH_HEAD
 select {
 	background:
 		url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.8 5.9" enable-background="new 0 0 8.8 5.9" xml:space="preserve"><path fill="#333333" d="M8.3,0.7L4.5,5.4c0,0.1-0.1,0.1-0.2,0L0.5,0.7c-0.1-0.1,0-0.2,0.1-0.2h7.6C8.3,0.5,8.3,0.6,8.3,0.7z"/></svg>')

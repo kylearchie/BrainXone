@@ -42,18 +42,17 @@
                          ArrayList<Message> unreadMessages = Message.getUnReadMessages(userName, stmt);
                          int numUnReadMessages = unreadMessages.size();
                     %>
-                    <p>You have <%= numUnReadMessages %> notes.</p>
+                    <p><a href="inbox.jsp">You have <%= numUnReadMessages %> notes. </a></p>
                     <%
                          ArrayList<Message> friends = Message.getFriendRequests(userName, stmt);
                          int numRequests = friends.size();
                     %>
-                    <p> You have <%= numRequests %> friend requests.</p>
+                    <p> <a href="inbox.jsp">You have <%= numRequests %> friend requests.</a></p>
                     <%
                          ArrayList<Challenge> challenges = Challenge.getChallenges(userName, stmt);
                          int numChallenges = challenges.size();
                     %>
-                    <p> You have <%= numChallenges %> challenges.</p>
-                    <a href="inbox.jsp">Read messages</a>
+                    <p> <a href="inbox.jsp">You have <%= numChallenges %> challenges.</a></p>
                 </div>
             </div>
             <div class="section">
@@ -167,7 +166,7 @@
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }            
-                                out.println("<li><a href = 'QuizSummary.jsp?id=" + id + "'> Quiz " + name  + "</a></li>");       
+                                out.println("<li><a href = 'QuizSummary.jsp?id=" + id + "'>" + name  + "</a></li>");       
                             } 
                         %>
                     </ul>
@@ -305,7 +304,6 @@
 </form>
 
 <h1>Select which mode you want to play in: </h1> <br>
-
 
 <a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
 <a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
-    <%@ page import = "java.sql.*, brainxone.*, java.util.*" %>
+    <%@ page import = "java.sql.*, brainxone.*, java.util.*, backend.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -25,7 +25,7 @@ out.println("<h4> Taken Quizes History </h4>");
 out.println("<ul>");
 for (TakenEvent takenEvent : takenEvents) 
 {
-	String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";	
+	String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> " + Quiz.getName(takenEvent.getQuizID(), stmt)  + "</a>";	
 	out.println("<li>" + name + "</li>");
 }
 %>
