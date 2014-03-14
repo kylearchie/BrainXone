@@ -138,10 +138,17 @@ Recently created quizzes:
     ArrayList<Event>  recentCreateEvents = Event.getRecentCreatedQuiz(stmt);
     for (Event recent : recentCreateEvents) {
     	String creatorName = recent.getUserName();
-    	int quizID = recent.getQuizID();    	
-    	String creatorNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
+    	User creator = User.retrieveByUserName(creatorName, stmt);
+    	int quizID = recent.getQuizID(); 
+    	
+    	String createrNameURL;
+    	if (!creator.isPrivate() || creator.getFriends().contains(userName)) {
+    		createrNameURL = "<a href = \"public-profile.jsp?name=" + creatorName + "\">" + creatorName + "</a>";
+    	} else {
+    		createrNameURL = "anonymous";
+    	}		
     	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
-    	out.println("<li>" + creatorNameURL + " created " + quizURL + "</li>");
+    	out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
     	   
     } 
 %>

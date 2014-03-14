@@ -54,7 +54,7 @@
 				<% if(quiz.hasPracticeMode()) { %>
 				<fieldset class="content-box">
 					<label for="max-points">Points required to be considered correct in practice mode:</label>
-					<input type="number" name="max-points" value ="1">
+					<input type="number" name="maxPoints" value ="1">
 				</fieldset>
 				<% } %>
 				<input id="submit-multi-choice" class="button action-button" type="submit">
