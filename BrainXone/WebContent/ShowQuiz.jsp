@@ -101,15 +101,15 @@
 				case Question.FIB:
 				case Question.PICTURE_RESPONSE:
 					out.print("<h3 class='quiz-question-header'>Fill in the blank below:</h3>");
-					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
-					out.print("<div class='quiz-answers'>");
-					out.print("<input type='text' name='question" + counter + "answer1'>");
+					out.print("<p class='quiz-question'>" + ques.getQuesText(counter) + "</p>");
 					break;
 				case Question.MULTI_STR_ANS:
 					out.print("<h3 class='quiz-question-header'>Fill in all the blank spaces below:</h3>");
 					out.print("<p class='quiz-question'>" + ques.getQuesText() + "</p>");
 					out.print("<div class='quiz-answers multi-option'>");
-					for (int i = 0; i < 3; i++) {
+					StringResponse sr = (StringResponse) ques;
+					int numQuestions = sr.getAnswerKeys(stmt).keySet().size();
+					for (int i = 0; i < numQuestions; i++) {
 						out.print("<div class='quiz-anwer-option'>");
 						out.print("<input type='text' name='question" + counter + "answer" + (i + 1) + "'>");
 						out.print("</div>");

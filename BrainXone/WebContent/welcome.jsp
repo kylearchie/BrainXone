@@ -14,6 +14,10 @@
         else
         {
         	userName = request.getParameter("username");
+        	if( userName == null ) {
+        		response.sendRedirect("Login.jsp");
+        		return;
+        	}
     		session.setAttribute("currentUser", userName);
         }
 %>

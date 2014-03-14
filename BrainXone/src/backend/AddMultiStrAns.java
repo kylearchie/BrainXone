@@ -66,7 +66,7 @@ public class AddMultiStrAns extends HttpServlet {
 					if(aoString == null || aoString.isEmpty()) break;
 					options.add(aoString);
 				}
-				if(aoString == null) break;
+				if(optionCounter == 1) break;
 				answerKeys.add(options);
 			
 		}

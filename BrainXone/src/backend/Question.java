@@ -58,8 +58,33 @@ public class Question {
 		return quesID;
 	}
 
+	public String getQuesText( int counter ){
+		String result = "<span>";
+		String questionParsing = quesText;
+		int quesIndex = quesText.indexOf("#QTEXT");
+		if( quesIndex != -1 ) {
+			questionParsing = questionParsing.substring(quesIndex + "#QTEXT".length() + 1);
+		}
+		int imgIndex = questionParsing.indexOf("#IMGURL");
+		if( imgIndex != -1 ) {
+			result += questionParsing.substring(0, imgIndex) + "</span>";
+			result += "<img src='" + questionParsing.substring(imgIndex + 1) + "'>";
+		} else if( counter != -1) {
+			int blankIndex = questionParsing.indexOf("#BLANK");
+			if( blankIndex != -1 ) {
+				result += questionParsing.substring(0, blankIndex) + "</span>";
+				result += "<input type='text' name='question" + counter + "answer1'>";
+				result += questionParsing.substring(blankIndex + "#BLANK".length() + 1);
+			} else {
+				result += questionParsing + "</span><div class='quiz-answers'>";
+				result += "<input type='text' name='question" + counter + "answer1'></div>";
+			}
+		} 
+		return result;
+	}
+	
 	public String getQuesText(){
-		return quesText;
+		return getQuesText( -1 );
 	}
 
 	public static void initMinID(int oldID){
