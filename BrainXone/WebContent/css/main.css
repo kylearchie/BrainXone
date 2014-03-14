@@ -8,7 +8,7 @@ body {
 }
 
 
-input, button, select {
+input, button, .button, select {
 	display: block;
 	font-size: 1em;
 	border: 0px;
@@ -39,7 +39,7 @@ select {
 	border: 1px solid #ccc;
 }
 
-input[type=text] {
+input[type=text], input[type=password], input[type=number] {
 	border: 1px solid #ccc;
 	width: 20em;
 	padding: 0.5em;
@@ -47,6 +47,18 @@ input[type=text] {
 
 .positive-button {
 	background-color: rgb(50, 175, 50);
+}
+
+.negative-button {
+	background-color: rgb(221, 87, 69);
+}
+
+.move-on-button {
+	background-color: rgb(49, 136, 216)
+}
+
+.neautral-button {
+	background-color: #999;
 }
 
 .action-button {
@@ -58,6 +70,25 @@ input[type=text] {
 	text-shadow: 1px 1px rgba( 0, 0, 0, 0.25 );
 	margin-top: 10px;
 	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+a.button {
+	text-decoration: none;
+	max-width: 20em;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.error-box {
+	color: #fff;
+	background-color: rgb(221, 87, 69);
+	margin: auto;
+	padding: 10px;
+	font-size: 10pt;
+	max-width: 20em;
+	margin-top: -10px;
 }
 
 /* Quiz Boxes */

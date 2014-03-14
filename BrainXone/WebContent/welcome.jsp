@@ -22,8 +22,15 @@
         }
 %>
 <title>Welcome <%= userName %></title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/quiz-page.css">
+
 </head>
 <body>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
 <h1>Welcome <%= userName %></h1>
 <%
 ServletContext servletContext = getServletContext();
@@ -241,5 +248,6 @@ Your friends have recently earned achievements:
 
 <a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
 <a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
+</div></div>
 </body>
 </html>

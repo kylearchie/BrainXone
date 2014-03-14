@@ -1,0 +1,24 @@
+@CHARSET "UTF-8";
+
+body {
+	background: url("../images/galaxy.jpg");
+	background-size: cover
+}
+
+.login-container {
+	max-width: 400px;
+	max-height: 500px;
+	padding: 20px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -250px;
+	margin-left: -200px;
+	background-color: rgba(255, 255, 255, 0.5);
+	border: 2px solid #eee;
+}
+
+.logo {
+	padding: 10px;
+	margin-bottom: 15px;
+}

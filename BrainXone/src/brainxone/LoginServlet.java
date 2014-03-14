@@ -49,7 +49,8 @@ public class LoginServlet extends HttpServlet {
 			RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
 			dispatch.forward(request, response);
 		} else {
-			RequestDispatcher dispatch = request.getRequestDispatcher("login_failed.jsp");
+			request.setAttribute("error", true);
+			RequestDispatcher dispatch = request.getRequestDispatcher("Login.jsp");
 			dispatch.forward(request, response);
 		}
 	}

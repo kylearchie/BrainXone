@@ -50,7 +50,8 @@ public class CreateNewAccountServlet extends HttpServlet {
 			RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
 			dispatch.forward(request, response);
 		} else {
-			RequestDispatcher dispatch = request.getRequestDispatcher("create_account_failed.jsp");
+			request.setAttribute("error", true);
+			RequestDispatcher dispatch = request.getRequestDispatcher("create_new_account.jsp");
 			dispatch.forward(request, response);
 		}
 	}
