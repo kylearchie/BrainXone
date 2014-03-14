@@ -274,6 +274,11 @@ public class Quiz {
 		return isPracticeMode == 1;
 	}
 	
+	public boolean hasImmediateCorrection() {
+		//TODO: Add this field to database so we can make quizzes like this!
+		return isOnePage != 1;
+	}
+	
 	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\";");	
@@ -290,7 +295,7 @@ public class Quiz {
 	}
 	
 	public boolean isTimedQuiz() {
-		return true;
+		return false;
 	}
 	
 	public static ArrayList<Integer> getQuizIDByTag(String tag, Statement stmt){

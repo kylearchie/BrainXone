@@ -63,7 +63,7 @@ public class AddMultiStrAns extends HttpServlet {
 					optionCounter++;
 					ao = a + "option" + optionCounter;
 					aoString = request.getParameter(ao);
-					if(aoString == null) break;
+					if(aoString == null || aoString.isEmpty()) break;
 					options.add(aoString);
 				}
 				if(aoString == null) break;

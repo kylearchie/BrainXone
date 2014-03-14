@@ -23,7 +23,7 @@ window.addEventListener("load", function() {
 
 		var label = document.createElement("label");
 		label.className = "variant-or";
-		label.for = "answer" + answerNumber + "option" + numOptions;
+		label["for"] = "answer" + answerNumber + "option" + numOptions;
 		label.innerHTML = "- OR -";
 
 		var variant = document.createElement("input");

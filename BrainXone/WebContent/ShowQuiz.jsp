@@ -53,6 +53,7 @@
 		long seed;
 		if( q.isOnePage() ) seed = System.nanoTime();
 		else seed = (Long) sess.getAttribute("randomSeed");
+		System.out.println("Seed is right now: " + seed);
 		Collections.shuffle(quesList, new Random(seed));
 	}
 	if(!q.isOnePage()) {
@@ -125,7 +126,7 @@
 						i++;
 						out.print("<div class='quiz-answer-option'><input type='hidden' name='question" + counter + "option" + i + "' value='" + str + "'>");
 						if(type == Question.MULTI_CHOICE_R) out.print("<input type='radio' name='question" + counter + "valid' value='" + i + "'> " + str + "</div>");
-						else out.print("<input type='checkbox' name='question" + counter + "valid" + i + "' value='" + i + "'> " + str + "</div>");
+						else out.print("<input type='checkbox' name='question" + counter + "valid" + i + "' value='" + i + "'> <span>" + str + "</span></div>");
 					}
 					break;
 				}
@@ -135,7 +136,7 @@
 		<input id="quiz-submit-button" class="action-button button" type="submit" value="Submit Answers">
 	</form>
 	<% if (isPracticeMode) { %>
-		<a class="escape-button button" href="QuizSummary.jsp?id=<%= quizID %>" >Leave Practice Mode</a>
+		<a class="move-on-button button" href="QuizSummary.jsp?id=<%= quizID %>" >Leave Practice Mode</a>
 	<% } %>
 	</div>
 	</div>
