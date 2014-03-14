@@ -44,6 +44,7 @@ class MultiChoice extends Question{
 	public int checkAnswer(HashSet<String> mapB, Statement stmt){
 		points = 0;
 		HashMap<String, Integer> mapA = displayAnswers(stmt);
+		System.out.println(mapA);
 		for(String ans : mapB){
 			if(mapA.containsKey(ans) && mapA.get(ans) == 1) {
 				points++;
