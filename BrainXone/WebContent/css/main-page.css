@@ -1,9 +1,5 @@
 @CHARSET "UTF-8";
 
-body {
-	background-color: #F7F4FA;
-}
-
 .main-page-content {
 	display: table;
 	height: 500px;

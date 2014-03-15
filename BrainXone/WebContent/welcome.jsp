@@ -192,7 +192,7 @@
             <div class="section">
                 <div class="section-header">News</div>
                 <div class="section-content">
-                    <p>Recently created quizzes:
+                    <p>Recently created quizzes:</p>
                     <ul class="striped-list">
                         <%
                             ArrayList<Event> recentCreateEvents = Event
@@ -211,16 +211,15 @@
                                 } else {
                                     createrNameURL = "anonymous";
                                 }
-                                String quizName = q.getName(quizID, stmt);
-                                System.out.println( q.getName(quizID, stmt) );
-                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName(quizID, stmt) + "</a>";
+                                String quizName = Quiz.getName(quizID, stmt);
+                                System.out.println( Quiz.getName(quizID, stmt) );
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + Quiz.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
 
                             }
                         %>
                     </ul>
-                    </p>
-                    <p>Your friends have created quizes:
+                    <p>Your friends have created quizes:</p>
                     <ul class="striped-list">
                         <%
                             ArrayList<Event> friendsCreateEvents = Event.getFriendsCreateEvent(
@@ -235,16 +234,15 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\"> " + q.getName(quizID, stmt) + "</a>";
+                                        + "\"> " + Quiz.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " created " + quizURL
                                         + "</li>");
 
                             }
                         %>
                     </ul>
-                    </p>
 
-                    <p>Your friends have taken quizes:
+                    <p>Your friends have taken quizes:</p>
                     <ul class="striped-list">
                         <%
                             ArrayList<TakenEvent> friendsTakenEvents = TakenEvent
@@ -259,15 +257,14 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\">" + q.getName(quizID, stmt) + "</a>";
+                                        + "\">" + Quiz.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " took " + quizURL
                                         + "</li>");
                             }
                         %>
                     </ul>
-                    </p>
 
-                    <p>Your friends have recently earned achievements:
+                    <p>Your friends have recently earned achievements: </p>
                     <ul class="striped-list">
                         <%
                             try {
@@ -293,14 +290,9 @@
                             }
                         %>
                     </ul>
-                    </p>
                 </div>
-                </div>
-                </div>
-               
-            
-        
+            </div>
+        </div>        
     </div>
-</div></div>
 </body>
 </html>

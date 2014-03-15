@@ -6,14 +6,13 @@
 <%
 	HttpSession sess = request.getSession();
 	Boolean b = (Boolean) sess.getAttribute("isPracticeMode");
-	if( b != null && b ) {
+	if (b != null && b) {
 		sess.setAttribute("isPracticeMode", new Boolean(false));
 		sess.removeAttribute("questionNumber");
 		sess.removeAttribute("currentScore");
 		sess.removeAttribute("currentTime");
 		sess.removeAttribute("randomSeed");
 	}
-
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,20 +24,17 @@
 <title>Quiz Summary!</title>
 </head>
 <body>
-<%@ include file="header.jsp" %>
-<%
+	<%@ include file="header.jsp"%>
+	<div class="central-content">
+		<div class="content-pane">
 
+<%
 
     
     ServletContext servletContext = getServletContext();
     Statement stmt = (Statement) servletContext.getAttribute("Statement");
     String userName = (String) session.getAttribute("currentUser");
 	int quizID = Integer.parseInt(request.getParameter("id"));
-
-	
-	
-	
-	
 
 	HttpSession hs = request.getSession();
 
@@ -169,9 +165,9 @@
 	if(q.hasPracticeMode() && !userName.equals(guest)){
 	%>
 
-	<form action="PracticeModeServlet" method="post"><input
-	type="submit" value="Practice Mode"> <input type="hidden"
-	name="quizID" value='<%= request.getParameter("id") %>'></form>
+	<form action="PracticeModeServlet" method="post">
+	<input class="move-on-button button" type="submit" value="Practice Mode">
+	<input type="hidden" name="quizID" value='<%= request.getParameter("id") %>'></form>
 
 <%
 	} else {
@@ -183,45 +179,41 @@
 	} else {
 		String url = "ShowQuiz.jsp?id=" + quizID;
 		out.println("<form action=\""+ url +"\" method=\"post\">");
-		out.println("<input type=\"submit\" value=\"PLAY!\">"); 
+		out.println("<input class='positive-button button' type=\"submit\" value=\"PLAY!\">"); 
 		out.println("<input type=\"hidden\" name=\"quizID\" value=\""+ request.getParameter("id") + "\"></form>");
 	}
 	
 	
     if (!userName.equals(guest)) {
     	%>
+			<form action="ListFriendsServlet.jsp" method="post">
+				<input class="move-on-button button" type="submit" value="Challenge a Friend!"> <input
+					type="hidden" name="quizID"
+					value='<%=request.getParameter("id")%>'>
+			</form>
 
-<form action="ListFriendsServlet.jsp" method="post"><input
-	type="submit" value="Challenge a Friend!"> <input type="hidden"
-	name="quizID" value='<%= request.getParameter("id") %>'></form>
+			<form action="ReportServelrt" method="post">
+				<input type="hidden" name="quizID" value='<%=request.getParameter("id")%>'>
+				<input class="negative-button button" type="submit" value="Report quiz as inappropriate">
+			</form>
+			<%
+				}
 
-<form action="ReportServelrt" method="post"><input type="hidden"
-	name="quizID" value='<%= request.getParameter("id") %>'> <input
-	type="submit" value="Report quiz as inappropriate"></form>
-<%
-   }
+				User user = User.retrieveByUserName(userName, stmt);
+				if (user.isAdmin()) {
+			%>
+			<form action="DeleteQuizServlet" method="post">
+				<input type="hidden" name="quizID" value='<%=request.getParameter("id")%>'> 
+				<input class="neutral-button button" type="submit" value="Delete this quiz">
+			</form>
 
-User user = User.retrieveByUserName(userName, stmt);
-if (user.isAdmin()) {
-    %>
-<form action="DeleteQuizServlet" method="post"><input
-	type="hidden" name="quizID" value='<%= request.getParameter("id") %>'>
-<input type="submit" value="Delete this quiz"></form>
+			<form action="DeleteQuizHistoryServlet" method="post">
+				<input type="hidden" name="quizID" value='<%=request.getParameter("id")%>'> 
+				<input class="neutral-button button" type="submit" value="Delete this quiz's history">
+			</form>
 
-<form action="DeleteQuizHistoryServlet" method="post"><input
-	type="hidden" name="quizID" value='<%= request.getParameter("id") %>'>
-<input type="submit" value="Delete this quiz's history"></form>
-
-
-
-
-
-<%
-}
-
-
-%>
-</div>
-</div>
+			<% } %>
+		</div>
+	</div>
 </body>
 </html>
