@@ -288,14 +288,9 @@ public class Quiz {
 	public boolean hasPracticeMode(){
 		return isPracticeMode == 1;
 	}
-	
-	public boolean hasImmeCorr(){
-		return isImmeCorr == 1;
-	}
 
 	public boolean hasImmediateCorrection() {
-		//TODO: Add this field to database so we can make quizzes like this!
-		return isOnePage != 1;
+		return isImmeCorr == 1;
 	}
 
 	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
