@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<%@ include file="header.html" %>
+<%@ include file="header.jsp" %>
 
 <h1>List of Quizzes in your selected category</h1>
 <%

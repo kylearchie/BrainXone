@@ -178,7 +178,18 @@
         <div class="right-content">
             <div class="section">
                 <div class="section-header">Search</div>
-                <div class="section-content"></div>
+                <div class="section-content">
+                    <p>Search for users:</p>
+                    <form class="form-bar" action="findServlet" method="post">
+                        <div><input type="text" name="searchTerm"/></div>
+                        <div><input class="move-on-button button" type="submit" value="Search"/></div>
+                    </form>
+                    <p>Search for quiz tags:</p>
+                    <form class="form-bar" action="findQuizServlet" method="post">
+                        <div><input type="text" name="searchTerm"/></div>
+                        <div><input class="move-on-button button" type="submit" value="Search"/></div>
+                    </form>
+                </div>
             </div>
             <div class="section">
                 <div class="section-header">News</div>
@@ -287,23 +298,6 @@
             </div>
         </div>
     </div>
-
-<p>Use the search box below to find other users!</p>
-
-<form action="findServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
-
-<p>Use the search box below to find quizzes by tag!</p>
-
-<form action="findQuizServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
-
-<h1>Select which mode you want to play in: </h1> <br>
-
 
 <a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
 <a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>

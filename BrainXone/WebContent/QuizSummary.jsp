@@ -24,7 +24,7 @@
 <title>Quiz Summary!</title>
 </head>
 <body>
-<%@ include file="header.html" %>
+<%@ include file="header.jsp" %>
 <%
 
     

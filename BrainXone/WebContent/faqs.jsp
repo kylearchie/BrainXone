@@ -10,7 +10,7 @@
 
 </head>
 <body>
-<%@ include file="header.html" %>
+<%@ include file="header.jsp" %>
 	<div class="central-content">
 		<div class="content-pane">
 

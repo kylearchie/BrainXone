@@ -12,7 +12,6 @@
 	</div>
 	<nav>
 		<ul>
-			<li><a href="welcome.jsp">My Account</a></li>
 			<li><a href="inbox.jsp">Messages</a></li>
 			<li><a href="QuizPlayerForm.jsp">Browse</a></li>
 			<li><a href="QuizCreateForm.jsp">Make Quiz</a></li>
