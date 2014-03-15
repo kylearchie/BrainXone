@@ -143,7 +143,7 @@ public class Quiz {
 		String quizName = "", description = "", category = "";
 		int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode, isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
