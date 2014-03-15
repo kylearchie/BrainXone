@@ -52,7 +52,7 @@
 	} else {
 		createrName = "anonymous";
 	}		
-	out.print("<b>Creator Name</b>: <a href = \"public-profile.jsp?name=" + q.getCreatorName() + "\">" + q.getCreatorName() + "</a>" + "<br><br>");
+	out.print("<b>Creator Name</b>: " + createrName + "<br><br>");
 
 	
 	String guest = "guest";
@@ -135,7 +135,7 @@
 		
 	}
 	
-	out.print("<b><u>Reviews for This Quiz:</b></u><br>");
+	out.print("<b><u><br>Reviews for This Quiz:</b></u><br>");
 	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
 	for(Review r : reviews){
 		User reviewer = User.retrieveByUserName(r.reviewerName, stmt);
@@ -151,7 +151,7 @@
 	}
 	
 	ArrayList<String> tags = Quiz.getTagsByQuizID(quizID, stmt);
-	out.print("<b><u>Tags for this quiz: </b></u>");
+	out.print("<b><u><br>Tags for this quiz: </b></u>");
 	for(int i = 0; i < tags.size(); i++){
 		String t = tags.get(i);
 		if(i == (tags.size() - 1))

@@ -51,11 +51,7 @@ public class QuizCreationServlet extends HttpServlet {
 		int isImmediateCorrection = Integer.parseInt((String) request.getParameter("isImmediateCorrection"));
 		String allTags = (String)request.getParameter("tags");
 		request.getSession().setAttribute("tags", allTags);
-
-		
-		
-		
-		// userName hardcoded 1 here.
+	
 		String creatorName = (String) hs.getAttribute("currentUser");
 		Quiz q = new Quiz(false, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmediateCorrection);
 		

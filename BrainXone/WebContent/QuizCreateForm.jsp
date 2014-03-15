@@ -38,9 +38,9 @@ Display in Random Order?
 <input type = "radio" name = "isRandom" value = "1" > YES &nbsp;
 <input type = "radio" name = "isRandom" value = "0" checked> NO <br>
 
-Display all questions in One Page? 
-<input type = "radio" name = "isOnePage" value = "1" checked> YES &nbsp;
-<input type = "radio" name = "isOnePage" value = "0"> NO <br>
+Page Choice: Single or Multi-Page? 
+<input type = "radio" name = "isOnePage" value = "1" checked> Single Page &nbsp;
+<input type = "radio" name = "isOnePage" value = "0"> Multi-Page <br>
 
 Is the quiz available for practice? 
 <input type = "radio" name = "isPracticeMode" value = "1" checked> YES &nbsp;
