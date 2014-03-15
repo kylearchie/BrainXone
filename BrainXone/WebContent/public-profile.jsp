@@ -26,7 +26,7 @@ User user = User.retrieveByUserName(userName, stmt);
 	<div class="central-content">
 		<div class="content-pane">
 
-		<h1 class="page-title"><%=(String)request.getParameter("name")%></h1>
+		<h1 class="page-title"> Profile of <%=(String)request.getParameter("name")%></h1>
 <% 
 ArrayList<String> friends = user.getFriends();
 String profileName = (String)request.getParameter("name");
@@ -81,7 +81,7 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
 		ResultSet rs = stmt.executeQuery("SELECT * FROM achievements WHERE userName = \"" + profileName + "\";");
 		while (rs.next()) {
 	    	String achievement = rs.getString("achievement");
-	    	out.println(achievement);
+	    	out.println("<li>" + achievement + "</li>");
 	    }
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
@@ -111,7 +111,7 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
      out.println("<ul>");
      for (TakenEvent takenEvent : takenEvents)  
      {
-		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> " + Quiz.getName(takenEvent.getQuizID(), stmt) + "</a>";
 		out.println("<li>" + name + "</li>");
 	 }
      out.println("</ul>");

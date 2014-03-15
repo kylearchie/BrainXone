@@ -40,9 +40,9 @@ Display in Random Order?
 </div>
 
 <div class="quiz-create-option">
-Display all questions in One Page? 
-<div><input type = "radio" name = "isOnePage" value = "1" checked> YES</div>
-<div><input type = "radio" name = "isOnePage" value = "0"> NO</div>
+Page Choice: Single or Multi-Page? 
+<div><input type = "radio" name = "isOnePage" value = "1" checked> Single Page</div>
+<div><input type = "radio" name = "isOnePage" value = "0"> Multi-Page</div>
 </div>
 
 <div class="quiz-create-option">
