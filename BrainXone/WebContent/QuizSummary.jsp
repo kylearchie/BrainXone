@@ -139,6 +139,7 @@
 		
 	}
 	
+	out.print("<b><u>Reviews for This Quiz:</b></u><br>");
 	ArrayList<Review> reviews = Quiz.getReviewByQuizID(quizID, stmt);
 	for(Review r : reviews){
 		User reviewer = User.retrieveByUserName(r.reviewerName, stmt);
@@ -148,7 +149,6 @@
 		} else {
 			creatorNameURL = "anonymous";
 		}		
-		out.print("<b><u>Reviews for This Quiz:</b></u><br>");
 		out.print("From Reviewer: " + creatorNameURL + "<br>");
 		out.print("Text Review: " + r.textReview + "<br>");
 		out.print("Stars: " + r.stars + "<br><br>");

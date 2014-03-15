@@ -301,14 +301,6 @@
             
         
     </div>
-
-<<<<<<< HEAD
-<a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
-<a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
-=======
-
-
->>>>>>> FETCH_HEAD
 </div></div>
 </body>
 </html>

@@ -109,7 +109,14 @@ public class CheckAnswerServlet extends HttpServlet {
 
 		System.out.println("*********" + quizID);
 
-		TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
+		if (!isPracticeMode) {
+			TakenEvent takenEvent = new TakenEvent(userName, quizID, scoreTotal, taken, stmt);
+		} else {
+			if (!TakenEvent.checkPractice(userName, stmt)) {
+				TakenEvent.UpdatePractivechievements(userName, stmt);
+			}
+		}
+		
 		if (!TakenEvent.checkGreatest(userName, stmt) && TakenEvent.CheckQualifiedGreatest(userName, quizID, stmt)) {
 			TakenEvent.UpdateGreatestAchievements(userName, stmt);
 		}

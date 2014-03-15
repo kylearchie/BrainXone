@@ -41,7 +41,7 @@ public class DeleteQuizHistoryServlet extends HttpServlet {
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
 		int quizID = Integer.parseInt(request.getParameter("quizID"));		
 		TakenEvent.deleteQuizHistory(quizID, stmt);
-		RequestDispatcher dispatch = request.getRequestDispatcher("welcome.jsp");
+		RequestDispatcher dispatch = request.getRequestDispatcher("QuizSummary.jsp?id=" + quizID);
 		dispatch.forward(request, response);
 	}
 

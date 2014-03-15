@@ -91,7 +91,7 @@
 				out.println("<div class='message-group'><h3> Reports </h3>");
 				for (Challenge r : reports) {
 					out.println("<div class='message content-box'>");
-					out.println("<h4 class='message-sender'> Report from " + r.getFromID() + "on"
+					out.println("<h4 class='message-sender'> Report from " + r.getFromID() + "on Quiz No."
 							+ r.getQuizID() + "</h4>");
 					out.println("<p class='message-text'> " + r.getText() + " </p>");
 					out.println("<form action=\"ReadReportServlet\" method=\"post\">");
