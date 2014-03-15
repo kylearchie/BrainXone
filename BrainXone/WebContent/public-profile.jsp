@@ -111,7 +111,7 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
      out.println("<ul>");
      for (TakenEvent takenEvent : takenEvents)  
      {
-		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
+		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> " + Quiz.getName(takenEvent.getQuizID(), stmt) + "</a>";
 		out.println("<li>" + name + "</li>");
 	 }
      out.println("</ul>");
