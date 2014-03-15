@@ -46,7 +46,7 @@
 
 </head>
 <body>
-<%@ include file="header.html" %>
+<%@ include file="header.jsp" %>
 	<div class="central-content">
 		<div class="content-pane">
 		<h1 class="quiz-title"><%= q.getDescription() %></h1>

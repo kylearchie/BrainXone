@@ -58,7 +58,7 @@ a:hover {
 
 input[type=text],input[type=password],input[type=number]{
 	border: 1px solid #ccc;
-	width: 20em;
+	max-width: 20em;
 	padding: 0.5em;
 }
 
@@ -158,4 +158,13 @@ ul.striped-list>li:nth-child(even) {
 
 ul.striped-list>li:nth-child(odd) {
 	background-color: rgb(250, 250, 250);
+}
+
+.form-bar {
+	display: table;
+}
+
+.form-bar > * {
+	display: table-cell;
+	vertical-align: middle;
 }

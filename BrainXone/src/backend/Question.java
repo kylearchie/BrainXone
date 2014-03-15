@@ -68,7 +68,8 @@ public class Question {
 		int imgIndex = questionParsing.indexOf("#IMGURL");
 		if( imgIndex != -1 ) {
 			result += questionParsing.substring(0, imgIndex) + "</span>";
-			result += "<img src='" + questionParsing.substring(imgIndex + 1) + "'>";
+			result += "<img src='" + questionParsing.substring(imgIndex + "#IMGURL".length() + 1) + "'>";
+			result += "<input type='text' name='question" + counter + "answer1'>";
 		} else if( counter != -1) {
 			int blankIndex = questionParsing.indexOf("#BLANK");
 			if( blankIndex != -1 ) {

@@ -175,23 +175,18 @@
         </div>
         <div class="right-content">
             <div class="section">
-                <div class="section-header">Search </div>
+                <div class="section-header">Search</div>
                 <div class="section-content">
-                <div class="section">
-             Search other users!
-
-<form action="findServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
-
-Search quizzes by tag!
-
-<form action="findQuizServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
-        </div>
+                    <p>Search for users:</p>
+                    <form class="form-bar" action="findServlet" method="post">
+                        <div><input type="text" name="searchTerm"/></div>
+                        <div><input class="move-on-button button" type="submit" value="Search"/></div>
+                    </form>
+                    <p>Search for quiz tags:</p>
+                    <form class="form-bar" action="findQuizServlet" method="post">
+                        <div><input type="text" name="searchTerm"/></div>
+                        <div><input class="move-on-button button" type="submit" value="Search"/></div>
+                    </form>
                 </div>
             </div>
             <div class="section">
@@ -307,8 +302,13 @@ Search quizzes by tag!
         
     </div>
 
+<<<<<<< HEAD
+<a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
+<a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
+=======
 
 
+>>>>>>> FETCH_HEAD
 </div></div>
 </body>
 </html>
