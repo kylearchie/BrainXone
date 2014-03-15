@@ -62,14 +62,6 @@ public class AddQuestionServlet extends HttpServlet {
 		}
 
 		Quiz q = (Quiz) hs.getAttribute("quiz");
-		
-		// TAGS TAGS TAGS
-		String allTags = (String) request.getSession().getAttribute("tags");
-		System.out.println(allTags);
-		StringTokenizer st = new StringTokenizer(allTags, ",");
-		while (st.hasMoreTokens()) {
-			q.addTagsToDB(st.nextToken(), stmt);
-		}
 
 		if(quesType == Question.MULTI_STR_ANS) {
 			int isOrdered = Integer.parseInt((String) request.getParameter("isOrdered"));

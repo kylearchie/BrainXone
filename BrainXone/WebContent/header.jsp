@@ -14,9 +14,11 @@
 		<ul>
 			<li><a href="welcome.jsp">My Account</a></li>
 			<li><a href="inbox.jsp">Messages</a></li>
-			<li><a href="QuizPlayerForm.jsp">Browse Quizzes</a></li>
+			<li><a href="QuizPlayerForm.jsp">Browse Quiz</a></li>
 			<li><a href="QuizCreateForm.jsp">Make Quiz</a></li>
-			<li><a href="faqs.jsp">Help!</a></li>
+			<li><a href="faqs.jsp">Help!!!</a></li>
+			<li><a class="logout-text" href="logoutServlet">Logout</a></li>
+			
 		</ul>
 	</nav>
 </header>

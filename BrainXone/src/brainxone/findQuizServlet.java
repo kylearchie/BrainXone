@@ -38,8 +38,8 @@ public class findQuizServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String search = (String) request.getParameter("searchTerm");
 		HttpSession session = request.getSession();
-		session.setAttribute("tag", search);
-		RequestDispatcher dispatch = request.getRequestDispatcher("quiz-results.jsp");
+		//session.setAttribute("tag", search);
+		RequestDispatcher dispatch = request.getRequestDispatcher("quiz-results.jsp?tag=" + search);
 		dispatch.forward(request, response);
 	}
 

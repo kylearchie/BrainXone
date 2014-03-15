@@ -20,7 +20,8 @@
 ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
 String userName = (String) session.getAttribute("currentUser");
-String searchTerm = (String) session.getAttribute("tag");
+//String searchTerm = (String) session.getAttribute("tag");
+String searchTerm = request.getParameter("tag");
 
 ArrayList<Integer> quizes = Quiz.getQuizIDByTag(searchTerm, stmt);
 System.out.println("****" + quizes.size());
@@ -34,11 +35,10 @@ for (Integer id : quizes)
 	    	name = rs.getString("quizName");    	
 	    }
 	} catch (SQLException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}	    	
-	String quiz = "<a href = \"QuizSummary.jsp?id=" + id + "\"> " + id  + "</a>";	
-	out.println("<li> QUIZ: " + quiz + "</li>");
+	String quiz = "<a href = \"QuizSummary.jsp?id=" + id + "\"> " +  Quiz.getName(id, stmt)  + "</a>";	
+	out.println("<li>" + quiz + "</li>");
 }
 out.println("</ul>");
 

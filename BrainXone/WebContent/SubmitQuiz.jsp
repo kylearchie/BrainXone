@@ -24,7 +24,7 @@ Statement stmt = (Statement) servletContext.getAttribute("Statement");
 Event event = new Event(userName, quizID, stmt);
 Event.UpdateCreateAchievements(userName, stmt);
 %>
-<a href = "index.jsp">BACK TO HOMEPAGE</a>
+<a href = "index.html">BACK TO HOMEPAGE</a>
 </div></div>
 </body>
 </html>

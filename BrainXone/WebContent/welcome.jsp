@@ -107,7 +107,6 @@
         <div class="center-content">
             <div class="section welcome-banner">
                 <h1>Welcome, <%= userName %>!</h1>
-                <a class="logout-text" href="logoutServlet">Logout</a>
             </div>
             <div class="section">
                 <div class="section-header">Announcements</div>
@@ -176,8 +175,24 @@
         </div>
         <div class="right-content">
             <div class="section">
-                <div class="section-header">Search</div>
-                <div class="section-content"></div>
+                <div class="section-header">Search </div>
+                <div class="section-content">
+                <div class="section">
+             Search other users!
+
+<form action="findServlet" method="post">
+<input type="text" name="searchTerm"/>
+<input type="submit" value="Search"/>
+</form>
+
+Search quizzes by tag!
+
+<form action="findQuizServlet" method="post">
+<input type="text" name="searchTerm"/>
+<input type="submit" value="Search"/>
+</form>
+        </div>
+                </div>
             </div>
             <div class="section">
                 <div class="section-header">News</div>
@@ -285,28 +300,15 @@
                     </ul>
                     </p>
                 </div>
-            </div>
-        </div>
+                </div>
+                </div>
+               
+            
+        
     </div>
 
-<p>Use the search box below to find other users!</p>
 
-<form action="findServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
 
-<p>Use the search box below to find quizzes by tag!</p>
-
-<form action="findQuizServlet" method="post">
-<input type="text" name="searchTerm"/>
-<input type="submit" value="Search"/>
-</form>
-
-<h1>Select which mode you want to play in: </h1> <br>
-
-<a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
-<a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
 </div></div>
 </body>
 </html>

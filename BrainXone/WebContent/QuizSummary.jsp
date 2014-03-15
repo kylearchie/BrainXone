@@ -179,9 +179,10 @@
 	for(int i = 0; i < tags.size(); i++){
 		String t = tags.get(i);
 		if(i == (tags.size() - 1))
-			out.print(t + "<br>");
+			
+            out.print("<a href=\"quiz-results.jsp?tag=" + t + "\"> "+ t +"</a> <br>");
 		else
-			out.print(t + ", ");
+            out.print("<a href=\"quiz-results.jsp?tag=" + t + "\"> "+ t +"</a>" + ", &nbsp; ");
 	}
 	if(q.hasPracticeMode() && !userName.equals(guest)){
 	%>

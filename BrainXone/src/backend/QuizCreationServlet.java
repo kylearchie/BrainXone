@@ -2,6 +2,7 @@ package backend;
 
 import java.io.IOException;
 import java.sql.Statement;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -51,9 +52,17 @@ public class QuizCreationServlet extends HttpServlet {
 		String allTags = (String)request.getParameter("tags");
 		request.getSession().setAttribute("tags", allTags);
 
+		
+		
+		
 		// userName hardcoded 1 here.
 		String creatorName = (String) hs.getAttribute("currentUser");
 		Quiz q = new Quiz(false, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmediateCorrection);
+		
+		StringTokenizer st = new StringTokenizer(allTags);
+		while(st.hasMoreTokens()) {
+			q.addTagsToDB(st.nextToken(), stmt);
+		}
 		q.pushToQuizDB(stmt);
 		hs.setAttribute("quiz", q);
 		RequestDispatcher rd = request.getRequestDispatcher("AddQuestion.jsp");
