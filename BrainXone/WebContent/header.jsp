@@ -7,7 +7,7 @@
 
 <header>
 	<div class="logo">
-		<a href="index.html"> <img src="images/QuiZoneLogo.svg">
+		<a href="welcome.jsp"> <img src="images/QuiZoneLogo.svg">
 		</a>
 	</div>
 	<nav>

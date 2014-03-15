@@ -167,3 +167,17 @@ ul.striped-list>li:nth-child(odd) {
 	display: table-cell;
 	vertical-align: middle;
 }
+
+.quiz-create-option {
+	display: table;
+	margin-left: 0px;
+	margin-bottom: 15px;
+}
+
+.quiz-create-option > div {
+	display: table-row;	
+}
+
+.quiz-create-option > div > * {
+	display: table-cell;
+}

@@ -45,16 +45,34 @@ public class AddMultiChoiceAns extends HttpServlet {
 		
 		ServletContext servletContext = getServletContext();
 		Statement stmt = (Statement) servletContext.getAttribute("Statement");
-		
-		for(int i = 0; i < 2; i ++)
-		{
-			String option = (String) request.getParameter("options" + (i + 1));
-			String isValid = (String)(request.getParameter("isValid" + (i + 1)));
-			answerKeys.put(option, Integer.parseInt(isValid));
+//		
+//		for(int i = 0; i < 2; i ++)
+//		{
+//			String option = (String) request.getParameter("options" + (i + 1));
+//			String isValid = (String)(request.getParameter("isValid" + (i + 1)));
+//			answerKeys.put(option, Integer.parseInt(isValid));
+//		}
+		Question ques = (Question) hs.getAttribute("question");
+		int counter = 0;
+		boolean found = false;
+		while( true ) {
+			counter ++;
+			String option = (String) request.getParameter("option" + counter);
+			if( option == null ) break;
+			String isValid = (String)(request.getParameter("valid" + counter));
+			int validInt;
+			if( isValid != null ) validInt = Integer.parseInt(isValid);
+			else validInt = 0;
+			int toPut = validInt;
+			if(ques.getType() == Question.MULTI_CHOICE_R && found) {
+				toPut = 0;
+			}
+			if(validInt == 1) found = true;
+			answerKeys.put(option, toPut);
 		}
 		
-		MultiChoice ques = (MultiChoice) hs.getAttribute("question");
-		int maxPoints = ques.setAnswer(answerKeys, stmt);
+		MultiChoice mcQues = (MultiChoice) hs.getAttribute("question");
+		int maxPoints = mcQues.setAnswer(answerKeys, stmt);
 		
 		try {
 			stmt.executeUpdate("UPDATE ques SET maxPoints = " + maxPoints + " WHERE quesID = " + ques.getID());

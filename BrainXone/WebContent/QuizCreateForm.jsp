@@ -33,22 +33,29 @@ Select category: <select name = "category">
 <option value = "Computers"> Computers </option>
 <option value = "Other"> Other </option>
 </select>
-<br> <br>
+<div class="quiz-create-option">
 Display in Random Order? 
-<input type = "radio" name = "isRandom" value = "1" > YES &nbsp;
-<input type = "radio" name = "isRandom" value = "0" checked> NO <br>
+<div><input type = "radio" name = "isRandom" value = "1" > YES </div>
+<div><input type = "radio" name = "isRandom" value = "0" checked> NO</div>
+</div>
 
+<div class="quiz-create-option">
 Page Choice: Single or Multi-Page? 
-<input type = "radio" name = "isOnePage" value = "1" checked> Single Page &nbsp;
-<input type = "radio" name = "isOnePage" value = "0"> Multi-Page <br>
+<div><input type = "radio" name = "isOnePage" value = "1" checked> Single Page</div>
+<div><input type = "radio" name = "isOnePage" value = "0"> Multi-Page</div>
+</div>
 
+<div class="quiz-create-option">
 Is the quiz available for practice? 
-<input type = "radio" name = "isPracticeMode" value = "1" checked> YES &nbsp;
-<input type = "radio" name = "isPracticeMode" value = "0"> NO <br> <br>
+<div><input type = "radio" name = "isPracticeMode" value = "1" checked> YES</div>
+<div><input type = "radio" name = "isPracticeMode" value = "0"> NO</div>
+</div>
 
+<div class="quiz-create-option">
 Is the quiz available for Immediate Correction/flashcard mode? 
-<input type = "radio" name = "isImmediateCorrection" value = "1"> YES &nbsp;
-<input type = "radio" name = "isImmediateCorrection" value = "0" checked> NO <br> <br>
+<div><input type = "radio" name = "isImmediateCorrection" value = "1"> YES</div>
+<div><input type = "radio" name = "isImmediateCorrection" value = "0" checked> NO</div>
+</div>
 
 Add Tags: Separate by <b>spaces</b>
 <input type = "text" name = "tags">  <br> <br>
