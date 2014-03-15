@@ -21,7 +21,6 @@ ServletContext servletContext = getServletContext();
 Statement stmt = (Statement) servletContext.getAttribute("Statement");
 String userName = (String)session.getAttribute("currentUser");
 ArrayList<Event> createEvents = Event.getCreateEvents(userName, stmt);
-out.println("<h4> Created Events </h4>");
 out.println("<ul>");
 for (Event createEvent : createEvents) 
 {

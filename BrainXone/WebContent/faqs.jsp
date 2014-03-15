@@ -30,7 +30,7 @@
 			<br>
 			<br> 4. How do I create a new account? <br> It's simple.
 			Just click the "Register" link displayed in the login box on any page
-			and sign up. It's free. Or click <a href="">here. </a> <br>
+			and sign up. It's free. Or click <a href="create_new_account.jsp">here. </a> <br>
 			<br> 5. What's required for a new account?<br> All you need
 			is valid username that hasn't been taken.<br>
 			<br> 6. Why do I need an account?<br> You need an account
@@ -53,35 +53,30 @@
 			Profile is a public information page about you and what you have done
 			on the site. It shows: your username, your creations, some of the
 			friends on your friends list.<br>
-			<br> 9. What is my "Friends" page?<br> Your "Friends" page
-			is the page where you see everyone you have selected as a friend. On
-			this page you will see their usernames, both of which link to their
-			profiles. Since your "Friends" list is not public, so other users can
-			not see who your friends are and cannot see who has added you as a
-			friend. <br>
-			<br> 10. What exactly are "friends?"<br> Friends are simply
+	
+			<br> 9. What exactly are "friends?"<br> Friends are simply
 			other users you've chosen to add to your "Friends" list. To add a
 			user to your friends list, you need to visit their page and send them
 			a request. You are asked to confirm when other users add you as a
-			friend, so not anyone can be "friends" with you. <br>
-			<br> 11. How do I take someone off my "Friends" list?<br>
+			friend, so not anyone can be "friends" with you. You can see their activity and they can see yours. Privacy setting doesn't affect friends visibility. <br>
+			<br> 10. How do I take someone off my "friends"?<br>
 			After logging into the site, go to the corresponding user's profile
-			and then click the "Unfriend" button. That user will no longer appear
+			and then click the "Remove Friend" button. That user will no longer appear
 			on your "Friends" list. <br>
-			<br> 12. What are the Top Rated Quizzes and how do I get one of
+			<br> 11. What are the Top Rated Quizzes and how do I get one of
 			my creations on one? <br> The Top Rated lists feature the
 			highest-rated quizzes published, as voted on by QuiZone users. They
 			are updated as soon as a user reviews a quiz. A piece of content must
 			have been rated multiple times to qualify for this list. Only the top
 			are chosen. <br>
-			<br> 13. How does search work?<br> The search engine is new
+			<br> 12. How does search work?<br> The search engine is new
 			and improved and is now faster and more accurate. Searching for all
 			users and quizzes by tags. To search for content, just enter a
 			keyword into the search page in the welcome page and click on the
 			"search". You'll be taken to the search results page, where you can
 			sort displayed results by relevance and partial match for usernames
 			and quiz tags date. <br>
-			<br> 14. Someone's quiz/message is inappropriate. What should I
+			<br> 13. Someone's quiz/message is inappropriate. What should I
 			do? <br> Use the "Report It" feature. Go to the user's profile
 			page and click the "Report It" button. Flag as inappropriate. Our
 			admins will read your report and address it as they see fit. <br>

@@ -45,7 +45,7 @@ Most popular quizzes:
     			// TODO Auto-generated catch block
     		e.printStackTrace();
    		}	    	
-   		String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + name  + "</a>";	
+   		String quiz = "<a href = \"ShowQuiz.jsp?id=" + id + "\"> " + Quiz.getName(id, stmt)  + "</a>";	
    		out.println("<li> QUIZ: " + quiz + "</li>");   	   
     } 
 %>
@@ -67,7 +67,7 @@ Recently created quizzes:
     		createrNameURL = "anonymous";
     	}		
 
-    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> QUIZ " + quizID  + "</a>";
+    	String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + Quiz.getName(quizID, stmt)  + "</a>";
     	out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
     	   
     } 
