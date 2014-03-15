@@ -4,13 +4,19 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>More Questions or Submit</title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1> Do you want to add more questions? Or Submit the current quiz?</h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title"> Do you want to add more questions? Or Submit the current quiz?</h1>
 
 <a href="AddQuestion.jsp">Add More Questions</a> <br>
 <a href="SubmitQuiz.jsp">Submit Quiz</a> <br>
-
+</div></div>
 </body>
 </html>

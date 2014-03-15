@@ -12,7 +12,7 @@ public class Quiz {
 	private ArrayList<Question> questions;
 	private String creatorName = "";
 	private String category = "";
-	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+	private int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 
 	/**
 	 * Constructor: To be used by creator
@@ -21,7 +21,7 @@ public class Quiz {
 	 * @param creatorID
 	 * @param category
 	 */
-	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode){
+	public Quiz(boolean isPlayerMode, String quizName, String description, String creatorName, String category, int isRandom, int isOnePage, int isPracticeMode, int isImmeCorr){
 		if(!isPlayerMode) 
 			ID++;
 		this.description = description;
@@ -31,6 +31,7 @@ public class Quiz {
 		this.isRandom = isRandom;
 		this.isOnePage = isOnePage;
 		this.isPracticeMode = isPracticeMode;
+		this.isImmeCorr = isImmeCorr;
 		questions = new ArrayList<Question>();
 	}
 
@@ -38,10 +39,10 @@ public class Quiz {
 	public static void initMinID(int oldID){
 		ID = oldID;
 	}
-	
+
 	public void pushToQuizDB(Statement stmt){
 		try {
-			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\");");
+			stmt.executeUpdate("INSERT INTO quiz VALUES (\"" + ID +"\",\"" + creatorName + "\",\"" + quizName + "\",\"" + description + "\",\"" + category + "\",\"" + isRandom + "\",\"" + isOnePage + "\",\"" + isPracticeMode + "\",\"" + isImmeCorr + "\");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -63,7 +64,7 @@ public class Quiz {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static ArrayList<Review> getReviewByQuizID(int quizID, Statement stmt){
 		ArrayList<Review> reviews = new ArrayList<Review>();
 		try {
@@ -115,9 +116,9 @@ public class Quiz {
 		if(quizID == 0) return null;
 		String creatorName = "";
 		String quizName = "", description = "", category = "";
-		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode, isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
@@ -126,22 +127,23 @@ public class Quiz {
 				isRandom = Integer.parseInt(rs.getString(5));
 				isOnePage = Integer.parseInt(rs.getString(6));
 				isPracticeMode = Integer.parseInt(rs.getString(7));
+				isImmeCorr = Integer.parseInt(rs.getString(8));
 			}
-				
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmeCorr);
 		return q;
 	}
-	
+
 	public static Quiz getQuizUsingID(Integer quizID, Statement stmt){
 		if(quizID == 0) return null;
 		String creatorName = "";
 		String quizName = "", description = "", category = "";
-		int isRandom = 0, isOnePage = 1, isPracticeMode = 0;
+		int isRandom = 0, isOnePage = 1, isPracticeMode = 0, isImmeCorr = 0;
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode FROM quiz WHERE quizID = \"" + quizID + "\";");
+			ResultSet rs = stmt.executeQuery("SELECT creatorUserName, quizName, description, category, isRandom, isOnepage, isPracticeMode isImmediateCorrection FROM quiz WHERE quizID = \"" + quizID + "\";");
 			if(rs.next()){				
 				creatorName = rs.getString(1);
 				quizName = rs.getString(2);
@@ -150,23 +152,36 @@ public class Quiz {
 				isRandom = Integer.parseInt(rs.getString(5));
 				isOnePage = Integer.parseInt(rs.getString(6));
 				isPracticeMode = Integer.parseInt(rs.getString(7));
+				isImmeCorr = Integer.parseInt(rs.getString(8));
 			}
-				
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode);
+		Quiz q = new Quiz(true, quizName, description, creatorName, category, isRandom, isOnePage, isPracticeMode, isImmeCorr);
 		return q;
 	}
-	
+
 	public String getCreatorName(){
 		return creatorName;
 	}
 
-	public String getName(){
-		return quizName;
+	public static String getName(int quizID, Statement stmt){
+		String name = "";
+		try {
+			String sql = "SELECT quizName FROM quiz WHERE quizID = \"" + quizID + "\";";
+			System.out.println(sql);
+			ResultSet rs = stmt.executeQuery("SELECT quizName FROM quiz WHERE quizID = \"" + quizID + "\";");
+
+			if(rs.next()){
+				name = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
 	}
-	
+
 	public String getDescription(){
 		return description;
 	}
@@ -182,7 +197,7 @@ public class Quiz {
 					int quesType = Integer.parseInt(rs.getString(2));
 					String quesText = rs.getString(3);
 					int isOrdered = Integer.parseInt(rs.getString(4));
-					
+
 					Question q = null;
 					if(quesType % 2 == Question.MULTI_CHOICE) {
 						q = new MultiChoice(true, quesID, quesType, quesText);
@@ -197,8 +212,8 @@ public class Quiz {
 		}
 		return qList;
 	}
-	
-	
+
+
 	public static ArrayList<Question> getQuesListUsingID(Integer quizID, Statement stmt){
 		ArrayList<Question> qList = new ArrayList<Question>();
 
@@ -210,7 +225,7 @@ public class Quiz {
 					int quesType = Integer.parseInt(rs.getString(2));
 					String quesText = rs.getString(3);
 					int isOrdered = Integer.parseInt(rs.getString(4));
-					
+
 					Question q = null;
 					if(quesType % 2 == Question.MULTI_CHOICE) {
 						q = new MultiChoice(true, quesID, quesType, quesText);
@@ -225,7 +240,7 @@ public class Quiz {
 		}
 		return qList;
 	}
-	
+
 	public static int getNumQuestionsUsingID(int quizID, Statement stmt){
 		int result = 0;
 		try {
@@ -261,24 +276,28 @@ public class Quiz {
 			return timeTaken;
 		}
 	}
-	
+
 	public boolean isRandomVal(){
 		return isRandom == 1;
 	}
-	
+
 	public boolean isOnePage() {
 		return isOnePage == 1;
 	}
-	
+
 	public boolean hasPracticeMode(){
 		return isPracticeMode == 1;
 	}
 	
+	public boolean hasImmeCorr(){
+		return isImmeCorr == 1;
+	}
+
 	public boolean hasImmediateCorrection() {
 		//TODO: Add this field to database so we can make quizzes like this!
 		return isOnePage != 1;
 	}
-	
+
 	public void deleteQuizByCreatorName(String creatorName, Statement stmt){
 		try {
 			stmt.executeUpdate("DELETE FROM quiz WHERE creatorUserName = \"" + creatorName + "\";");	
@@ -293,11 +312,11 @@ public class Quiz {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean isTimedQuiz() {
 		return false;
 	}
-	
+
 	public static ArrayList<Integer> getQuizIDByTag(String tag, Statement stmt){
 		ArrayList<Integer> quizIDList = new ArrayList<Integer>();
 		try {
@@ -305,13 +324,13 @@ public class Quiz {
 			while(rs.next()){
 				quizIDList.add(rs.getInt("quizID"));
 			}
-				
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return quizIDList;
 	}
-	
+
 	public static ArrayList<Integer> getTopQuiz(Statement stmt) {
 		ArrayList<Integer> quizzes = new ArrayList<Integer>();
 		try {
@@ -319,13 +338,13 @@ public class Quiz {
 			while(rs.next()){
 				int quizID = rs.getInt("quizID");
 				quizzes.add(quizID);
-				}			
+			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return quizzes;
 	}
-	
+
 	public static ArrayList<String> getTagsByQuizID(int quizID, Statement stmt){
 		ArrayList<String> tags = new ArrayList<String>();
 		try {

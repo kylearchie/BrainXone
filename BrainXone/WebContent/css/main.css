@@ -7,6 +7,8 @@ body {
 	font-size: 12pt;
 }
 
+<<<<<<< HEAD
+=======
 
 input, button, .button, select {
 	display: block;
@@ -22,9 +24,12 @@ input[type=text], input[type=number], input[type=password], input[type=submit], 
 	-webkit-appearance: none;
 }
 
+>>>>>>> FETCH_HEAD
 select {
-	background:url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.8 5.9" enable-background="new 0 0 8.8 5.9" xml:space="preserve"><path fill="#333333" d="M8.3,0.7L4.5,5.4c0,0.1-0.1,0.1-0.2,0L0.5,0.7c-0.1-0.1,0-0.2,0.1-0.2h7.6C8.3,0.5,8.3,0.6,8.3,0.7z"/></svg>') no-repeat;
-	 outline: none; 
+	background:
+		url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.8 5.9" enable-background="new 0 0 8.8 5.9" xml:space="preserve"><path fill="#333333" d="M8.3,0.7L4.5,5.4c0,0.1-0.1,0.1-0.2,0L0.5,0.7c-0.1-0.1,0-0.2,0.1-0.2h7.6C8.3,0.5,8.3,0.6,8.3,0.7z"/></svg>')
+		no-repeat;
+	outline: none;
 	background-color: #eee;
 	background-size: 25% 25%;
 	background-position: top 50% right -1em;
@@ -51,11 +56,14 @@ a:hover {
 	border: 1px solid #ccc;
 }
 
-input[type=text], input[type=password], input[type=number] {
+input[type=text],input[type=password],input[type=number]{
 	border: 1px solid #ccc;
 	max-width: 20em;
 	padding: 0.5em;
 }
+
+input[type=radio] {
+	border:4px;width:auto;height:auto;}
 
 .positive-text {
 	color: rgb(50, 175, 50);
@@ -87,7 +95,7 @@ input[type=text], input[type=password], input[type=number] {
 
 .button {
 	color: #fff;
-	text-shadow: 1px 1px rgba( 0, 0, 0, 0.25 );
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.25);
 	margin-top: 10px;
 	margin-bottom: 10px;
 	margin-left: auto;
@@ -111,7 +119,6 @@ a.button {
 }
 
 /* Quiz Boxes */
-
 .content-box {
 	background-color: #fcfcfc;
 	border: 1px dashed #ccc;
@@ -129,28 +136,27 @@ a.button {
 	font-size: 2em;
 }
 
-form > * {
+form>* {
 	margin-left: auto;
 	margin-right: auto;
 }
 
 /* Lists */
-
 ul.striped-list {
 	margin: 0px;
 	padding: 0px;
 }
 
-ul.striped-list > li {
+ul.striped-list>li {
 	display: block;
 	padding: 5px;
 }
 
-ul.striped-list > li:nth-child(even) {
+ul.striped-list>li:nth-child(even) {
 	background-color: rgb(240, 240, 240);
 }
 
-ul.striped-list > li:nth-child(odd) {
+ul.striped-list>li:nth-child(odd) {
 	background-color: rgb(250, 250, 250);
 }
 

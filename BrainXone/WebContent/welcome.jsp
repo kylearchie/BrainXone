@@ -42,18 +42,17 @@
                          ArrayList<Message> unreadMessages = Message.getUnReadMessages(userName, stmt);
                          int numUnReadMessages = unreadMessages.size();
                     %>
-                    <p>You have <%= numUnReadMessages %> notes.</p>
+                    <p><a href="inbox.jsp">You have <%= numUnReadMessages %> notes. </a></p>
                     <%
                          ArrayList<Message> friends = Message.getFriendRequests(userName, stmt);
                          int numRequests = friends.size();
                     %>
-                    <p> You have <%= numRequests %> friend requests.</p>
+                    <p> <a href="inbox.jsp">You have <%= numRequests %> friend requests.</a></p>
                     <%
                          ArrayList<Challenge> challenges = Challenge.getChallenges(userName, stmt);
                          int numChallenges = challenges.size();
                     %>
-                    <p> You have <%= numChallenges %> challenges.</p>
-                    <a href="inbox.jsp">Read messages</a>
+                    <p> <a href="inbox.jsp">You have <%= numChallenges %> challenges.</a></p>
                 </div>
             </div>
             <div class="section">
@@ -108,7 +107,6 @@
         <div class="center-content">
             <div class="section welcome-banner">
                 <h1>Welcome, <%= userName %>!</h1>
-                <a class="logout-text" href="logoutServlet">Logout</a>
             </div>
             <div class="section">
                 <div class="section-header">Announcements</div>
@@ -167,7 +165,7 @@
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }            
-                                out.println("<li><a href = 'QuizSummary.jsp?id=" + id + "'> Quiz " + name  + "</a></li>");       
+                                out.println("<li><a href = 'QuizSummary.jsp?id=" + id + "'>" + name  + "</a></li>");       
                             } 
                         %>
                     </ul>
@@ -213,7 +211,9 @@
                                 } else {
                                     createrNameURL = "anonymous";
                                 }
-                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName() + "</a>";
+                                String quizName = q.getName(quizID, stmt);
+                                System.out.println( q.getName(quizID, stmt) );
+                                String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID + "\"> " + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + createrNameURL + " created " + quizURL + "</li>");
 
                             }
@@ -235,7 +235,7 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\"> " + q.getName() + "</a>";
+                                        + "\"> " + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " created " + quizURL
                                         + "</li>");
 
@@ -259,7 +259,7 @@
                                 String friendNameURL = "<a href = \"public-profile.jsp?name="
                                         + friendName + "\">" + friendName + "</a>";
                                 String quizURL = "<a href = \"QuizSummary.jsp?id=" + quizID
-                                        + "\">" + q.getName() + "</a>";
+                                        + "\">" + q.getName(quizID, stmt) + "</a>";
                                 out.println("<li>" + friendNameURL + " took " + quizURL
                                         + "</li>");
                             }
@@ -295,12 +295,20 @@
                     </ul>
                     </p>
                 </div>
-            </div>
-        </div>
+                </div>
+                </div>
+               
+            
+        
     </div>
 
+<<<<<<< HEAD
 <a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
 <a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
+=======
+
+
+>>>>>>> FETCH_HEAD
 </div></div>
 </body>
 </html>

@@ -20,7 +20,6 @@
 
 <a href = "QuizCreateForm.jsp"> Creator Mode </a> <br>
 <a href = "QuizPlayerForm.jsp"> Player Mode </a> <br>
- </div>
- </div>
+</div></div>
 </body>
 </html>

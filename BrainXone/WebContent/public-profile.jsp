@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
-    <%@ page import = "java.sql.*, brainxone.*, java.util.*" %>
+    <%@ page import = "java.sql.*, brainxone.*, java.util.*, backend.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,9 +17,16 @@ User user = User.retrieveByUserName(userName, stmt);
 %>
 
 <title><%=(String)request.getParameter("name")%></title>
+</title>
+	<link rel="stylesheet" href="css/header.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<h1><%=(String)request.getParameter("name")%></h1>
+<%@ include file="header.jsp" %>
+	<div class="central-content">
+		<div class="content-pane">
+
+		<h1 class="page-title"><%=(String)request.getParameter("name")%></h1>
 <% 
 ArrayList<String> friends = user.getFriends();
 String profileName = (String)request.getParameter("name");
@@ -89,9 +96,11 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
      out.println("<ul>");
      for (Event createEvent : createEvents) 
      {
-	    String name = "<a href = \"QuizSummary.jsp?id=" + createEvent.getQuizID() + "\"> QUIZ " + createEvent.getQuizID()  + "</a>";
+	    String name = "<a href = \"QuizSummary.jsp?id=" + createEvent.getQuizID() + "\"> " +  Quiz.getName(createEvent.getQuizID(), stmt)  + "</a>";
 	    out.println("<li>" + name + "</li>");
      }
+     out.println("</ul>");
+
 %>   
 
 
@@ -105,11 +114,13 @@ if (!profileUser.isAdmin() && user.isAdmin()) {
 		String name = "<a href = \"QuizSummary.jsp?id=" + takenEvent.getQuizID() + "\"> QUIZ " + takenEvent.getQuizID()  + "</a>";
 		out.println("<li>" + name + "</li>");
 	 }
+     out.println("</ul>");
+
 %>  
 
 <form action="logoutServlet" method="post">
 <input type="submit" value="Logout"/>
 </form>
-
+</div></div>
 </body>
 </html>
