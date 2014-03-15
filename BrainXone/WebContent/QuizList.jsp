@@ -12,16 +12,19 @@
 <body>
 
 <%@ include file="header.jsp" %>
-
-<h1>List of Quizzes in your selected category</h1>
-<%
-	HashMap<Integer, String> quizList = (HashMap<Integer, String>) request.getSession().getAttribute("quizList");
-	for(int quizID : quizList.keySet()){
-    		String quizName = quizList.get(quizID);
-    		out.print("<li><a href=\"QuizSummary.jsp?id=" + quizID + "\">" + quizName + "</a></li>");
-    }
-%>
-
-</div></div>
+	<div class="central-content">
+		<div class="content-pane">
+			<h1 class="page-title">List of Quizzes in your selected category</h1>
+			<ul class="striped-list">
+				<%
+					HashMap<Integer, String> quizList = (HashMap<Integer, String>) request.getSession().getAttribute("quizList");
+					for(int quizID : quizList.keySet()){
+			    		String quizName = quizList.get(quizID);
+ 				   		out.print("<li><a href=\"QuizSummary.jsp?id=" + quizID + "\">" + quizName + "</a></li>");
+  					  }
+				%>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>
